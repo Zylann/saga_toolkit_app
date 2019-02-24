@@ -1,0 +1,16 @@
+[gd_scene format=2]
+
+[node name="EpisodeEditor" type="HSplitContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+split_offset = 150
+
+[node name="EpisodeList" type="ItemList" parent="."]
+margin_right = 150.0
+margin_bottom = 600.0
+
+[node name="Control" type="Control" parent="."]
+margin_left = 162.0
+margin_right = 1024.0
+margin_bottom = 600.0
+
