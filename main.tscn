@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://episode_editor/episode_editor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://icon_white.png" type="Texture" id=6]
+[ext_resource path="res://util/rich_text_label_hyperlinks.gd" type="Script" id=7]
 
 [node name="Main" type="Panel"]
 anchor_right = 1.0
@@ -144,5 +145,6 @@ text = "SagaTK is a set of tools for hobbyist audio plays production, combined i
 Developped by Marc Gilleron, aka Zylann
 
 https://github.com/Zylann/saga_toolkit_app"
+script = ExtResource( 7 )
 
 [connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]
