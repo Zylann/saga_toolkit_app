@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   version="1.1"
+   viewBox="0 0 16 16"
+   id="svg12"
+   sodipodi:docname="icon.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:export-filename="D:\PROJETS\INFO\GODOT\Games\SagaTK\icon.png"
+   inkscape:export-xdpi="877.71429"
+   inkscape:export-ydpi="877.71429">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1524"
+     inkscape:window-height="876"
+     id="namedview14"
+     showgrid="false"
+     inkscape:zoom="29.5"
+     inkscape:cx="7.7007699"
+     inkscape:cy="7.4116769"
+     inkscape:window-x="141"
+     inkscape:window-y="92"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg12"
+     inkscape:snap-grids="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid828" />
+  </sodipodi:namedview>
+  <path
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:50;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 8 1 A 7 7 0 0 0 1 8 A 7 7 0 0 0 2.3027344 12.058594 L 2.6660156 11.595703 L 3.0136719 9.90625 A 6.25 6.25 0 0 1 2.4628906 7.359375 A 6.25 6.25 0 0 1 8.7128906 1.109375 A 6.25 6.25 0 0 1 9.4882812 1.1640625 A 7 7 0 0 0 8 1 z M 14.962891 7.3359375 A 6.25 6.25 0 0 1 14.962891 7.359375 A 6.25 6.25 0 0 1 8.7128906 13.609375 A 6.25 6.25 0 0 1 5.6914062 12.828125 C 5.1357351 13.001854 4.3476562 13.25 4.3476562 13.25 L 3.828125 13.611328 A 7 7 0 0 0 8 15 A 7 7 0 0 0 15 8 A 7 7 0 0 0 14.962891 7.3359375 z "
+     id="path832" />
+  <path
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 13.623047 2.5136719 C 12.912944 2.5346454 12.020139 2.6121314 11.289062 2.8398438 C 11.289062 2.8398437 7.6226559 4.0630767 5.7050781 6.4121094 C 5.7050781 6.4121094 3.8824461 8.377022 3.2832031 12.068359 L 1.9902344 14.058594 L 3.7636719 12.667969 C 3.7636719 12.667969 5.3684524 12.283902 6.5429688 11.636719 C 6.5429687 11.636719 7.7178909 11.230248 9.2519531 8.953125 C 9.2519531 8.953125 10.786236 5.8122996 11.529297 4.5898438 C 11.529297 4.5898438 12.105304 3.7040039 12.728516 3.2246094 C 12.728516 3.2246094 13.710781 2.6731152 14.861328 2.5292969 C 14.861328 2.5292969 14.33315 2.4926984 13.623047 2.5136719 z M 11.601562 3.2714844 C 9.5161967 4.9493649 7.5507813 7.2265625 7.5507812 7.2265625 C 6.5919925 8.4250486 3.7871094 12.021484 3.7871094 12.021484 C 3.7871094 12.021484 5.2972611 9.0972652 6.9511719 7.1796875 C 6.9511719 7.1796875 8.8690143 4.9253952 11.601562 3.2714844 z "
+     id="path853" />
+</svg>

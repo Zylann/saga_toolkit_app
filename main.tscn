@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=2]
 [ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=3]
 [ext_resource path="res://episode_editor/episode_editor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=5]
+[ext_resource path="res://icon_white.png" type="Texture" id=6]
 
 [node name="Main" type="Panel"]
 anchor_right = 1.0
@@ -12,6 +13,7 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -91,5 +93,56 @@ access = 2
 filters = PoolStringArray( "*.txt" )
 current_dir = "D:/PROJETS/INFO/GODOT/Games/SagaTK"
 current_path = "D:/PROJETS/INFO/GODOT/Games/SagaTK/"
+
+[node name="AboutWindow" type="AcceptDialog" parent="."]
+margin_left = 318.0
+margin_top = 216.0
+margin_right = 820.0
+margin_bottom = 416.0
+rect_min_size = Vector2( 320, 200 )
+window_title = "About Saga Toolkit"
+
+[node name="Content" type="Control" parent="AboutWindow"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 494.0
+margin_bottom = 164.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="AboutWindow/Content"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -8.0
+
+[node name="TextureRect" type="TextureRect" parent="AboutWindow/Content/HBoxContainer2"]
+self_modulate = Color( 0.45098, 0.607843, 0.376471, 1 )
+margin_right = 128.0
+margin_bottom = 140.0
+texture = ExtResource( 6 )
+
+[node name="Spacer" type="Control" parent="AboutWindow/Content/HBoxContainer2"]
+margin_left = 132.0
+margin_right = 148.0
+margin_bottom = 140.0
+rect_min_size = Vector2( 16, 0 )
+
+[node name="Label" type="RichTextLabel" parent="AboutWindow/Content/HBoxContainer2"]
+margin_left = 152.0
+margin_right = 470.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
+bbcode_enabled = true
+bbcode_text = "SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.
+
+Developped by Marc Gilleron, aka Zylann
+
+[url=\"https://github.com/Zylann/saga_toolkit_app\"]https://github.com/Zylann/saga_toolkit_app[/url]"
+text = "SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.
+
+Developped by Marc Gilleron, aka Zylann
+
+https://github.com/Zylann/saga_toolkit_app"
 
 [connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]
