@@ -9,6 +9,7 @@ onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
+onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
 
 const MENU_FILE_OPEN_SCRIPT = 0
 const MENU_FILE_EXPORT_AS_HTML = 1
@@ -17,6 +18,7 @@ const MENU_FILE_QUIT = 2
 const MENU_HELP_ABOUT = 0
 
 func _ready():
+	
 	_file_menu.get_popup().add_item("Open Script...", MENU_FILE_OPEN_SCRIPT)
 	_file_menu.get_popup().add_item("Export As HTML...", MENU_FILE_EXPORT_AS_HTML)
 	_file_menu.get_popup().add_item("Quit", MENU_FILE_QUIT)
@@ -26,9 +28,22 @@ func _ready():
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
 	
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
+	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
 
 	# TEST
 	_script_editor.open_script("D:/PROJETS/AUDIO/Enfer Liquide/Script/Enfer Liquide/Script.txt")
+
+
+func _on_ScriptEditor_script_parsed(path, result):
+	if len(result.errors) > 0:
+		if len(result.errors) == 1:
+			_status_label.text = "Found 1 error in script"
+		else:
+			_status_label.text = "Found {0} errors in script".format([len(result.errors)])
+		_status_label.modulate = Color(1, 0.2, 0.1)
+	else:
+		_status_label.text = "Script successfully parsed"
+		_status_label.modulate = Color(1, 1, 1)
 
 
 func _on_FileMenu_id_pressed(id):

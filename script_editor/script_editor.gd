@@ -4,7 +4,7 @@ const Errors = preload("res://util/errors.gd")
 const ScriptParser = preload("res://script_parser.gd")
 const HtmlExporter = preload("res://html_exporter/html_exporter.gd")
 
-signal script_parsed(path, data)
+signal script_parsed(path, result)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
 onready var _text_editor = get_node("TextEditor")
@@ -44,13 +44,13 @@ func open_script(path):
 	_file_list.add_item(filename)
 	_file_list.set_item_metadata(i, path)
 	
-	var data = ScriptParser.parse_text(text)
+	var res = ScriptParser.parse_text(text)
 	
-	_scripts_data[path] = data
+	_scripts_data[path] = res.data
 	_file_list.select(i)
 	_set_current_script(path)
 	
-	emit_signal("script_parsed", path, data)
+	emit_signal("script_parsed", path, res)
 
 
 func _set_current_script(path):

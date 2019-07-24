@@ -1,9 +1,12 @@
 
 const Accents = preload("util/accents.gd")
 
+# These may be ignored because they are not proper characters,
+# but rather "all of them" or "all those present in scene"
 const _ignored_character_names = {
 	"TOUS": true,
-	"TOUT LE MONDE": true
+	"TOUT LE MONDE": true,
+	"FOULE": true
 }
 
 
@@ -39,20 +42,29 @@ static func parse_text(text):
 	var time_before = OS.get_ticks_msec()
 	
 	var lines = text.split("\n")
-	var data = parse_scenes(lines)
+	var res = parse_scenes(lines)
 	
-	data.text = text
+	res.data.text = text
+
+	if len(res.errors) > 0:
+		printerr("--- Unrecognized content ---")
+		for e in res.errors:
+			printerr("Line ", e.line_index, ":")
+			print("\"", e.text, "\"\n")
+		printerr("----------------------------")
 	
 	var time_spent = OS.get_ticks_msec() - time_before
 	print("Took ", time_spent, "ms to parse text")
 	
-	return data
+	return res
 
 
 static func parse_scenes(lines):
 	
 	var data = ScriptData.new()
 	var scene = null
+	
+	var unrecognized_content = {}
 	
 	# Using a while because for loop forbids incrementing the index --"
 	var line_index = 0
@@ -80,39 +92,77 @@ static func parse_scenes(lines):
 				line_index += 1
 				line = lines[line_index].strip_edges()
 			scene.elements.append(note)
-
-		elif line.begins_with("(") or line.begins_with("<"):
+		
+		elif line.begins_with("(") or line.begins_with("<") \
+		or line.begins_with("*") or line.begins_with("#"):
 			var desc = Description.new()
 			desc.text = line
 			scene.elements.append(desc)
 
 		elif line.begins_with("==="):
 			data.title = lines[line_index - 1].strip_edges()
+			unrecognized_content.erase(line_index - 1)
 		
 		elif line.begins_with("---"):
 			scene = Scene.new()
 			scene.title = lines[line_index - 1].strip_edges()
 			scene.line_index = line_index - 1
 			data.scenes.append(scene)
+			unrecognized_content.erase(line_index - 1)
 		
 		elif line.find("--") != -1:
 			var res = parse_statement(lines, line_index)
 			if res == null:
-				printerr("Unrecognized statement at line ", line_index + 1)
+				unrecognized_content[line_index] = {
+					"text": line
+				}
 			else:
 				var statement = res.statement
-				if not _ignored_character_names.has(statement.character_name):
-					data.character_names[statement.character_name] = true
-				scene.elements.append(statement)
+				_add_statement(scene, data, statement)
 				line_index = res.line_index
 		
+		elif line != "" and (raw_line.begins_with("    ") or raw_line.begins_with("\t")):
+			# TODO This is for poems or songs, find something better than defaulting to some crowd
+			var statement = Statement.new()
+			statement.text = line
+			statement.character_name = "FOULE"
+			_add_statement(scene, data, statement)
+		
+		elif line.begins_with("FIN"):
+			# The End
+			var note = Note.new()
+			note.text = line
+			scene.elements.append(note)
+
 		elif line != "":
-			pass
-			##printerr("Unknown content at line ", line_index + 1)
+			unrecognized_content[line_index] = {
+				"text": line
+			}
 		
 		line_index += 1
 	
-	return data
+	var errors = []
+
+	if unrecognized_content.empty():
+		print("No problem found in script.")
+	else:
+		for line_index in unrecognized_content:
+			var c = unrecognized_content[line_index]
+			errors.append({
+				"line_index": line_index,
+				"text": c.text
+			})
+	
+	return {
+		"data": data,
+		"errors": errors
+	}
+
+
+static func _add_statement(scene, data, statement):
+	if not _ignored_character_names.has(statement.character_name):
+		data.character_names[statement.character_name] = true
+	scene.elements.append(statement)
 
 
 static func parse_statement(lines, line_index):

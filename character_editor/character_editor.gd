@@ -30,7 +30,7 @@ func merge_character_names(character_names):
 		_character_list.sort_items_by_text()
 
 
-func _on_ScriptEditor_script_parsed(script_path, script_data):
-	var cnames = script_data.character_names
+func _on_ScriptEditor_script_parsed(script_path, result):
+	var cnames = result.data.character_names
 	merge_character_names(cnames)
 
