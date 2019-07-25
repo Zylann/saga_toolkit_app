@@ -20,6 +20,7 @@ func export_script(script_data, output_path):
 	var time_before = OS.get_ticks_msec()
 	
 	var content = ""
+	var statement_index = 1
 	
 	for scene_index in len(script_data.scenes):
 		var scene = script_data.scenes[scene_index]
@@ -37,8 +38,11 @@ func export_script(script_data, output_path):
 				content += _statement_template.format({
 					"character_name": e.character_name.xml_escape(),
 					"note": note_html,
-					"text": e.text.xml_escape()
+					"text": e.text.xml_escape(),
+					"statement_index": statement_index
 				})
+				
+				statement_index += 1
 			
 			elif e is ScriptParser.Note:
 				content += _note_template.format({
