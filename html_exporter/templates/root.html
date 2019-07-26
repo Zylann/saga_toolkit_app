@@ -67,12 +67,12 @@
 			position: fixed;
 			top: 0%;
 			left: 0%;
-			width: 100%;
-			height: 20px;
-			background: #eee;
+			width: 10%;
+			height: 100%;
+			background: #666;
 			border-bottom: 1px solid #888;
 			box-shadow: -2px -2px 8px #000;
-			padding: 4px;
+			/*padding: 4px;*/
 		}
 		.statementIndex {
 			float: left;
@@ -80,12 +80,28 @@
 			margin-top: 0px;
 			color: #aaa;
 			font-size: 0.7em;
+			text-align: right;
+		}
+		#outlineCanvasContainer {
+			float: right;
+			position: fixed;
+			top: 0%;
+			right: 0%;
+			width: 30px;
+			height: 100%;
+			background: #000;
+		}
+		#outlineCanvas {
+			width: 100%;
+			height: 100%;
 		}
 	</style>
 </head>
 <body>
 
-	{navigator}
+	<div id="outlineCanvasContainer">
+		<canvas width="1" height="100" id="outlineCanvas">Canvas is not supported</canvas>
+	</div>
 
 	<div id="content">
 		{content}
@@ -125,20 +141,34 @@
 
 		function parseContent() {
 			var charBlocks = document.querySelectorAll("#content .charBlock")
-			console.log("Found " + charBlocks.length + " blocks");
+			console.log("Found " + charBlocks.length + " statement blocks");
 			for(var i = 0; i < charBlocks.length; ++i) {
 				var block = charBlocks[i];
 				block.addEventListener("click", onCharBlockClicked);
 				statements.push(new Statement(block));
 			}
+
+			var outlineCanvas = document.getElementById('outlineCanvas');
+			outlineCanvas.height = statements.length;
+			var ctx = outlineCanvas.getContext('2d');
+			ctx.fillStyle = "#000";
+			ctx.fillRect(0, 0, outlineCanvas.width, outlineCanvas.height);
 		}
 
 		function highlightCharacter(characterName) {
+
+			var outlineCanvas = document.getElementById('outlineCanvas');
+			var ctx = outlineCanvas.getContext('2d');
+			ctx.fillStyle = "#000";
+			ctx.fillRect(0, 0, outlineCanvas.width, outlineCanvas.height);
+			ctx.fillStyle = "#ff4";
+
 			// TODO highlight occurences with a "+" in them
 			for(var i = 0; i < statements.length; ++i) {
 				var s = statements[i];
 				if(s.characterName == characterName) {
 					s.highlight(true);
+					ctx.fillRect(0, i, outlineCanvas.width, 1);
 				}
 				else {
 					s.highlight(false);
