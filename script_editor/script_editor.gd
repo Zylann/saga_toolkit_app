@@ -23,6 +23,10 @@ func _ready():
 	_text_editor.add_color_region("(", ")", comment_color)
 	_text_editor.add_color_region("/*", "*/", comment_color)
 	_text_editor.add_color_region("//", "", comment_color, false)
+	_text_editor.add_color_region("---", "", Color(0.5, 0.5, 1.0), false)
+	_text_editor.add_color_region("===", "", Color(0.5, 0.5, 1.0), false)
+	_text_editor.add_color_override("selection_color", Color(1, 1, 1, 0.1))
+	_text_editor.add_color_override("background_color", Color(0.1, 0.1, 0.1))
 
 
 func open_script(path):
