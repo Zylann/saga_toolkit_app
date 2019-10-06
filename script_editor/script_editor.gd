@@ -92,3 +92,10 @@ func export_as_html():
 	var output_path = script_path.get_basename() + ".html"
 	exporter.export_script(data, output_path)
 	OS.shell_open(output_path)
+
+
+func _on_ScriptList_item_selected(index):
+	var path = _file_list.get_item_metadata(index)
+	_set_current_script(path)
+
+

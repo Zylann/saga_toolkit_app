@@ -47,4 +47,5 @@ wrap_enabled = true
 caret_blink = true
 caret_blink_speed = 0.5
 
+[connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
