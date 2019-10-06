@@ -22,4 +22,11 @@ config/icon="res://icon.png"
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation=0
+quality/directional_shadow/size=256
+quality/shadow_atlas/size=256
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+environment/default_clear_color=Color( 0.541176, 0.541176, 0.541176, 1 )
+quality/reflections/atlas_size=256
 environment/default_environment="res://default_env.tres"
