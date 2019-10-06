@@ -6,7 +6,7 @@ onready var _character_list = get_node("CharacterList")
 var _characters_data = {}
 
 
-func merge_character_names(character_names):
+func _merge_character_names(character_names):
 	if len(character_names) == 0:
 		return
 	
@@ -32,5 +32,5 @@ func merge_character_names(character_names):
 
 func _on_ScriptEditor_script_parsed(script_path, result):
 	var cnames = result.data.character_names
-	merge_character_names(cnames)
+	_merge_character_names(cnames)
 
