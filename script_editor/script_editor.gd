@@ -121,3 +121,18 @@ func _setup_colors(character_names):
 	for cname in character_names:
 		# TODO What if the keyword contains a space? Godot doesnt check that.
 		_text_editor.add_keyword_color(cname, CHARACTER_NAME_COLOR)
+
+
+func save_current_script():
+	var script_path = _get_current_script_path()
+	if script_path == null:
+		printerr("No selected script")
+		return
+	var f = File.new()
+	var err = f.open(script_path, File.WRITE)
+	if err != OK:
+		printerr("Could not save file ", script_path, ", ", Errors.get_message(err))
+		return
+	f.store_string(_text_editor.text)
+	f.close()
+

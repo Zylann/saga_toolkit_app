@@ -14,13 +14,17 @@ onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
 const MENU_FILE_OPEN_SCRIPT = 0
 const MENU_FILE_EXPORT_AS_HTML = 1
 const MENU_FILE_QUIT = 2
+const MENU_FILE_SAVE_CURRENT_SCRIPT = 3
 
 const MENU_HELP_ABOUT = 0
 
 func _ready():
 	
 	_file_menu.get_popup().add_item("Open Script...", MENU_FILE_OPEN_SCRIPT)
+	_file_menu.get_popup().add_item("Save Current Script...", MENU_FILE_SAVE_CURRENT_SCRIPT)
+	_file_menu.get_popup().add_separator()
 	_file_menu.get_popup().add_item("Export As HTML...", MENU_FILE_EXPORT_AS_HTML)
+	_file_menu.get_popup().add_separator()
 	_file_menu.get_popup().add_item("Quit", MENU_FILE_QUIT)
 	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
 	
@@ -50,10 +54,10 @@ func _on_FileMenu_id_pressed(id):
 	match id:
 		
 		MENU_FILE_OPEN_SCRIPT:
-			var dir = UserPrefs.get_value("last_open_script_path")
-			if dir != null:
-				_open_script_dialog.current_dir = dir
-			_open_script_dialog.popup_centered_ratio(0.75)
+			_trigger_open_script_dialog()
+
+		MENU_FILE_SAVE_CURRENT_SCRIPT:
+			_trigger_save()
 		
 		MENU_FILE_EXPORT_AS_HTML:
 			_script_editor.export_as_html()
@@ -72,4 +76,22 @@ func _on_OpenScriptDialog_file_selected(path):
 	UserPrefs.set_value("last_open_script_path", path.get_base_dir())
 	_script_editor.open_script(path)
 
+
+func _on_OpenButton_pressed():
+	_trigger_open_script_dialog()
+
+
+func _on_SaveButton_pressed():
+	_trigger_save()
+
+
+func _trigger_open_script_dialog():
+	var dir = UserPrefs.get_value("last_open_script_path")
+	if dir != null:
+		_open_script_dialog.current_dir = dir
+	_open_script_dialog.popup_centered_ratio(0.75)
+
+
+func _trigger_save():
+	_script_editor.save_current_script()
 
