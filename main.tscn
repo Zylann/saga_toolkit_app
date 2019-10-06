@@ -146,4 +146,5 @@ Developped by Marc Gilleron, aka Zylann
 https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 7 )
 
+[connection signal="characters_list_changed" from="VBoxContainer/TabContainer/CharacterEditor" to="VBoxContainer/TabContainer/ScriptEditor" method="_on_CharacterEditor_characters_list_changed"]
 [connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]

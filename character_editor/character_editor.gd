@@ -1,6 +1,8 @@
 extends HSplitContainer
 
 
+signal characters_list_changed(names)
+
 onready var _character_list = get_node("CharacterList")
 
 var _characters_data = {}
@@ -28,6 +30,8 @@ func _merge_character_names(character_names):
 	
 	if added > 0:
 		_character_list.sort_items_by_text()
+	
+	emit_signal("characters_list_changed", _characters_data.keys())
 
 
 func _on_ScriptEditor_script_parsed(script_path, result):

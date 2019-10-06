@@ -4,6 +4,12 @@ const Errors = preload("res://util/errors.gd")
 const ScriptParser = preload("res://script_parser.gd")
 const HtmlExporter = preload("res://html_exporter/html_exporter.gd")
 
+const CHARACTER_NAME_COLOR = Color(0.5, 0.5, 1.0)
+const HEADING_COLOR = Color(0.3, 0.6, 0.3)
+const COMMENT_COLOR = Color(0.5, 0.5, 0.5)
+const SELECTION_COLOR = Color(1, 1, 1, 0.1)
+const BACKGROUND_COLOR = Color(0.1, 0.1, 0.1)
+
 signal script_parsed(path, result)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
@@ -16,17 +22,7 @@ var _scripts_data = {}
 
 func _ready():
 	_text_editor.syntax_highlighting = true
-	var comment_color = Color(0.5, 0.5, 0.5)
-	_text_editor.add_color_override("number_color", _text_editor.get_color("font_color"))
-	_text_editor.add_color_override("function_color", _text_editor.get_color("font_color"))
-	_text_editor.add_color_region("<", ">", comment_color)
-	_text_editor.add_color_region("(", ")", comment_color)
-	_text_editor.add_color_region("/*", "*/", comment_color)
-	_text_editor.add_color_region("//", "", comment_color, false)
-	_text_editor.add_color_region("---", "", Color(0.5, 0.5, 1.0), false)
-	_text_editor.add_color_region("===", "", Color(0.5, 0.5, 1.0), false)
-	_text_editor.add_color_override("selection_color", Color(1, 1, 1, 0.1))
-	_text_editor.add_color_override("background_color", Color(0.1, 0.1, 0.1))
+	_setup_colors([])
 
 
 func open_script(path):
@@ -103,3 +99,25 @@ func _on_ScriptList_item_selected(index):
 	_set_current_script(path)
 
 
+func _on_CharacterEditor_characters_list_changed(names):
+	_setup_colors(names)
+
+
+func _setup_colors(character_names):
+	
+	_text_editor.clear_colors()
+
+	_text_editor.add_color_override("number_color", _text_editor.get_color("font_color"))
+	_text_editor.add_color_override("function_color", _text_editor.get_color("font_color"))
+	_text_editor.add_color_region("<", ">", COMMENT_COLOR)
+	_text_editor.add_color_region("(", ")", COMMENT_COLOR)
+	_text_editor.add_color_region("/*", "*/", COMMENT_COLOR)
+	_text_editor.add_color_region("//", "", COMMENT_COLOR, false)
+	_text_editor.add_color_region("---", "", HEADING_COLOR, false)
+	_text_editor.add_color_region("===", "", HEADING_COLOR, false)
+	_text_editor.add_color_override("selection_color", SELECTION_COLOR)
+	_text_editor.add_color_override("background_color", BACKGROUND_COLOR)
+
+	for cname in character_names:
+		# TODO What if the keyword contains a space? Godot doesnt check that.
+		_text_editor.add_keyword_color(cname, CHARACTER_NAME_COLOR)
