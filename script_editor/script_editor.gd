@@ -9,6 +9,7 @@ const HEADING_COLOR = Color(0.3, 0.6, 0.3)
 const COMMENT_COLOR = Color(0.5, 0.5, 0.5)
 const SELECTION_COLOR = Color(1, 1, 1, 0.1)
 const BACKGROUND_COLOR = Color(0.1, 0.1, 0.1)
+const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
 
 signal script_parsed(path, result)
 
@@ -57,6 +58,7 @@ func _set_current_script(path):
 	var data = _scripts_data[path]
 	
 	_text_editor.text = data.text
+	_text_editor.cursor_set_line(0, true, false)
 	
 	_scene_list.clear()
 	for scene in data.scenes:
@@ -112,11 +114,14 @@ func _setup_colors(character_names):
 	_text_editor.add_color_region("<", ">", COMMENT_COLOR)
 	_text_editor.add_color_region("(", ")", COMMENT_COLOR)
 	_text_editor.add_color_region("/*", "*/", COMMENT_COLOR)
+	_text_editor.add_color_region("*", "*", COMMENT_COLOR)
 	_text_editor.add_color_region("//", "", COMMENT_COLOR, false)
 	_text_editor.add_color_region("---", "", HEADING_COLOR, false)
 	_text_editor.add_color_region("===", "", HEADING_COLOR, false)
 	_text_editor.add_color_override("selection_color", SELECTION_COLOR)
 	_text_editor.add_color_override("background_color", BACKGROUND_COLOR)
+	_text_editor.add_color_override("current_line_color", CURRENT_LINE_COLOR)
+	_text_editor.highlight_current_line = true
 
 	for cname in character_names:
 		# TODO What if the keyword contains a space? Godot doesnt check that.
