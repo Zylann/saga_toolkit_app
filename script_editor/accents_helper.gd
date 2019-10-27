@@ -1,28 +1,25 @@
 extends HBoxContainer
 
 
-export(NodePath) var text_edit_path
+var _text_edit = null
 
 const letters = "àâéèêôùû"
 
 
 func _ready():
-	assert(_get_text_edit() != null)
 	for letter in letters:
 		var b = Button.new()
 		b.text = letter
 		b.connect("pressed", self, "_on_button_pressed", [letter])
 		add_child(b)
-	get_parent().notification(NOTIFICATION_SORT_CHILDREN)
+
+
+func set_text_edit(te):
+	assert(te != null)
+	assert(te is TextEdit)
+	_text_edit = te
 
 
 func _on_button_pressed(letter):
-	var text_edit = _get_text_edit()
-	text_edit.insert_text_at_cursor(letter)
-	text_edit.grab_focus()
-
-
-func _get_text_edit():
-	var te = get_node(text_edit_path)
-	assert(te is TextEdit)
-	return te
+	_text_edit.insert_text_at_cursor(letter)
+	_text_edit.grab_focus()

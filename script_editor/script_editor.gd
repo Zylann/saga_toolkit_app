@@ -26,6 +26,7 @@ var _project = ScriptData.Project.new()
 func _ready():
 	_text_editor.syntax_highlighting = true
 	_setup_colors([])
+	_accent_buttons.set_text_edit(_text_editor)
 
 
 func _get_episode_from_path(fpath):

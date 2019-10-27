@@ -47,21 +47,20 @@ margin_bottom = 800.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 817.0
-margin_bottom = 24.0
+margin_bottom = 16.0
 
 [node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]
 margin_right = 813.0
-margin_bottom = 24.0
+margin_bottom = 16.0
 size_flags_horizontal = 3
 
 [node name="AccentsHelper" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
 margin_left = 817.0
 margin_right = 817.0
-margin_bottom = 24.0
-text_edit_path = NodePath("../../TextEditor")
+margin_bottom = 16.0
 
 [node name="TextEditor" type="TextEdit" parent="VBoxContainer"]
-margin_top = 28.0
+margin_top = 20.0
 margin_right = 817.0
 margin_bottom = 800.0
 size_flags_vertical = 3
