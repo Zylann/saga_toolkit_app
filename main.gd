@@ -4,6 +4,7 @@ const UserPrefs = preload("util/userprefs.gd")
 
 onready var _file_menu = get_node("VBoxContainer/MenuBar/FileMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
+onready var _view_menu = get_node("VBoxContainer/MenuBar/ViewMenu")
 onready var _open_script_dialog = get_node("OpenScriptDialog")
 onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
@@ -18,6 +19,8 @@ const MENU_FILE_SAVE_CURRENT_SCRIPT = 3
 
 const MENU_HELP_ABOUT = 0
 
+const MENU_VIEW_ACCENT_BUTTONS = 0
+
 func _ready():
 	
 	_file_menu.get_popup().add_item("Open Script...", MENU_FILE_OPEN_SCRIPT)
@@ -30,6 +33,9 @@ func _ready():
 	
 	_help_menu.get_popup().add_item("About...", MENU_HELP_ABOUT)
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
+	
+	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
+	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
 	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
@@ -72,6 +78,12 @@ func _on_HelpMenu_id_pressed(id):
 	match id:
 		MENU_HELP_ABOUT:
 			_about_window.popup_centered_minsize()
+
+
+func _on_ViewMenu_id_pressed(id):
+	match id:
+		MENU_VIEW_ACCENT_BUTTONS:
+			_script_editor.toggle_accent_buttons()
 
 
 func _on_OpenScriptDialog_file_selected(path):

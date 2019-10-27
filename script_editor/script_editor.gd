@@ -15,8 +15,9 @@ const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
 signal script_parsed(project, path)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
-onready var _text_editor = get_node("TextEditor")
+onready var _text_editor = get_node("VBoxContainer/TextEditor")
 onready var _scene_list = get_node("VSplitContainer/VBoxContainer/SceneList")
+onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelper")
 
 
 var _project = ScriptData.Project.new()
@@ -168,3 +169,6 @@ func save_current_script():
 	f.store_string(_text_editor.text)
 	f.close()
 
+
+func toggle_accent_buttons():
+	_accent_buttons.visible = not _accent_buttons.visible
