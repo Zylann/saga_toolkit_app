@@ -94,6 +94,9 @@ func _set_current_script(path):
 		var i = _scene_list.get_item_count()
 		_scene_list.add_item(scene.title)
 		_scene_list.set_item_metadata(i, scene)
+	
+	# TODO To workaround this limitation, we may instance multiple TextEdits
+	_text_editor.clear_undo_history()
 
 
 func _on_SceneList_item_selected(index):
