@@ -1,6 +1,6 @@
 
 const Errors = preload("res://util/errors.gd")
-const ScriptParser = preload("res://script_parser.gd")
+const ScriptData = preload("res://script_data.gd")
 
 const TEMPLATES_PATH = "res://html_exporter/templates/"
 
@@ -25,15 +25,17 @@ func export_script(script_data, output_path):
 	for scene_index in len(script_data.scenes):
 		var scene = script_data.scenes[scene_index]
 		
-		content += "<h2 id=\"{0}\">{1}</h2>\n".format([scene_index, scene.title.xml_escape()])
+		content += "<h2 id=\"{0}\">{1}</h2>\n" \
+			.format([scene_index, scene.title.xml_escape()])
 		
 		for e in scene.elements:
 			
-			if e is ScriptParser.Statement:
+			if e is ScriptData.Statement:
 				
 				var note_html = ""
 				if len(e.note) != 0:
-					note_html = "<span class=\"note\">, {0}</span>".format([e.note.xml_escape()])
+					note_html = "<span class=\"note\">, {0}</span>" \
+						.format([e.note.xml_escape()])
 				
 				content += _statement_template.format({
 					"character_name": e.character_name.xml_escape(),
@@ -44,12 +46,12 @@ func export_script(script_data, output_path):
 				
 				statement_index += 1
 			
-			elif e is ScriptParser.Note:
+			elif e is ScriptData.Note:
 				content += _note_template.format({
 					"text": e.text.xml_escape()
 				})
 			
-			elif e is ScriptParser.Description:
+			elif e is ScriptData.Description:
 				# TODO Proper template
 				content += _note_template.format({
 					"text": e.text.xml_escape()

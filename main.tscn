@@ -4,9 +4,9 @@
 [ext_resource path="res://icons/icon_load.svg" type="Texture" id=2]
 [ext_resource path="res://icons/icon_save.svg" type="Texture" id=3]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=4]
-[ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=5]
+[ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://episode_editor/episode_editor.tscn" type="PackedScene" id=6]
-[ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=7]
+[ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=7]
 [ext_resource path="res://icon_white.png" type="Texture" id=8]
 [ext_resource path="res://util/rich_text_label_hyperlinks.gd" type="Script" id=9]
 
@@ -70,7 +70,7 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="CharacterEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 5 )]
+[node name="CharacterEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 7 )]
 visible = false
 margin_left = 4.0
 margin_top = 32.0
@@ -84,7 +84,7 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="ProjectEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 7 )]
+[node name="ProjectEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 5 )]
 visible = false
 margin_left = 4.0
 margin_top = 32.0
@@ -112,7 +112,6 @@ current_dir = "D:/PROJETS/INFO/GODOT/Games/SagaTK"
 current_path = "D:/PROJETS/INFO/GODOT/Games/SagaTK/"
 
 [node name="AboutWindow" type="AcceptDialog" parent="."]
-editor/display_folded = true
 margin_left = 318.0
 margin_top = 216.0
 margin_right = 820.0
@@ -163,8 +162,6 @@ Developped by Marc Gilleron, aka Zylann
 
 https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
-
 [connection signal="pressed" from="VBoxContainer/MenuBar/OpenButton" to="." method="_on_OpenButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/MenuBar/SaveButton" to="." method="_on_SaveButton_pressed"]
-[connection signal="characters_list_changed" from="VBoxContainer/TabContainer/CharacterEditor" to="VBoxContainer/TabContainer/ScriptEditor" method="_on_CharacterEditor_characters_list_changed"]
 [connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]

@@ -3,6 +3,7 @@ extends HSplitContainer
 const Errors = preload("res://util/errors.gd")
 const ScriptParser = preload("res://script_parser.gd")
 const HtmlExporter = preload("res://html_exporter/html_exporter.gd")
+const ScriptData = preload("./../script_data.gd")
 
 const CHARACTER_NAME_COLOR = Color(0.5, 0.5, 1.0)
 const HEADING_COLOR = Color(0.3, 0.6, 0.3)
@@ -11,14 +12,14 @@ const SELECTION_COLOR = Color(1, 1, 1, 0.1)
 const BACKGROUND_COLOR = Color(0.1, 0.1, 0.1)
 const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
 
-signal script_parsed(path, result)
+signal script_parsed(project, path)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
 onready var _text_editor = get_node("TextEditor")
 onready var _scene_list = get_node("VSplitContainer/VBoxContainer/SceneList")
 
 
-var _scripts_data = {}
+var _project = ScriptData.Project.new()
 
 
 func _ready():
@@ -26,9 +27,16 @@ func _ready():
 	_setup_colors([])
 
 
+func _get_episode_from_path(fpath):
+	for e in _project.episodes:
+		if e.file_path == fpath:
+			return e
+	return null
+
+
 func open_script(path):
 	
-	if _scripts_data.has(path):
+	if _get_episode_from_path(path) != null:
 		print("Script ", path, " is already open")
 		return
 	
@@ -39,23 +47,42 @@ func open_script(path):
 		return
 	var text = f.get_as_text()
 	f.close()
+
+	var errors = _load_script_data(_project, text, path)
 	
 	var filename = path.get_file()
 	var i = _file_list.get_item_count()
 	_file_list.add_item(filename)
 	_file_list.set_item_metadata(i, path)
 	
-	var res = ScriptParser.parse_text(text)
-	
-	_scripts_data[path] = res.data
+	_update_character_colors()
+
 	_file_list.select(i)
 	_set_current_script(path)
 	
-	emit_signal("script_parsed", path, res)
+	emit_signal("script_parsed", _project, path, errors)
+
+
+static func _load_script_data(project: ScriptData.Project, text: String, path: String) -> Array:
+	
+	var res = ScriptParser.parse_episode(text)
+	res.data.file_path = path
+	project.episodes.append(res.data)
+	
+	var character_names : Dictionary = res.data.character_names
+	if len(character_names) != 0:
+		for cname in character_names:
+			if project.characters.has(cname):
+				continue
+			var c := ScriptData.Character.new()
+			c.name = cname
+			project.characters[cname] = c
+	
+	return res.errors
 
 
 func _set_current_script(path):
-	var data = _scripts_data[path]
+	var data = _get_episode_from_path(path)
 	
 	_text_editor.text = data.text
 	_text_editor.cursor_set_line(0, true, false)
@@ -89,7 +116,7 @@ func export_as_html():
 	if script_path == null:
 		printerr("No selected script")
 		return
-	var data = _scripts_data[script_path]
+	var data = _get_episode_from_path(script_path)
 	var exporter = HtmlExporter.new()
 	var output_path = script_path.get_basename() + ".html"
 	exporter.export_script(data, output_path)
@@ -101,8 +128,8 @@ func _on_ScriptList_item_selected(index):
 	_set_current_script(path)
 
 
-func _on_CharacterEditor_characters_list_changed(names):
-	_setup_colors(names)
+func _update_character_colors():
+	_setup_colors(_project.characters.keys())
 
 
 func _setup_colors(character_names):

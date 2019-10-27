@@ -1,5 +1,6 @@
 
 const Accents = preload("util/accents.gd")
+const ScriptData = preload("./script_data.gd")
 
 # These may be ignored because they are not proper characters,
 # but rather "all of them" or "all those present in scene"
@@ -10,39 +11,11 @@ const _ignored_character_names = {
 }
 
 
-class ScriptData:
-	var title = "Untitled"
-	var scenes = []
-	var character_names = {}
-	var text = ""
-
-
-class Scene:
-	var title = ""
-	var line_index = 0
-	var elements = []
-
-
-class Note:
-	var text = ""
-
-
-class Description:
-	var text = ""
-
-
-class Statement:
-	var character_name = ""
-	var note = ""
-	var text = ""
-
-
-static func parse_text(text):
+static func parse_episode(text):
 	
 	var time_before = OS.get_ticks_msec()
 	
-	var lines = text.split("\n")
-	var res = parse_scenes(lines)
+	var res = _parse_episode(text)
 	
 	res.data.text = text
 
@@ -59,9 +32,11 @@ static func parse_text(text):
 	return res
 
 
-static func parse_scenes(lines):
+static func _parse_episode(text):
+
+	var lines = text.split("\n")
 	
-	var data = ScriptData.new()
+	var data = ScriptData.Episode.new()
 	var scene = null
 	
 	var unrecognized_content = {}
@@ -74,13 +49,13 @@ static func parse_scenes(lines):
 		var line = raw_line.strip_edges()
 		
 		if line.begins_with("//"):
-			var note = Note.new()
+			var note = ScriptData.Note.new()
 			note.text = line
 			scene.elements.append(note)
 
 		elif line.begins_with("/*"):
 			var begin_index = line_index
-			var note = Note.new()
+			var note = ScriptData.Note.new()
 			while line_index < len(lines):
 				if note.text == "":
 					note.text = line
@@ -95,7 +70,7 @@ static func parse_scenes(lines):
 		
 		elif line.begins_with("(") or line.begins_with("<") \
 		or line.begins_with("*") or line.begins_with("#"):
-			var desc = Description.new()
+			var desc = ScriptData.Description.new()
 			desc.text = line
 			scene.elements.append(desc)
 
@@ -104,7 +79,7 @@ static func parse_scenes(lines):
 			unrecognized_content.erase(line_index - 1)
 		
 		elif line.begins_with("---"):
-			scene = Scene.new()
+			scene = ScriptData.Scene.new()
 			scene.title = lines[line_index - 1].strip_edges()
 			scene.line_index = line_index - 1
 			data.scenes.append(scene)
@@ -123,14 +98,14 @@ static func parse_scenes(lines):
 		
 		elif line != "" and (raw_line.begins_with("    ") or raw_line.begins_with("\t")):
 			# TODO This is for poems or songs, find something better than defaulting to some crowd
-			var statement = Statement.new()
+			var statement = ScriptData.Statement.new()
 			statement.text = line
 			statement.character_name = "FOULE"
 			_add_statement(scene, data, statement)
 		
 		elif line.begins_with("FIN"):
 			# The End
-			var note = Note.new()
+			var note = ScriptData.Note.new()
 			note.text = line
 			scene.elements.append(note)
 
@@ -200,7 +175,7 @@ static func parse_statement(lines, line_index):
 	if char_name == "":
 		return null
 	
-	var statement = Statement.new()
+	var statement = ScriptData.Statement.new()
 	statement.character_name = char_name
 	
 	var head_note = line.substr(len(char_name), dash_index - len(char_name)).strip_edges()

@@ -35,15 +35,17 @@ func _ready():
 	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
 
 	# TEST
-	_script_editor.open_script("D:/PROJETS/AUDIO/Enfer Liquide/Script/Enfer Liquide/Script.txt")
+	for i in 8:
+		_script_editor.open_script(\
+			str("D:/PROJETS/AUDIO/Enfer Liquide/Script/Episodes/ep", (i+1), ".txt"))
 
 
-func _on_ScriptEditor_script_parsed(path, result):
-	if len(result.errors) > 0:
-		if len(result.errors) == 1:
+func _on_ScriptEditor_script_parsed(project, path, errors):
+	if len(errors) > 0:
+		if len(errors) == 1:
 			_status_label.text = "Found 1 error in script"
 		else:
-			_status_label.text = "Found {0} errors in script".format([len(result.errors)])
+			_status_label.text = "Found {0} errors in script".format([len(errors)])
 		_status_label.modulate = Color(1, 0.2, 0.1)
 	else:
 		_status_label.text = "Script successfully parsed"

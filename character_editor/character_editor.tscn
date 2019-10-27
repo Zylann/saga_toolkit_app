@@ -90,3 +90,4 @@ size_flags_vertical = 3
 caret_blink = true
 caret_blink_speed = 0.5
 
+[connection signal="item_selected" from="CharacterList" to="." method="_on_CharacterList_item_selected"]
