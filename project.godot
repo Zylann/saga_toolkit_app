@@ -20,6 +20,10 @@ run/main_scene="res://main.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
 
+[display]
+
+window/size/height=800
+
 [rendering]
 
 quality/intended_usage/framebuffer_allocation=0
