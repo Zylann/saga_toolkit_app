@@ -29,16 +29,9 @@ func _ready():
 	_accent_buttons.set_text_edit(_text_editor)
 
 
-func _get_episode_from_path(fpath):
-	for e in _project.episodes:
-		if e.file_path == fpath:
-			return e
-	return null
-
-
 func open_script(path):
 	
-	if _get_episode_from_path(path) != null:
+	if _project.get_episode_from_path(path) != null:
 		print("Script ", path, " is already open")
 		return
 	
@@ -50,7 +43,7 @@ func open_script(path):
 	var text = f.get_as_text()
 	f.close()
 
-	var errors = _load_script_data(_project, text, path)
+	var errors = _update_episode_data(_project, text, path)
 	
 	var filename = path.get_file()
 	var i = _file_list.get_item_count()
@@ -65,13 +58,20 @@ func open_script(path):
 	emit_signal("script_parsed", _project, path, errors)
 
 
-static func _load_script_data(project: ScriptData.Project, text: String, path: String) -> Array:
+static func _update_episode_data( \
+		project: ScriptData.Project, text: String, path: String) -> Array:
 	
 	var res = ScriptParser.parse_episode(text)
-	res.data.file_path = path
-	project.episodes.append(res.data)
+	var ep = res.data
+	ep.file_path = path
 	
-	var character_names : Dictionary = res.data.character_names
+	var epi = project.get_episode_index_from_path(path)
+	if epi == -1:
+		project.episodes.append(ep)
+	else:
+		project.episodes[epi] = ep
+	
+	var character_names : Dictionary = ep.character_names
 	if len(character_names) != 0:
 		for cname in character_names:
 			if project.characters.has(cname):
@@ -84,7 +84,7 @@ static func _load_script_data(project: ScriptData.Project, text: String, path: S
 
 
 func _set_current_script(path):
-	var data = _get_episode_from_path(path)
+	var data = _project.get_episode_from_path(path)
 	
 	_text_editor.text = data.text
 	_text_editor.cursor_set_line(0, true, false)
@@ -121,7 +121,7 @@ func export_as_html():
 	if script_path == null:
 		printerr("No selected script")
 		return
-	var data = _get_episode_from_path(script_path)
+	var data = _project.get_episode_from_path(script_path)
 	var exporter = HtmlExporter.new()
 	var output_path = script_path.get_basename() + ".html"
 	exporter.export_script(data, output_path)
@@ -172,6 +172,7 @@ func save_current_script():
 		return
 	f.store_string(_text_editor.text)
 	f.close()
+	_update_episode_data(_project, _text_editor.text, script_path)
 
 
 func toggle_accent_buttons():

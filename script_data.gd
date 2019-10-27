@@ -5,6 +5,18 @@ class Project:
 	var episodes = []
 	var characters = {}
 
+	func get_episode_index_from_path(fpath):
+		for i in len(episodes):
+			if episodes[i].file_path == fpath:
+				return i
+		return -1
+
+	func get_episode_from_path(fpath):
+		for e in episodes:
+			if e.file_path == fpath:
+				return e
+		return null
+
 
 class Episode:
 	var title = ""
