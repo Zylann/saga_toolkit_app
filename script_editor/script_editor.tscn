@@ -63,7 +63,7 @@ margin_bottom = 16.0
 [node name="TextEditor" type="TextEdit" parent="VBoxContainer"]
 margin_top = 20.0
 margin_right = 817.0
-margin_bottom = 772.0
+margin_bottom = 800.0
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
 show_line_numbers = true
@@ -73,6 +73,7 @@ caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="SearchBox" type="HBoxContainer" parent="VBoxContainer"]
+visible = false
 margin_top = 776.0
 margin_right = 817.0
 margin_bottom = 800.0
