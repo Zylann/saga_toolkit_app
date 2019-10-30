@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://script_editor/script_editor.gd" type="Script" id=1]
 [ext_resource path="res://fonts/hack_regular.tres" type="DynamicFont" id=2]
 [ext_resource path="res://script_editor/accents_helper.tscn" type="PackedScene" id=3]
+[ext_resource path="res://script_editor/search_bar.gd" type="Script" id=4]
 
 [node name="ScriptEditor" type="HSplitContainer"]
 anchor_right = 1.0
@@ -62,7 +63,7 @@ margin_bottom = 16.0
 [node name="TextEditor" type="TextEdit" parent="VBoxContainer"]
 margin_top = 20.0
 margin_right = 817.0
-margin_bottom = 800.0
+margin_bottom = 772.0
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
 show_line_numbers = true
@@ -70,5 +71,44 @@ smooth_scrolling = true
 wrap_enabled = true
 caret_blink = true
 caret_blink_speed = 0.5
+
+[node name="SearchBox" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 776.0
+margin_right = 817.0
+margin_bottom = 800.0
+script = ExtResource( 4 )
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/SearchBox"]
+margin_right = 700.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/SearchBox"]
+margin_left = 704.0
+margin_top = 5.0
+margin_right = 704.0
+margin_bottom = 19.0
+
+[node name="NextButton" type="Button" parent="VBoxContainer/SearchBox"]
+margin_left = 708.0
+margin_right = 750.0
+margin_bottom = 24.0
+text = "Next"
+
+[node name="PrevButton" type="Button" parent="VBoxContainer/SearchBox"]
+margin_left = 754.0
+margin_right = 794.0
+margin_bottom = 24.0
+text = "Prev"
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/SearchBox"]
+margin_left = 798.0
+margin_right = 817.0
+margin_bottom = 24.0
+text = "x"
 [connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
+[connection signal="text_entered" from="VBoxContainer/SearchBox/LineEdit" to="VBoxContainer/SearchBox" method="_on_LineEdit_text_entered"]
+[connection signal="pressed" from="VBoxContainer/SearchBox/NextButton" to="VBoxContainer/SearchBox" method="_on_NextButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SearchBox/PrevButton" to="VBoxContainer/SearchBox" method="_on_PrevButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SearchBox/CloseButton" to="VBoxContainer/SearchBox" method="_on_CloseButton_pressed"]

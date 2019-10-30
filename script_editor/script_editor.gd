@@ -16,6 +16,7 @@ signal script_parsed(project, path)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
 onready var _text_editor = get_node("VBoxContainer/TextEditor")
+onready var _search_bar = get_node("VBoxContainer/SearchBox")
 onready var _scene_list = get_node("VSplitContainer/VBoxContainer/SceneList")
 onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelper")
 
@@ -27,6 +28,7 @@ func _ready():
 	_text_editor.syntax_highlighting = true
 	_setup_colors([])
 	_accent_buttons.set_text_edit(_text_editor)
+	_search_bar.set_text_edit(_text_editor)
 
 
 func open_script(path):
