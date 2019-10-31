@@ -179,3 +179,25 @@ func save_current_script():
 
 func toggle_accent_buttons():
 	_accent_buttons.visible = not _accent_buttons.visible
+
+
+func get_current_script_statistics():
+	var path = _get_current_script_path()
+	if path == "":
+		return null
+	var ep = _project.get_episode_from_path(path)
+	if ep == null:
+		return null
+	var statement_count = 0
+	for scene in ep.scenes:
+		for elem in scene.elements:
+			if elem is ScriptData.Statement:
+				statement_count += 1
+	print("Char count ", len(ep.text))
+	# This is pure guesswork. For an accurate measure, read your text out loud
+	var estimated_duration = 60 * len(ep.text) / 1200
+	return {
+		"statement_count": statement_count,
+		"estimated_duration": estimated_duration
+	}
+

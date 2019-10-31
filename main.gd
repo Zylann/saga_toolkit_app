@@ -11,6 +11,7 @@ onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEd
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
+onready var _statistics_window = get_node("StatisticsWindow")
 
 const MENU_FILE_OPEN_SCRIPT = 0
 const MENU_FILE_EXPORT_AS_HTML = 1
@@ -20,6 +21,7 @@ const MENU_FILE_SAVE_CURRENT_SCRIPT = 3
 const MENU_HELP_ABOUT = 0
 
 const MENU_VIEW_ACCENT_BUTTONS = 0
+const MENU_VIEW_STATISTICS = 1
 
 func _ready():
 	
@@ -35,6 +37,7 @@ func _ready():
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
 	
 	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
+	_view_menu.get_popup().add_item("Statistics", MENU_VIEW_STATISTICS)
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
@@ -84,6 +87,9 @@ func _on_ViewMenu_id_pressed(id):
 	match id:
 		MENU_VIEW_ACCENT_BUTTONS:
 			_script_editor.toggle_accent_buttons()
+		
+		MENU_VIEW_STATISTICS:
+			_show_statistics()
 
 
 func _on_OpenScriptDialog_file_selected(path):
@@ -109,3 +115,21 @@ func _trigger_open_script_dialog():
 func _trigger_save():
 	_script_editor.save_current_script()
 
+
+func _show_statistics():
+	var stats = _script_editor.get_current_script_statistics()
+	print("Stats: ", stats)
+	if stats == null:
+		_statistics_window.dialog_text = "No statistics available."
+	else:
+		_statistics_window.dialog_text = PoolStringArray([
+			str("Statements: ", stats.statement_count),
+			str("Estimated duration: ", _format_time(stats.estimated_duration))
+		]).join("\n")
+	_statistics_window.popup_centered_minsize()
+
+
+static func _format_time(total_seconds):
+	var mins = total_seconds / 60
+	var seconds = total_seconds % 60
+	return str(mins, " min ", seconds, " seconds")

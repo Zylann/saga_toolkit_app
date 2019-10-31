@@ -174,6 +174,11 @@ Developped by Marc Gilleron, aka Zylann
 
 https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
+
+[node name="StatisticsWindow" type="AcceptDialog" parent="."]
+margin_right = 83.0
+margin_bottom = 58.0
+window_title = "Statistics"
 [connection signal="pressed" from="VBoxContainer/MenuBar/OpenButton" to="." method="_on_OpenButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/MenuBar/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]
