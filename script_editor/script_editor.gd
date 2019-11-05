@@ -22,6 +22,7 @@ onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelpe
 
 
 var _project = ScriptData.Project.new()
+var _modified_files = {}
 
 
 func _ready():
@@ -175,6 +176,11 @@ func save_current_script():
 	f.store_string(_text_editor.text)
 	f.close()
 	_update_episode_data(_project, _text_editor.text, script_path)
+	var i = _get_file_list_index(script_path)
+	assert(i != -1)
+	_file_list.set_item_text(i, script_path.get_file())
+	_modified_files.erase(script_path)
+	
 
 
 func toggle_accent_buttons():
@@ -200,4 +206,22 @@ func get_current_script_statistics():
 		"statement_count": statement_count,
 		"estimated_duration": estimated_duration
 	}
+
+
+func _on_TextEditor_text_changed():
+	var path = _get_current_script_path()
+	if path != "":
+		if not _modified_files.has(path):
+			_modified_files[path] = true
+			var i = _get_file_list_index(path)
+			assert(i != -1)
+			_file_list.set_item_text(i, str(path.get_file(), " (*)"))
+
+
+func _get_file_list_index(path):
+	for i in _file_list.get_item_count():
+		var meta = _file_list.get_item_metadata(i)
+		if meta == path:
+			return i
+	return -1
 

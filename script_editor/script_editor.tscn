@@ -109,6 +109,7 @@ margin_bottom = 24.0
 text = "x"
 [connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
+[connection signal="text_changed" from="VBoxContainer/TextEditor" to="." method="_on_TextEditor_text_changed"]
 [connection signal="text_entered" from="VBoxContainer/SearchBox/LineEdit" to="VBoxContainer/SearchBox" method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/SearchBox/NextButton" to="VBoxContainer/SearchBox" method="_on_NextButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SearchBox/PrevButton" to="VBoxContainer/SearchBox" method="_on_PrevButton_pressed"]
