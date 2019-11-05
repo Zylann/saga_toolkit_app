@@ -1,8 +1,6 @@
 extends HBoxContainer
 
 
-onready var _next_button = get_node("NextButton")
-onready var _prev_button = get_node("PrevButton")
 onready var _line_edit = get_node("LineEdit")
 onready var _label = get_node("Label")
 
@@ -63,6 +61,7 @@ func _search(flags):
 	
 	var text = _line_edit.text
 	
+	# A little inspired by Godot's FindReplaceBar
 	var search_col = _text_edit.cursor_get_column()
 	var search_line = _text_edit.cursor_get_line()
 	if search_line == _result_line:
@@ -77,7 +76,7 @@ func _search(flags):
 			else:
 				search_col = _result_col + len(text)
 	
-	print("Searching from ", search_line, ", col ", search_col)
+	#print("Searching from ", search_line, ", col ", search_col)
 	var res = _text_edit.search(text, flags, search_line, search_col)
 	
 	if len(res) == 0:
@@ -92,6 +91,11 @@ func _search(flags):
 		_text_edit.cursor_set_line(_result_line)
 		_text_edit.cursor_set_column(_result_col)
 		_text_edit.select(_result_line, _result_col, _result_line, _result_col + len(text))
+
+	# TODO Had to wait one frame for centering to work
+	# See https://github.com/godotengine/godot/issues/33375
+	yield(get_tree(), "idle_frame")
+	_text_edit.center_viewport_to_cursor()
 
 
 func _on_CloseButton_pressed():
