@@ -76,7 +76,7 @@ const _accentued_to_non_accentued = {
 	"ŕ": "r",
 }
 
-static func remove_accents(s):
+static func remove_accents(s: String):
 	var res = ""
 	for c in s:
 		if _accentued_to_non_accentued.has(c):
@@ -85,3 +85,13 @@ static func remove_accents(s):
 			res += c
 	return res
 
+
+static func is_accentued_char(c: String) -> bool:
+	return _accentued_to_non_accentued.has(c)
+
+
+static func has_accents(s: String) -> bool:
+	for c in s:
+		if _accentued_to_non_accentued.has(c):
+			return true
+	return false

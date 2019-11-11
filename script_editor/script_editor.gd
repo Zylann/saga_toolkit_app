@@ -4,6 +4,8 @@ const Errors = preload("res://util/errors.gd")
 const ScriptParser = preload("res://script_parser.gd")
 const HtmlExporter = preload("res://html_exporter/html_exporter.gd")
 const ScriptData = preload("./../script_data.gd")
+const AccentorController = preload("./../spell_checker/accentor_controller.gd")
+const WordsDictionary = preload("../words_dictionary.gd")
 
 const CHARACTER_NAME_COLOR = Color(0.5, 0.5, 1.0)
 const HEADING_COLOR = Color(0.3, 0.6, 0.3)
@@ -19,6 +21,7 @@ onready var _text_editor = get_node("VBoxContainer/TextEditor")
 onready var _search_bar = get_node("VBoxContainer/SearchBox")
 onready var _scene_list = get_node("VSplitContainer/VBoxContainer/SceneList")
 onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelper")
+onready var _spell_check_panel = get_node("VBoxContainer/SpellCheckPanel")
 
 
 var _project = ScriptData.Project.new()
@@ -28,8 +31,20 @@ var _modified_files = {}
 func _ready():
 	_text_editor.syntax_highlighting = true
 	_setup_colors([])
+	
 	_accent_buttons.set_text_edit(_text_editor)
+	
 	_search_bar.set_text_edit(_text_editor)
+	
+	var words_dictionary = WordsDictionary.new()
+	words_dictionary.load_from_file(WordsDictionary.FRENCH_PATH)
+
+	var accentor_controller = AccentorController.new()
+	accentor_controller.set_words_dictionary(words_dictionary)
+	
+	# TODO Have an actual spell-checker controller too
+	_spell_check_panel.set_text_edit(_text_editor)
+	_spell_check_panel.set_controller(accentor_controller)
 
 
 func open_script(path):

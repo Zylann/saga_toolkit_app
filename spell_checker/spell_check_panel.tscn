@@ -1,0 +1,96 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://spell_checker/spell_check_panel.gd" type="Script" id=1]
+
+[node name="SpellCheckPanel" type="Control"]
+margin_left = 1.0
+margin_top = -1.0
+margin_right = 647.0
+margin_bottom = 143.0
+rect_min_size = Vector2( 0, 144 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 513.0
+margin_bottom = 136.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_right = 513.0
+margin_bottom = 14.0
+text = "Suggestions:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SuggestionList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 513.0
+margin_bottom = 136.0
+size_flags_vertical = 3
+items = [ "Item 0", null, false, "Item 1", null, false, "Item 2", null, false, "Item 3", null, false, "Item 4", null, false, "Item 5", null, false, "Item 6", null, false, "Item 7", null, false, "Item 8", null, false, "Item 9", null, false, "Item 10", null, false ]
+max_columns = 0
+icon_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 517.0
+margin_right = 638.0
+margin_bottom = 136.0
+
+[node name="SkipButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+margin_right = 121.0
+margin_bottom = 20.0
+text = "Skip"
+
+[node name="CorrectButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+margin_top = 24.0
+margin_right = 121.0
+margin_bottom = 44.0
+text = "Correct"
+
+[node name="AddToDictionaryButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+margin_top = 48.0
+margin_right = 121.0
+margin_bottom = 68.0
+disabled = true
+text = "Add to dictionary"
+
+[node name="IgnoreAllButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+margin_top = 72.0
+margin_right = 121.0
+margin_bottom = 92.0
+text = "Ignore All"
+
+[node name="Spacer" type="Control" parent="HBoxContainer/HBoxContainer"]
+margin_top = 96.0
+margin_right = 121.0
+margin_bottom = 112.0
+size_flags_vertical = 3
+
+[node name="CloseButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+margin_top = 116.0
+margin_right = 121.0
+margin_bottom = 136.0
+text = "Close"
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/CorrectButton" to="." method="_on_CorrectButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/AddToDictionaryButton" to="." method="_on_AddToDictionaryButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/IgnoreAllButton" to="." method="_on_IgnoreAllButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/HBoxContainer/CloseButton" to="." method="_on_CloseButton_pressed"]

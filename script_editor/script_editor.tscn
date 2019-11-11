@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://script_editor/script_editor.gd" type="Script" id=1]
 [ext_resource path="res://fonts/hack_regular.tres" type="DynamicFont" id=2]
 [ext_resource path="res://script_editor/accents_helper.tscn" type="PackedScene" id=3]
 [ext_resource path="res://script_editor/search_bar.gd" type="Script" id=4]
+[ext_resource path="res://spell_checker/spell_check_panel.tscn" type="PackedScene" id=5]
 
 [node name="ScriptEditor" type="HSplitContainer"]
 anchor_right = 1.0
@@ -107,6 +108,13 @@ margin_left = 798.0
 margin_right = 817.0
 margin_bottom = 24.0
 text = "x"
+
+[node name="SpellCheckPanel" parent="VBoxContainer" instance=ExtResource( 5 )]
+visible = false
+margin_left = 0.0
+margin_top = 680.0
+margin_right = 817.0
+margin_bottom = 800.0
 [connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
 [connection signal="text_changed" from="VBoxContainer/TextEditor" to="." method="_on_TextEditor_text_changed"]
