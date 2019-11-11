@@ -26,6 +26,7 @@ window/size/height=800
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
 quality/intended_usage/framebuffer_allocation=0
 quality/directional_shadow/size=256
 quality/shadow_atlas/size=256
