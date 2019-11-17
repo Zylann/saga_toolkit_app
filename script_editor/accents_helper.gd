@@ -3,7 +3,7 @@ extends HBoxContainer
 
 var _text_edit = null
 
-const letters = "àâéèêôùûç"
+const letters = "àâéèêîôùûç"
 
 
 func _ready():
