@@ -1,7 +1,9 @@
 
+# TOOD Rename ProjectData
+
+# TOOD Make this class the main script
 class Project:
 	var title = "Untitled"
-	var directory = ""
 	var episodes = []
 	var characters = {}
 
@@ -16,6 +18,11 @@ class Project:
 			if e.file_path == fpath:
 				return e
 		return null
+	
+	func clear():
+		title = "Untitled"
+		episodes.clear()
+		characters.clear()
 
 
 class Episode:

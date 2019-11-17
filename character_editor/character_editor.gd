@@ -5,6 +5,10 @@ extends HSplitContainer
 onready var _character_list = get_node("CharacterList")
 
 
+func clear():
+	_character_list.clear()
+
+
 func _update_characters_list(project):
 	
 	_character_list.clear()

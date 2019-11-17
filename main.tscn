@@ -33,39 +33,46 @@ __meta__ = {
 margin_right = 1008.0
 margin_bottom = 24.0
 
+[node name="ProjectMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
+margin_right = 57.0
+margin_bottom = 24.0
+text = "Project"
+switch_on_hover = true
+
 [node name="FileMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_right = 35.0
+margin_left = 61.0
+margin_right = 96.0
 margin_bottom = 24.0
 text = "File"
 switch_on_hover = true
 
 [node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_left = 39.0
-margin_right = 81.0
+margin_left = 100.0
+margin_right = 142.0
 margin_bottom = 24.0
 text = "Help"
 switch_on_hover = true
 
 [node name="ViewMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_left = 85.0
-margin_right = 127.0
+margin_left = 146.0
+margin_right = 188.0
 margin_bottom = 24.0
 text = "View"
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/MenuBar"]
-margin_left = 131.0
-margin_right = 135.0
+margin_left = 192.0
+margin_right = 196.0
 margin_bottom = 24.0
 
 [node name="OpenButton" type="ToolButton" parent="VBoxContainer/MenuBar"]
-margin_left = 139.0
-margin_right = 167.0
+margin_left = 200.0
+margin_right = 228.0
 margin_bottom = 24.0
 icon = ExtResource( 2 )
 
 [node name="SaveButton" type="ToolButton" parent="VBoxContainer/MenuBar"]
-margin_left = 171.0
-margin_right = 199.0
+margin_left = 232.0
+margin_right = 260.0
 margin_bottom = 24.0
 icon = ExtResource( 3 )
 
