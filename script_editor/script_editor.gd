@@ -190,12 +190,14 @@ func save_current_script():
 		return
 	f.store_string(_text_editor.text)
 	f.close()
-	_update_episode_data(_project, _text_editor.text, script_path)
+	
+	var errors = _update_episode_data(_project, _text_editor.text, script_path)
 	var i = _get_file_list_index(script_path)
 	assert(i != -1)
 	_file_list.set_item_text(i, script_path.get_file())
 	_modified_files.erase(script_path)
 	
+	emit_signal("script_parsed", _project, script_path, errors)
 
 
 func toggle_accent_buttons():
