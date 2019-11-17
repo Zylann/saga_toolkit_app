@@ -87,6 +87,7 @@ func open_script(path):
 	emit_signal("script_parsed", _project, path, errors)
 
 
+# TODO I think this should be part of the parser
 static func _update_episode_data( \
 		project: ScriptData.Project, text: String, path: String) -> Array:
 	
@@ -100,14 +101,18 @@ static func _update_episode_data( \
 	else:
 		project.episodes[epi] = ep
 	
-	var character_names : Dictionary = ep.character_names
-	if len(character_names) != 0:
-		for cname in character_names:
+	var character_occurences : Dictionary = ep.character_occurrences
+	if len(character_occurences) != 0:
+		for cname in character_occurences:
+			
+			# Get or create character
+			var character : ScriptData.Character
 			if project.characters.has(cname):
-				continue
-			var c := ScriptData.Character.new()
-			c.name = cname
-			project.characters[cname] = c
+				character = project.characters[cname]
+			else:
+				character = ScriptData.Character.new()
+				character.name = cname
+				project.characters[cname] = character
 	
 	return res.errors
 

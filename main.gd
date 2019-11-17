@@ -62,6 +62,8 @@ func _ready():
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
 	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
 	
+	_character_editor.set_project(_project)
+	
 	var dialogs_parent = self
 
 	var fd = FileDialog.new()

@@ -1,21 +1,25 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://character_editor/character_editor.gd" type="Script" id=1]
+[ext_resource path="res://icon_white.png" type="Texture" id=2]
 
 [node name="CharacterEditor" type="HSplitContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 split_offset = 150
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CharacterList" type="ItemList" parent="."]
 margin_right = 150.0
-margin_bottom = 600.0
+margin_bottom = 800.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 162.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 800.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 862.0
@@ -64,7 +68,7 @@ margin_top = 56.0
 margin_right = 658.0
 margin_bottom = 80.0
 
-[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+[node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]
 margin_left = 662.0
 margin_right = 862.0
 margin_bottom = 80.0
@@ -85,9 +89,34 @@ text = "Description"
 [node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
 margin_top = 114.0
 margin_right = 862.0
-margin_bottom = 600.0
+margin_bottom = 782.0
 size_flags_vertical = 3
 caret_blink = true
 caret_blink_speed = 0.5
 
+[node name="OccurenceMap" type="GridContainer" parent="VBoxContainer"]
+margin_top = 786.0
+margin_right = 862.0
+margin_bottom = 800.0
+columns = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/OccurenceMap"]
+margin_right = 24.0
+margin_bottom = 14.0
+text = "ep1"
+
+[node name="Label2" type="Label" parent="VBoxContainer/OccurenceMap"]
+margin_left = 28.0
+margin_right = 86.0
+margin_bottom = 14.0
+text = "36 words"
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/OccurenceMap"]
+margin_left = 90.0
+margin_right = 862.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
 [connection signal="item_selected" from="CharacterList" to="." method="_on_CharacterList_item_selected"]

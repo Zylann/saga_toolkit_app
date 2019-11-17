@@ -101,6 +101,7 @@ static func _parse_episode(text):
 			var statement = ScriptData.Statement.new()
 			statement.text = line
 			statement.character_name = "FOULE"
+			statement.word_count = len(line.split(" ", false))
 			_add_statement(scene, data, statement)
 		
 		elif line.begins_with("FIN"):
@@ -136,7 +137,16 @@ static func _parse_episode(text):
 
 static func _add_statement(scene, data, statement):
 	if not _ignored_character_names.has(statement.character_name):
-		data.character_names[statement.character_name] = true
+		
+		var occurrence : ScriptData.CharacterOccurrence
+		if data.character_occurrences.has(statement.character_name):
+			occurrence = data.character_occurrences[statement.character_name]
+		else:
+			occurrence = ScriptData.CharacterOccurrence.new()
+			data.character_occurrences[statement.character_name] = occurrence
+		
+		occurrence.word_count += statement.word_count
+	
 	scene.elements.append(statement)
 
 
@@ -183,6 +193,8 @@ static func parse_statement(lines, line_index):
 		head_note = head_note.right(1)
 	statement.note = head_note
 	
+	var word_count = 0
+	
 	while line_index < len(lines):
 		line = lines[line_index].strip_edges()
 		if line == "":
@@ -190,15 +202,39 @@ static func parse_statement(lines, line_index):
 		if statement.text == "":
 			var after_dash = dash_index + 2
 			statement.text = line.substr(after_dash, len(line) - after_dash)
+			word_count += len(statement.text.split(" ", false))
 		else:
 			# In case of two statements not separated by an empty line...
 			if line.find("--") != -1:
 				break
+			word_count += len(line.split(" ", false))
 			statement.text = str(statement.text, "\n", line)
 		line_index += 1
 	
+	statement.word_count = word_count
+	
 	return {
 		"statement": statement,
-		"line_index": line_index
+		"line_index": line_index,
+		"word_count": word_count
 	}
 
+
+#static func _count_words(text):
+#	var count = 0
+#	var i = 0
+#	while i < len(text):
+#		while i < len(text):
+#			var c = text[i]
+#			if c == ' ' or c == '\n':
+#				break
+#			i += 1
+#		while i < len(text):
+#			var c = text[i]
+#			if c != ' ' and c != '\n':
+#				break
+#			i += 1
+#		count += 1
+#		i += 1
+#	return count
+	

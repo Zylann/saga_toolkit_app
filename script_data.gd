@@ -29,8 +29,14 @@ class Episode:
 	var title = ""
 	var file_path = ""
 	var scenes = []
-	var character_names = {}
+	var character_occurrences = {} # name => occurence
 	var text = ""
+
+
+class CharacterOccurrence:
+	var image = null
+	var texture = null
+	var word_count = 0
 
 
 class Scene:
@@ -51,8 +57,10 @@ class Statement:
 	var character_name = ""
 	var note = ""
 	var text = ""
+	var word_count = 0
 
 
 class Character:
 	var name = ""
+
 
