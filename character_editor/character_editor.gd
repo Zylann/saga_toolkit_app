@@ -8,11 +8,23 @@ const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0)
 const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 0.2)
 const OCCURRENCES_MODULATE = Color(1, 1, 0.8)
 
-onready var _character_list = get_node("CharacterList")
+const SORT_BY_NAME = 0
+const SORT_BY_WORD_COUNT = 1
+
+onready var _character_list = get_node("CharacterListContainer/CharacterList")
+onready var _character_sort_option_button = \
+	get_node("CharacterListContainer/HBoxContainer/SortOption")
 onready var _occurrence_grid = get_node("VBoxContainer/OccurenceMap")
 
 var _project = null
 var _empty_texture = null
+
+
+func _ready():
+	_character_sort_option_button.get_popup().add_item("Name", SORT_BY_NAME)
+	_character_sort_option_button.get_popup().add_item("Word Count", SORT_BY_WORD_COUNT)
+	_character_sort_option_button.select(0)
+	_character_sort_option_button.get_popup().connect("id_pressed", self, "_on_SortOption_id_pressed")
 
 
 func set_project(project):
@@ -23,18 +35,53 @@ func clear():
 	_character_list.clear()
 
 
-func _update_characters_list(project):
+class _WordCountComparer:
+	var word_count_totals = {}
+	func compare(cname_a, cname_b):
+		# Highest word counts come first
+		return word_count_totals[cname_a] > word_count_totals[cname_b]
+
+
+func _update_characters_list(project, sort_mode = -1):
 	
 	_character_list.clear()
 	
+	var sorted_names = []
+	if sort_mode == -1:
+		sort_mode = _character_sort_option_button.selected
+	
 	for cname in project.characters:
-		var character = project.characters[cname]
+		sorted_names.append(cname)
 
+	match sort_mode:
+		SORT_BY_NAME:
+			sorted_names.sort()
+			
+		SORT_BY_WORD_COUNT:
+			var comparer = _WordCountComparer.new()
+			comparer.word_count_totals = _get_word_count_totals(_project)
+			sorted_names.sort_custom(comparer, "compare")
+
+	for cname in sorted_names:
 		var i = _character_list.get_item_count()
 		_character_list.add_item(cname)
 		_character_list.set_item_metadata(i, cname)
 
 	#emit_signal("characters_list_changed", project)
+
+
+static func _get_word_count_totals(project):
+	var word_count_totals = {}
+	for ep in project.episodes:
+		for cname in ep.character_occurrences:
+			var wc = ep.character_occurrences[cname].word_count
+			if word_count_totals.has(cname):
+				var c = word_count_totals[cname]
+				c += wc
+				word_count_totals[cname] = c
+			else:
+				word_count_totals[cname] = wc
+	return word_count_totals	
 
 
 func _on_ScriptEditor_script_parsed(project, script_path, errors):
@@ -166,3 +213,7 @@ func _on_CharacterList_item_selected(index):
 		tex_control.texture = tex
 		tex_control.modulate = OCCURRENCES_MODULATE
 		_occurrence_grid.add_child(tex_control)
+
+
+func _on_SortOption_id_pressed(id):
+	_update_characters_list(_project, id)
