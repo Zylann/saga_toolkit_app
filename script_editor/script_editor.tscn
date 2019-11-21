@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://script_editor/script_editor.gd" type="Script" id=1]
 [ext_resource path="res://fonts/hack_regular.tres" type="DynamicFont" id=2]
 [ext_resource path="res://script_editor/accents_helper.tscn" type="PackedScene" id=3]
 [ext_resource path="res://script_editor/search_bar.gd" type="Script" id=4]
 [ext_resource path="res://spell_checker/spell_check_panel.tscn" type="PackedScene" id=5]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=6]
+[ext_resource path="res://icons/icon_load.svg" type="Texture" id=7]
 
 [node name="ScriptEditor" type="HSplitContainer"]
 anchor_right = 1.0
@@ -49,20 +51,49 @@ margin_bottom = 800.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 817.0
-margin_bottom = 16.0
+margin_bottom = 24.0
+
+[node name="FileMenu" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+margin_right = 35.0
+margin_bottom = 24.0
+text = "File"
+
+[node name="ViewMenu" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 39.0
+margin_right = 81.0
+margin_bottom = 24.0
+text = "View"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+margin_left = 85.0
+margin_right = 89.0
+margin_bottom = 24.0
+
+[node name="OpenButton" type="ToolButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 93.0
+margin_right = 121.0
+margin_bottom = 24.0
+icon = ExtResource( 7 )
+
+[node name="SaveButton" type="ToolButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 125.0
+margin_right = 153.0
+margin_bottom = 24.0
+icon = ExtResource( 6 )
 
 [node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]
+margin_left = 157.0
 margin_right = 813.0
-margin_bottom = 16.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="AccentsHelper" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
 margin_left = 817.0
 margin_right = 817.0
-margin_bottom = 16.0
+margin_bottom = 24.0
 
 [node name="TextEditor" type="TextEdit" parent="VBoxContainer"]
-margin_top = 20.0
+margin_top = 28.0
 margin_right = 817.0
 margin_bottom = 800.0
 size_flags_vertical = 3
@@ -117,6 +148,8 @@ margin_right = 817.0
 margin_bottom = 800.0
 [connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_OpenButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="text_changed" from="VBoxContainer/TextEditor" to="." method="_on_TextEditor_text_changed"]
 [connection signal="text_entered" from="VBoxContainer/SearchBox/LineEdit" to="VBoxContainer/SearchBox" method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/SearchBox/NextButton" to="VBoxContainer/SearchBox" method="_on_NextButton_pressed"]

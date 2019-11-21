@@ -6,6 +6,7 @@ const HtmlExporter = preload("res://html_exporter/html_exporter.gd")
 const ScriptData = preload("./../script_data.gd")
 const AccentorController = preload("./../spell_checker/accentor_controller.gd")
 const WordsDictionary = preload("../words_dictionary.gd")
+const UserPrefs = preload("./../util/userprefs.gd")
 
 const CHARACTER_NAME_COLOR = Color(0.5, 0.5, 1.0)
 const HEADING_COLOR = Color(0.3, 0.6, 0.3)
@@ -13,6 +14,13 @@ const COMMENT_COLOR = Color(0.5, 0.5, 0.5)
 const SELECTION_COLOR = Color(1, 1, 1, 0.1)
 const BACKGROUND_COLOR = Color(0.1, 0.1, 0.1)
 const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
+
+const MENU_FILE_OPEN_SCRIPT = 0
+const MENU_FILE_SAVE_CURRENT_SCRIPT = 1
+const MENU_FILE_EXPORT_AS_HTML = 2
+
+const MENU_VIEW_ACCENT_BUTTONS = 0
+const MENU_VIEW_STATISTICS = 1
 
 signal script_parsed(project, path)
 
@@ -22,10 +30,13 @@ onready var _search_bar = get_node("VBoxContainer/SearchBox")
 onready var _scene_list = get_node("VSplitContainer/VBoxContainer/SceneList")
 onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelper")
 onready var _spell_check_panel = get_node("VBoxContainer/SpellCheckPanel")
-
+onready var _file_menu = get_node("VBoxContainer/HBoxContainer/FileMenu")
+onready var _view_menu = get_node("VBoxContainer/HBoxContainer/ViewMenu")
 
 var _project = ScriptData.Project.new()
 var _modified_files = {}
+var _open_script_dialog: FileDialog
+var _statistics_window: AcceptDialog
 
 
 func _ready():
@@ -45,6 +56,29 @@ func _ready():
 	# TODO Have an actual spell-checker controller too
 	_spell_check_panel.set_text_edit(_text_editor)
 	_spell_check_panel.set_controller(accentor_controller)
+	
+	_file_menu.get_popup().add_item("Open Script...", MENU_FILE_OPEN_SCRIPT)
+	_file_menu.get_popup().add_item("Save Current Script...", MENU_FILE_SAVE_CURRENT_SCRIPT)
+	_file_menu.get_popup().add_separator()
+	_file_menu.get_popup().add_item("Export As HTML...", MENU_FILE_EXPORT_AS_HTML)
+	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
+	
+	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
+	_view_menu.get_popup().add_item("Statistics", MENU_VIEW_STATISTICS)
+	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
+	
+	_open_script_dialog = FileDialog.new()
+	_open_script_dialog.window_title = "Open Script"
+	_open_script_dialog.add_filter("*.txt ; TXT files")
+	_open_script_dialog.add_filter("*.md ; MD files")
+	_open_script_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_open_script_dialog.resizable = true
+	_open_script_dialog.connect("file_selected", self, "_on_OpenScriptDialog_file_selected")
+	add_child(_open_script_dialog)
+	
+	_statistics_window = AcceptDialog.new()
+	_statistics_window.window_title = "Script Statistics"
+	add_child(_statistics_window)
 
 
 func set_project(project):
@@ -217,11 +251,11 @@ func save_current_script():
 	emit_signal("script_parsed", _project, script_path, errors)
 
 
-func toggle_accent_buttons():
+func _toggle_accent_buttons():
 	_accent_buttons.visible = not _accent_buttons.visible
 
 
-func get_current_script_statistics():
+func _get_current_script_statistics():
 	var path = _get_current_script_path()
 	if path == "":
 		return null
@@ -242,6 +276,25 @@ func get_current_script_statistics():
 	}
 
 
+func _show_statistics():
+	var stats = _get_current_script_statistics()
+	print("Stats: ", stats)
+	if stats == null:
+		_statistics_window.dialog_text = "No statistics available."
+	else:
+		_statistics_window.dialog_text = PoolStringArray([
+			str("Statements: ", stats.statement_count),
+			str("Estimated duration: ", _format_time(stats.estimated_duration))
+		]).join("\n")
+	_statistics_window.popup_centered_minsize()
+
+
+static func _format_time(total_seconds):
+	var mins = total_seconds / 60
+	var seconds = total_seconds % 60
+	return str(mins, " min ", seconds, " seconds")
+
+
 func _on_TextEditor_text_changed():
 	var path = _get_current_script_path()
 	if path != "":
@@ -259,3 +312,40 @@ func _get_file_list_index(path):
 			return i
 	return -1
 
+
+func _on_FileMenu_id_pressed(id):
+	match id:
+		MENU_FILE_OPEN_SCRIPT:
+			_trigger_open_script_dialog()
+		MENU_FILE_SAVE_CURRENT_SCRIPT:
+			save_current_script()
+		MENU_FILE_EXPORT_AS_HTML:
+			export_as_html()
+
+
+func _trigger_open_script_dialog():
+	var dir = UserPrefs.get_value("last_open_script_path")
+	if dir != null:
+		_open_script_dialog.current_dir = dir
+	_open_script_dialog.popup_centered_ratio(0.75)
+
+
+func _on_OpenScriptDialog_file_selected(path):
+	UserPrefs.set_value("last_open_script_path", path.get_base_dir())
+	open_script(path)
+
+
+func _on_OpenButton_pressed():
+	_trigger_open_script_dialog()
+
+
+func _on_SaveButton_pressed():
+	save_current_script()
+
+
+func _on_ViewMenu_id_pressed(id):
+	match id:
+		MENU_VIEW_ACCENT_BUTTONS:
+			_toggle_accent_buttons()
+		MENU_VIEW_STATISTICS:
+			_show_statistics()

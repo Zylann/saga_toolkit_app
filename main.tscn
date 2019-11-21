@@ -1,8 +1,6 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
-[ext_resource path="res://icons/icon_load.svg" type="Texture" id=2]
-[ext_resource path="res://icons/icon_save.svg" type="Texture" id=3]
 [ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=6]
@@ -31,53 +29,23 @@ __meta__ = {
 
 [node name="MenuBar" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1008.0
-margin_bottom = 24.0
+margin_bottom = 20.0
 
 [node name="ProjectMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_right = 57.0
-margin_bottom = 24.0
+margin_bottom = 20.0
 text = "Project"
 switch_on_hover = true
 
-[node name="FileMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_left = 61.0
-margin_right = 96.0
-margin_bottom = 24.0
-text = "File"
-switch_on_hover = true
-
 [node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_left = 100.0
-margin_right = 142.0
-margin_bottom = 24.0
+margin_left = 61.0
+margin_right = 103.0
+margin_bottom = 20.0
 text = "Help"
 switch_on_hover = true
 
-[node name="ViewMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
-margin_left = 146.0
-margin_right = 188.0
-margin_bottom = 24.0
-text = "View"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/MenuBar"]
-margin_left = 192.0
-margin_right = 196.0
-margin_bottom = 24.0
-
-[node name="OpenButton" type="ToolButton" parent="VBoxContainer/MenuBar"]
-margin_left = 200.0
-margin_right = 228.0
-margin_bottom = 24.0
-icon = ExtResource( 2 )
-
-[node name="SaveButton" type="ToolButton" parent="VBoxContainer/MenuBar"]
-margin_left = 232.0
-margin_right = 260.0
-margin_bottom = 24.0
-icon = ExtResource( 3 )
-
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
-margin_top = 28.0
+margin_top = 24.0
 margin_right = 1008.0
 margin_bottom = 766.0
 size_flags_vertical = 3
@@ -119,16 +87,6 @@ margin_bottom = 784.0
 margin_right = 39.0
 margin_bottom = 14.0
 text = "Status"
-
-[node name="OpenScriptDialog" type="FileDialog" parent="."]
-margin_right = 275.0
-margin_bottom = 130.0
-window_title = "Open a File"
-mode = 0
-access = 2
-filters = PoolStringArray( "*.txt" )
-current_dir = "D:/PROJETS/INFO/GODOT/Games/SagaTK"
-current_path = "D:/PROJETS/INFO/GODOT/Games/SagaTK/"
 
 [node name="AboutWindow" type="AcceptDialog" parent="."]
 margin_left = 318.0
@@ -181,11 +139,3 @@ Developped by Marc Gilleron, aka Zylann
 
 https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
-
-[node name="StatisticsWindow" type="AcceptDialog" parent="."]
-margin_right = 83.0
-margin_bottom = 58.0
-window_title = "Statistics"
-[connection signal="pressed" from="VBoxContainer/MenuBar/OpenButton" to="." method="_on_OpenButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/MenuBar/SaveButton" to="." method="_on_SaveButton_pressed"]
-[connection signal="file_selected" from="OpenScriptDialog" to="." method="_on_OpenScriptDialog_file_selected"]
