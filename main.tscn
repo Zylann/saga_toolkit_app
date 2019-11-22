@@ -35,6 +35,7 @@ margin_bottom = 20.0
 margin_right = 57.0
 margin_bottom = 20.0
 text = "Project"
+flat = false
 switch_on_hover = true
 
 [node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
@@ -42,6 +43,7 @@ margin_left = 61.0
 margin_right = 103.0
 margin_bottom = 20.0
 text = "Help"
+flat = false
 switch_on_hover = true
 
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]

@@ -57,12 +57,14 @@ margin_bottom = 24.0
 margin_right = 35.0
 margin_bottom = 24.0
 text = "File"
+flat = false
 
 [node name="ViewMenu" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
 margin_left = 39.0
 margin_right = 81.0
 margin_bottom = 24.0
 text = "View"
+flat = false
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
 margin_left = 85.0

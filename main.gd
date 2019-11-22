@@ -3,6 +3,7 @@ extends Panel
 const UserPrefs = preload("./util/userprefs.gd")
 const ScriptData = preload("./script_data.gd")
 const Errors = preload("./util/errors.gd")
+const ThemeGenerator = preload("./theme/theme_generator.gd")
 
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
@@ -25,6 +26,7 @@ var _save_project_dialog = null
 
 
 func _ready():
+	theme = ThemeGenerator.get_theme()
 	
 	_project_menu.get_popup().add_item("Open...", MENU_PROJECT_OPEN)
 	_project_menu.get_popup().add_item("Save", MENU_PROJECT_SAVE)

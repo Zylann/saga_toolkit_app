@@ -5,8 +5,7 @@ const ScriptData = preload("./../script_data.gd")
 #signal characters_list_changed(names)
 
 const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0)
-const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 0.2)
-const OCCURRENCES_MODULATE = Color(1, 1, 0.8)
+const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
 
 const SORT_BY_NAME = 0
 const SORT_BY_WORD_COUNT = 1
@@ -211,7 +210,8 @@ func _on_CharacterList_item_selected(index):
 		tex_control.stretch_mode = TextureRect.STRETCH_SCALE
 		tex_control.expand = true
 		tex_control.texture = tex
-		tex_control.modulate = OCCURRENCES_MODULATE
+		var mod = get_color("accent_color", "App")
+		tex_control.modulate = mod
 		_occurrence_grid.add_child(tex_control)
 
 
