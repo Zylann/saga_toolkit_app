@@ -46,6 +46,7 @@ func _ready():
 	fd.mode = FileDialog.MODE_OPEN_FILE
 	fd.access = FileDialog.ACCESS_FILESYSTEM
 	fd.window_title = "Open Project"
+	fd.resizable = true
 	fd.add_filter("*.stk ; STK Project Files")
 	fd.connect("file_selected", self, "_on_OpenProjectDialog_file_selected")
 	dialogs_parent.add_child(fd)
@@ -55,6 +56,7 @@ func _ready():
 	fd.mode = FileDialog.MODE_SAVE_FILE
 	fd.access = FileDialog.ACCESS_FILESYSTEM
 	fd.window_title = "Save Project As"
+	fd.resizable = true
 	fd.add_filter("*.stk ; STK Project Files")
 	fd.connect("file_selected", self, "_on_SaveProjectDialog_file_selected")
 	dialogs_parent.add_child(fd)
