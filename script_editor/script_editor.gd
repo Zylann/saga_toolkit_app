@@ -296,6 +296,8 @@ static func _format_time(total_seconds):
 
 
 func _on_TextEditor_text_changed():
+	if _file_list.get_item_count() == 0:
+		return
 	var path = _get_current_script_path()
 	if path != "":
 		if not _modified_files.has(path):
