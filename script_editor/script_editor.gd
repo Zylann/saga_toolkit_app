@@ -21,6 +21,7 @@ const MENU_FILE_EXPORT_AS_HTML = 2
 
 const MENU_VIEW_ACCENT_BUTTONS = 0
 const MENU_VIEW_STATISTICS = 1
+const MENU_VIEW_MINIMAP = 2
 
 signal script_parsed(project, path)
 
@@ -65,6 +66,7 @@ func _ready():
 	
 	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
 	_view_menu.get_popup().add_item("Statistics", MENU_VIEW_STATISTICS)
+	_view_menu.get_popup().add_item("Minimap", MENU_VIEW_MINIMAP)
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_open_script_dialog = FileDialog.new()
@@ -351,3 +353,5 @@ func _on_ViewMenu_id_pressed(id):
 			_toggle_accent_buttons()
 		MENU_VIEW_STATISTICS:
 			_show_statistics()
+		MENU_VIEW_MINIMAP:
+			_text_editor.minimap_draw = not _text_editor.minimap_draw
