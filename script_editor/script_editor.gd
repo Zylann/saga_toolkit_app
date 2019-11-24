@@ -18,6 +18,7 @@ const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
 const MENU_FILE_OPEN_SCRIPT = 0
 const MENU_FILE_SAVE_CURRENT_SCRIPT = 1
 const MENU_FILE_EXPORT_AS_HTML = 2
+const MENU_FILE_EXPORT_ALL_AS_HTML = 3
 
 const MENU_VIEW_ACCENT_BUTTONS = 0
 const MENU_VIEW_STATISTICS = 1
@@ -62,6 +63,7 @@ func _ready():
 	_file_menu.get_popup().add_item("Save Current Script...", MENU_FILE_SAVE_CURRENT_SCRIPT)
 	_file_menu.get_popup().add_separator()
 	_file_menu.get_popup().add_item("Export As HTML...", MENU_FILE_EXPORT_AS_HTML)
+	_file_menu.get_popup().add_item("Export All As HTML", MENU_FILE_EXPORT_ALL_AS_HTML)
 	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
 	
 	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
@@ -183,7 +185,18 @@ func export_as_html():
 	var exporter = HtmlExporter.new()
 	var output_path = script_path.get_basename() + ".html"
 	exporter.export_script(data, output_path)
+	print("Exported ", output_path)
 	OS.shell_open(output_path)
+
+
+func export_all_as_html():
+	for ep in _project.episodes:
+		if ep.file_path == "":
+			continue
+		var exporter = HtmlExporter.new()
+		var output_path = ep.file_path.get_basename() + ".html"
+		exporter.export_script(ep, output_path)
+		print("Exported ", output_path)
 
 
 func _on_ScriptList_item_selected(index):
@@ -313,6 +326,8 @@ func _on_FileMenu_id_pressed(id):
 			save_current_script()
 		MENU_FILE_EXPORT_AS_HTML:
 			export_as_html()
+		MENU_FILE_EXPORT_ALL_AS_HTML:
+			export_all_as_html()
 
 
 func _trigger_open_script_dialog():
