@@ -9,6 +9,8 @@ onready var _name_edit = get_node("VSplitContainer/Properties/ActorNameEdit")
 onready var _characters_list = get_node("VSplitContainer/Properties/HBoxContainer2/CharacterList")
 onready var _notes_edit = get_node("VSplitContainer/Properties/Notes")
 onready var _properties_container = get_node("VSplitContainer/Properties")
+onready var _remove_actor_button = get_node("VSplitContainer/HBoxContainer/RemoveActorButton")
+onready var _get_statements_button = get_node("VSplitContainer/HBoxContainer/StatementsReduxButton")
 
 var _project = null
 var _character_selection_dialog = null
@@ -21,11 +23,13 @@ func _ready():
 	_gender_selector.add_item("Other", ScriptData.GENDER_OTHER)
 	
 	_properties_container.hide()
+	_update_buttons_availability()
 
 
 func set_project(project):
 	_project = project
 	_properties_container.hide()
+	_update_buttons_availability()
 	_update_actors_list()
 
 
@@ -42,6 +46,16 @@ func setup_dialogs(parent):
 	_remove_actor_confirmation_dialog.connect(\
 		"confirmed", self, "_on_RemoveActorConfirmationDialog_confirmed")
 	parent.add_child(_remove_actor_confirmation_dialog)
+
+
+func _update_buttons_availability():
+	var available = false
+	if _project != null:
+		var actor_id = _get_selected_actor_id()
+		var actor = _project.get_actor_by_id(actor_id)
+		available = (actor != null)
+	_remove_actor_button.disabled = not available
+	_get_statements_button.disabled = not available
 
 
 func _update_actors_list():
@@ -118,9 +132,11 @@ func _update_for_actor(actor_id):
 	if actor == null:
 		push_error("Actor {0} not found".format(actor_id))
 		_properties_container.hide()
+		_update_buttons_availability()
 		return
 	
 	_properties_container.show()
+	_update_buttons_availability()
 
 	_name_edit.text = actor.name
 
@@ -163,6 +179,7 @@ func _on_RemoveActorButton_pressed():
 	_remove_actor_confirmation_dialog.dialog_text = "Remove actor {0}?".format([actor.name])
 	_remove_actor_confirmation_dialog.popup_centered_minsize()
 	_properties_container.hide()
+	_update_buttons_availability()
 
 
 func _on_RemoveActorConfirmationDialog_confirmed():
