@@ -1,16 +1,89 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://episode_editor/episode_editor.gd" type="Script" id=1]
 
 [node name="EpisodeEditor" type="HSplitContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-split_offset = 150
+split_offset = 200
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="EpisodeList" type="ItemList" parent="."]
-margin_right = 150.0
-margin_bottom = 600.0
+margin_right = 200.0
+margin_bottom = 800.0
 
-[node name="Control" type="Control" parent="."]
-margin_left = 162.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 212.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 800.0
 
+[node name="Properties" type="GridContainer" parent="VBoxContainer"]
+margin_right = 812.0
+margin_bottom = 128.0
+columns = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Properties"]
+margin_top = 5.0
+margin_right = 56.0
+margin_bottom = 19.0
+text = "Title"
+
+[node name="TitleEdit" type="LineEdit" parent="VBoxContainer/Properties"]
+margin_left = 60.0
+margin_right = 812.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+editable = false
+
+[node name="Label3" type="Label" parent="VBoxContainer/Properties"]
+margin_top = 71.0
+margin_right = 56.0
+margin_bottom = 85.0
+text = "Synopsis"
+
+[node name="Synopsis" type="TextEdit" parent="VBoxContainer/Properties"]
+margin_left = 60.0
+margin_top = 28.0
+margin_right = 812.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 100 )
+readonly = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 132.0
+margin_right = 812.0
+margin_bottom = 136.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 140.0
+margin_right = 812.0
+margin_bottom = 154.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 91.0
+margin_bottom = 14.0
+text = "Recording grid"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+margin_left = 95.0
+margin_right = 99.0
+margin_bottom = 14.0
+
+[node name="ProgressLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_left = 103.0
+margin_right = 130.0
+margin_bottom = 14.0
+text = "---%"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 158.0
+margin_right = 812.0
+margin_bottom = 800.0
+size_flags_vertical = 3
+
+[node name="CharacterGrid" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+columns = 3
+[connection signal="item_selected" from="EpisodeList" to="." method="_on_EpisodeList_item_selected"]
