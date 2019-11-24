@@ -128,7 +128,7 @@ func _open_script(path):
 	var text = f.get_as_text()
 	f.close()
 
-	var errors = ScriptParser.update_episode_data(_project, text, path)
+	var errors = ScriptParser.update_episode_data_from_text(_project, text, path)
 	
 	var filename = path.get_file()
 	var i = _file_list.get_item_count()
@@ -245,7 +245,9 @@ func save_current_script():
 	f.store_string(_text_editor.text)
 	f.close()
 	
-	var errors = ScriptParser.update_episode_data(_project, _text_editor.text, script_path)
+	var errors = ScriptParser.update_episode_data_from_text(\
+		_project, _text_editor.text, script_path)
+	
 	var i = _get_file_list_index(script_path)
 	assert(i != -1)
 	_file_list.set_item_text(i, script_path.get_file())
