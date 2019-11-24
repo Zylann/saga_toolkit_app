@@ -12,11 +12,11 @@ const _ignored_character_names = {
 }
 
 
-static func parse_episode(text):
+static func parse_episode(text, existing_episode = null):
 	
 	var time_before = OS.get_ticks_msec()
 	
-	var res = _parse_episode(text)
+	var res = _parse_episode(text, existing_episode)
 	
 	res.data.text = text
 
@@ -33,13 +33,22 @@ static func parse_episode(text):
 	return res
 
 
-static func _parse_episode(text):
+static func _parse_episode(text, existing_episode = null):
 
 	var lines = text.split("\n")
 	
-	var data = ScriptData.Episode.new()
-	var scene = null
+	var data = existing_episode
+	if data == null:
+		data = ScriptData.Episode.new()
 	
+	# Reset occurrences in case they change
+	for cname in data.character_occurrences:
+		var occurrence = data.character_occurrences[cname]
+		occurrence.image = null
+		occurrence.texture = null
+		occurrence.word_count = 0
+	
+	var scene = null
 	var unrecognized_content = {}
 	
 	# Using a while because for loop forbids incrementing the index --"
@@ -130,6 +139,13 @@ static func _parse_episode(text):
 				"text": c.text
 			})
 	
+	var character_names = data.character_occurrences.keys()
+	for cname in character_names:
+		var occurrence = data.character_occurrences[cname]
+		if occurrence.word_count == 0:
+			# The character is no longer present in that episode
+			data.character_occurrences.erase(cname)
+	
 	return {
 		"data": data,
 		"errors": errors
@@ -138,7 +154,8 @@ static func _parse_episode(text):
 
 static func _add_statement(scene, data, statement):
 	if not _ignored_character_names.has(statement.character_name):
-		
+	
+		# Add occurrence if not found	
 		var occurrence : ScriptData.CharacterOccurrence
 		if data.character_occurrences.has(statement.character_name):
 			occurrence = data.character_occurrences[statement.character_name]
@@ -258,15 +275,17 @@ static func update_episode_data_from_file(project: ScriptData.Project, path: Str
 static func update_episode_data_from_text( \
 		project: ScriptData.Project, text: String, path: String) -> Array:
 	
-	var res = parse_episode(text)
-	var ep = res.data
+	var ep = null
+	var epi = project.get_episode_index_from_path(path)
+	if epi != -1:
+		ep = project.episodes[epi]
+	
+	var res = parse_episode(text, ep)
+	ep = res.data
 	ep.file_path = path
 	
-	var epi = project.get_episode_index_from_path(path)
 	if epi == -1:
 		project.episodes.append(ep)
-	else:
-		project.episodes[epi] = ep
 	
 	var character_occurences : Dictionary = ep.character_occurrences
 	if len(character_occurences) != 0:

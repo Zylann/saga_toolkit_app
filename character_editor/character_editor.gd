@@ -1,6 +1,7 @@
 extends HSplitContainer
 
 const ScriptData = preload("./../script_data.gd")
+const WordCountComparer = preload("./../word_count_comparer.gd")
 
 #signal characters_list_changed(names)
 
@@ -36,23 +37,6 @@ func set_project(project):
 		_generate_character_occurrence_maps_highp(project, ep.file_path)
 
 
-class _WordCountComparer:
-	var word_count_totals = {}
-	func compare(cname_a, cname_b):
-		var wca = -1
-		var wcb = -1
-		# It's possible the character has no occurrence
-		if word_count_totals.has(cname_a):
-			wca = word_count_totals[cname_a]
-		if word_count_totals.has(cname_b):
-			wcb = word_count_totals[cname_b]
-		# Tie break by name if word counts are equal
-		if wca == wcb:
-			return cname_a < cname_b
-		# Highest word counts come first
-		return wca > wcb
-
-
 func _update_characters_list(project, sort_mode = -1):
 	
 	_character_list.clear()
@@ -69,8 +53,8 @@ func _update_characters_list(project, sort_mode = -1):
 			sorted_names.sort()
 			
 		SORT_BY_WORD_COUNT:
-			var comparer = _WordCountComparer.new()
-			comparer.word_count_totals = _get_word_count_totals(_project)
+			var comparer = WordCountComparer.new()
+			comparer.word_count_totals = _project.get_word_count_totals()
 			sorted_names.sort_custom(comparer, "compare")
 
 	for cname in sorted_names:
@@ -79,20 +63,6 @@ func _update_characters_list(project, sort_mode = -1):
 		_character_list.set_item_metadata(i, cname)
 
 	#emit_signal("characters_list_changed", project)
-
-
-static func _get_word_count_totals(project):
-	var word_count_totals = {}
-	for ep in project.episodes:
-		for cname in ep.character_occurrences:
-			var wc = ep.character_occurrences[cname].word_count
-			if word_count_totals.has(cname):
-				var c = word_count_totals[cname]
-				c += wc
-				word_count_totals[cname] = c
-			else:
-				word_count_totals[cname] = wc
-	return word_count_totals	
 
 
 func _on_ScriptEditor_script_parsed(project, script_path, errors):

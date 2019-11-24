@@ -11,6 +11,7 @@ onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
 onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
 onready var _actor_editor = get_node("VBoxContainer/TabContainer/ActorEditor")
+onready var _actor_grid = get_node("VBoxContainer/TabContainer/ActorGrid")
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
@@ -177,6 +178,7 @@ func _set_project(project):
 	_script_editor.set_project(_project)
 	_character_editor.set_project(_project)
 	_actor_editor.set_project(_project)
+	_actor_grid.set_project(_project)
 
 
 func _open_project(fpath):

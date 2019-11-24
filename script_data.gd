@@ -40,6 +40,19 @@ class Project:
 		actors.clear()
 		next_actor_id = 1
 
+	func get_word_count_totals():
+		var word_count_totals = {}
+		for ep in episodes:
+			for cname in ep.character_occurrences:
+				var wc = ep.character_occurrences[cname].word_count
+				if word_count_totals.has(cname):
+					var c = word_count_totals[cname]
+					c += wc
+					word_count_totals[cname] = c
+				else:
+					word_count_totals[cname] = wc
+		return word_count_totals
+
 
 class Episode:
 	var title = ""
@@ -53,6 +66,7 @@ class CharacterOccurrence:
 	var image = null
 	var texture = null
 	var word_count = 0
+	var recorded = false	
 
 
 class Scene:
@@ -78,6 +92,7 @@ class Statement:
 
 class Character:
 	var name = ""
+	# TODO Allow multiple actors so we can have crowd participation?
 	var actor_id = -1
 
 
