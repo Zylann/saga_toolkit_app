@@ -130,14 +130,25 @@ func _save_project():
 func _save_project_as(fpath):
 	
 	var dir = fpath.get_base_dir()
-	var episode_files = []
 	
+	var episodes = []
 	for episode in _project.episodes:
 		if episode.file_path != "":
 			var path = episode.file_path
 			# Relative path
 			path = path.right(1 + len(dir))
-			episode_files.append(path)
+			var ep_data = {
+				"file_path": path,
+				"character_occurrences": []
+			}
+			episodes.append(ep_data)
+			for cname in episode.character_occurrences:
+				var occurrence = episode.character_occurrences[cname]
+				var occurrence_data = {
+					"character_name": cname,
+					"recorded": occurrence.recorded
+				}
+				ep_data.character_occurrences.append(occurrence_data)
 	
 	var characters = []
 	for cname in _project.characters:
@@ -160,7 +171,7 @@ func _save_project_as(fpath):
 	
 	var data = {
 		"title": _project.title,
-		"episode_files": episode_files,
+		"episodes": episodes,
 		"actors": actors,
 		"characters": characters
 	}
@@ -198,12 +209,37 @@ func _open_project(fpath):
 		_project.characters[character.name] = character
 	
 	_project.title = data.title
-	var dir = fpath.get_base_dir()
-	for ep_file_rpath in data.episode_files:
-		var path = dir.plus_file(ep_file_rpath)
-		ScriptParser.update_episode_data_from_file(_project, path)
+	
+	if len(data.episode_files) > 0:
+		# Legacy
+		var dir = fpath.get_base_dir()
+		for ep_file_rpath in data.episode_files:
+			var path = dir.plus_file(ep_file_rpath)
+			ScriptParser.update_episode_data_from_file(_project, path)
+			# TODO Display errors
+	
+	for ep_data in data.episodes:
+		
+		var dir = fpath.get_base_dir()
+		# Path in project file is relative to project dir
+		var ep_fullpath = dir.plus_file(ep_data.file_path)
+		ScriptParser.update_episode_data_from_file(_project, ep_fullpath)
 		# TODO Display errors
 		
+		var episode = _project.get_episode_from_path(ep_fullpath)
+		if episode == null:
+			# Some error happened
+			continue
+		
+		for occurrence_data in ep_data.character_occurrences:
+			var cname = occurrence_data.character_name
+			if not episode.character_occurrences.has(cname):
+				push_error("Character {0} has no occurrence in {1}".format(\
+					[cname, ep_data.file_path]))
+				continue
+			var occurrence = episode.character_occurrences[cname]
+			occurrence.recorded = occurrence_data.recorded
+	
 	for actor_data in data.actors:
 		if _project.next_actor_id <= actor_data.id:
 			_project.next_actor_id = actor_data.id + 1
@@ -245,6 +281,7 @@ static func _load_project_file(fpath):
 	
 	var data = {
 		"title": "Untitled",
+		"episodes": [],
 		"episode_files": [],
 		"actors": [],
 		"characters": []
@@ -253,7 +290,11 @@ static func _load_project_file(fpath):
 	if json_data.has("title"):
 		data.title = json_data.title
 	
-	if json_data.has("episode_files"):
+	if json_data.has("episodes"):
+		data.episodes = json_data.episodes
+
+	elif json_data.has("episode_files"):
+		# Legacy
 		data.episode_files = json_data.episode_files
 
 	if json_data.has("actors"):
