@@ -219,7 +219,7 @@ func _set_actor_data_prop(key, value):
 		push_error("Actor {0} not found".format([actor_id]))
 		return
 	actor.set(key, value)
-	print("Set actor ", actor_id, " ", key, " to ", value)
+	#print("Set actor ", actor_id, " ", key, " to ", value)
 
 
 func _on_Notes_text_changed():
