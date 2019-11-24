@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
+[ext_resource path="res://actor_editor/actor_editor.tscn" type="PackedScene" id=2]
 [ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=6]
@@ -60,6 +61,13 @@ margin_right = -4.0
 margin_bottom = -4.0
 
 [node name="CharacterEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 5 )]
+visible = false
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="ActorEditor" parent="VBoxContainer/TabContainer" instance=ExtResource( 2 )]
 visible = false
 margin_left = 4.0
 margin_top = 32.0

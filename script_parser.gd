@@ -1,6 +1,7 @@
 
 const Accents = preload("util/accents.gd")
 const ScriptData = preload("./script_data.gd")
+const Errors = preload("res://util/errors.gd")
 
 # These may be ignored because they are not proper characters,
 # but rather "all of them" or "all those present in scene"
@@ -237,4 +238,48 @@ static func parse_statement(lines, line_index):
 #		count += 1
 #		i += 1
 #	return count
+
+
+static func update_episode_data_from_file(project: ScriptData.Project, path: String) -> Array:
+	var f = File.new()
+	var err = f.open(path, File.READ)
+	if err != OK:
+		var err_msg = "Could not load file {0}, {1}".format([path, Errors.get_message(err)])
+		push_error(err_msg)
+		return [err_msg]
+	var text = f.get_as_text()
+	f.close()
+
+	var errors = update_episode_data_from_text(project, text, path)
 	
+	return errors
+
+
+static func update_episode_data_from_text( \
+		project: ScriptData.Project, text: String, path: String) -> Array:
+	
+	var res = parse_episode(text)
+	var ep = res.data
+	ep.file_path = path
+	
+	var epi = project.get_episode_index_from_path(path)
+	if epi == -1:
+		project.episodes.append(ep)
+	else:
+		project.episodes[epi] = ep
+	
+	var character_occurences : Dictionary = ep.character_occurrences
+	if len(character_occurences) != 0:
+		for cname in character_occurences:
+			
+			# Get or create character
+			var character : ScriptData.Character
+			if project.characters.has(cname):
+				character = project.characters[cname]
+			else:
+				character = ScriptData.Character.new()
+				character.name = cname
+				project.characters[cname] = character
+	
+	return res.errors
+

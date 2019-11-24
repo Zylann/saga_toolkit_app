@@ -4,7 +4,7 @@ const ScriptData = preload("./../script_data.gd")
 
 #signal characters_list_changed(names)
 
-const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0)
+const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0, 0.8)
 const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
 
 const SORT_BY_NAME = 0
@@ -14,6 +14,8 @@ onready var _character_list = get_node("CharacterListContainer/CharacterList")
 onready var _character_sort_option_button = \
 	get_node("CharacterListContainer/HBoxContainer/SortOption")
 onready var _occurrence_grid = get_node("VBoxContainer/OccurenceMap")
+onready var _name_edit = get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit")
+onready var _actor_edit = get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit3")
 
 var _project = null
 var _empty_texture = null
@@ -28,10 +30,10 @@ func _ready():
 
 func set_project(project):
 	_project = project
-
-
-func clear():
-	_character_list.clear()
+	_update_characters_list(_project)
+	
+	for ep in project.episodes:
+		_generate_character_occurrence_maps_highp(project, ep.file_path)
 
 
 class _WordCountComparer:
@@ -106,7 +108,7 @@ static func _generate_character_occurrence_maps_highp(project, episode_path):
 		var width = total_word_count
 		if width == 0:
 			width = 1
-		im.create(width, 1, false, Image.FORMAT_RGB8)
+		im.create(width, 1, false, Image.FORMAT_RGBA8)
 		im.fill(OCCURRENCES_IMAGE_BG_COLOR)
 		images[character_name] = im
 		im.lock()
@@ -167,6 +169,15 @@ static func _generate_character_occurrence_maps_highp(project, episode_path):
 func _on_CharacterList_item_selected(index):
 	var character_name = _character_list.get_item_metadata(index)
 	
+	_name_edit.text = character_name
+	
+	var character = _project.characters[character_name]
+	var actor = _project.get_actor_by_id(character.actor_id)
+	if actor == null:
+		_actor_edit.text = ""
+	else:
+		_actor_edit.text = actor.name
+	
 	# Display occurrence grid
 	
 	for i in _occurrence_grid.get_child_count():
@@ -191,7 +202,7 @@ func _on_CharacterList_item_selected(index):
 		if tex == null:
 			if _empty_texture == null:
 				var im = Image.new()
-				im.create(1, 1, false, Image.FORMAT_RGB8)
+				im.create(1, 1, false, Image.FORMAT_RGBA8)
 				im.fill(OCCURRENCES_IMAGE_BG_COLOR)
 				_empty_texture = ImageTexture.new()
 				_empty_texture.create_from_image(im, Texture.FLAG_FILTER)
@@ -204,15 +215,20 @@ func _on_CharacterList_item_selected(index):
 		var word_count_label = Label.new()
 		word_count_label.text = str(word_count, " words    ")
 		_occurrence_grid.add_child(word_count_label)
-		
+
 		var tex_control = TextureRect.new()
 		tex_control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tex_control.stretch_mode = TextureRect.STRETCH_SCALE
 		tex_control.expand = true
 		tex_control.texture = tex
-		var mod = get_color("accent_color", "App")
+		var mod = get_color("accent_color", "App").lightened(0.2)
 		tex_control.modulate = mod
 		_occurrence_grid.add_child(tex_control)
+
+		if word_count == 0:
+			ep_name_label.modulate = Color(1,1,1, 0.5)
+			word_count_label.modulate = Color(1,1,1, 0.5)
+			tex_control.modulate = Color(mod.r, mod.g, mod.b, mod.a * 0.5)
 
 
 func _on_SortOption_id_pressed(id):

@@ -6,6 +6,9 @@ class Project:
 	var title = "Untitled"
 	var episodes = []
 	var characters = {}
+	var actors = []
+	var next_actor_id = 1
+	var file_path = ""
 
 	func get_episode_index_from_path(fpath):
 		for i in len(episodes):
@@ -19,10 +22,23 @@ class Project:
 				return e
 		return null
 	
+	func get_actor_by_id(id):
+		for a in actors:
+			if a.id == id:
+				return a
+		return null
+	
+	func generate_actor_id():
+		var id = next_actor_id
+		next_actor_id += 1
+		return id
+	
 	func clear():
 		title = "Untitled"
 		episodes.clear()
 		characters.clear()
+		actors.clear()
+		next_actor_id = 1
 
 
 class Episode:
@@ -62,5 +78,19 @@ class Statement:
 
 class Character:
 	var name = ""
+	var actor_id = -1
+
+
+const GENDER_UNKNOWN = -1
+const GENDER_MALE = 0
+const GENDER_FEMALE = 1
+const GENDER_OTHER = 2
+
+
+class Actor:
+	var id = -1
+	var name = ""
+	var gender = -1
+	var notes = ""
 
 

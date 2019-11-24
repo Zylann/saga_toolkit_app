@@ -1,0 +1,139 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://actor_editor/actor_editor.gd" type="Script" id=1]
+
+[node name="ActorEditor" type="HSplitContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+split_offset = 200
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActorList" type="ItemList" parent="."]
+margin_right = 200.0
+margin_bottom = 800.0
+
+[node name="VSplitContainer" type="VBoxContainer" parent="."]
+margin_left = 212.0
+margin_right = 1024.0
+margin_bottom = 800.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VSplitContainer"]
+margin_right = 812.0
+margin_bottom = 20.0
+
+[node name="AddActorButton" type="Button" parent="VSplitContainer/HBoxContainer"]
+margin_right = 75.0
+margin_bottom = 20.0
+text = "Add Actor"
+
+[node name="RemoveActorButton" type="Button" parent="VSplitContainer/HBoxContainer"]
+margin_left = 79.0
+margin_right = 181.0
+margin_bottom = 20.0
+text = "Remove Actor"
+
+[node name="Control" type="Control" parent="VSplitContainer/HBoxContainer"]
+margin_left = 185.0
+margin_right = 193.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 8, 0 )
+
+[node name="StatementsReduxButton" type="Button" parent="VSplitContainer/HBoxContainer"]
+margin_left = 197.0
+margin_right = 309.0
+margin_bottom = 20.0
+text = "Get Statements"
+
+[node name="Spacer" type="Control" parent="VSplitContainer"]
+margin_top = 24.0
+margin_right = 812.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="Properties" type="GridContainer" parent="VSplitContainer"]
+margin_top = 36.0
+margin_right = 812.0
+margin_bottom = 292.0
+columns = 2
+
+[node name="Label" type="Label" parent="VSplitContainer/Properties"]
+margin_top = 5.0
+margin_right = 67.0
+margin_bottom = 19.0
+text = "Name"
+
+[node name="ActorNameEdit" type="LineEdit" parent="VSplitContainer/Properties"]
+margin_left = 71.0
+margin_right = 812.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VSplitContainer/Properties"]
+margin_top = 31.0
+margin_right = 67.0
+margin_bottom = 45.0
+text = "Gender"
+
+[node name="GenderSelector" type="OptionButton" parent="VSplitContainer/Properties"]
+margin_left = 71.0
+margin_top = 28.0
+margin_right = 812.0
+margin_bottom = 48.0
+
+[node name="Label3" type="Label" parent="VSplitContainer/Properties"]
+margin_top = 95.0
+margin_right = 67.0
+margin_bottom = 109.0
+text = "Characters"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VSplitContainer/Properties"]
+margin_left = 71.0
+margin_top = 52.0
+margin_right = 812.0
+margin_bottom = 152.0
+
+[node name="CharacterList" type="ItemList" parent="VSplitContainer/Properties/HBoxContainer2"]
+margin_right = 200.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 200, 100 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VSplitContainer/Properties/HBoxContainer2"]
+margin_left = 204.0
+margin_right = 268.0
+margin_bottom = 100.0
+
+[node name="AddCharacterButton" type="Button" parent="VSplitContainer/Properties/HBoxContainer2/VBoxContainer"]
+margin_right = 64.0
+margin_bottom = 20.0
+text = "Add"
+
+[node name="RemoveCharacterButton" type="Button" parent="VSplitContainer/Properties/HBoxContainer2/VBoxContainer"]
+margin_top = 24.0
+margin_right = 64.0
+margin_bottom = 44.0
+text = "Remove"
+
+[node name="Label4" type="Label" parent="VSplitContainer/Properties"]
+margin_top = 199.0
+margin_right = 67.0
+margin_bottom = 213.0
+text = "Notes"
+
+[node name="Notes" type="TextEdit" parent="VSplitContainer/Properties"]
+margin_left = 71.0
+margin_top = 156.0
+margin_right = 812.0
+margin_bottom = 256.0
+rect_min_size = Vector2( 0, 100 )
+[connection signal="item_selected" from="ActorList" to="." method="_on_ActorList_item_selected"]
+[connection signal="pressed" from="VSplitContainer/HBoxContainer/AddActorButton" to="." method="_on_AddActorButton_pressed"]
+[connection signal="pressed" from="VSplitContainer/HBoxContainer/RemoveActorButton" to="." method="_on_RemoveActorButton_pressed"]
+[connection signal="pressed" from="VSplitContainer/HBoxContainer/StatementsReduxButton" to="." method="_on_StatementsReduxButton_pressed"]
+[connection signal="text_changed" from="VSplitContainer/Properties/ActorNameEdit" to="." method="_on_ActorNameEdit_text_changed"]
+[connection signal="item_selected" from="VSplitContainer/Properties/GenderSelector" to="." method="_on_GenderSelector_item_selected"]
+[connection signal="pressed" from="VSplitContainer/Properties/HBoxContainer2/VBoxContainer/AddCharacterButton" to="." method="_on_AddCharacterButton_pressed"]
+[connection signal="pressed" from="VSplitContainer/Properties/HBoxContainer2/VBoxContainer/RemoveCharacterButton" to="." method="_on_RemoveCharacterButton_pressed"]
+[connection signal="text_changed" from="VSplitContainer/Properties/Notes" to="." method="_on_Notes_text_changed"]

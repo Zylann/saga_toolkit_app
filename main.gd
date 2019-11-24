@@ -4,23 +4,25 @@ const UserPrefs = preload("./util/userprefs.gd")
 const ScriptData = preload("./script_data.gd")
 const Errors = preload("./util/errors.gd")
 const ThemeGenerator = preload("./theme/theme_generator.gd")
+const ScriptParser = preload("./script_parser.gd")
 
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
 onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
+onready var _actor_editor = get_node("VBoxContainer/TabContainer/ActorEditor")
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
 
-const MENU_PROJECT_OPEN = 0
-const MENU_PROJECT_SAVE = 1
-const MENU_PROJECT_SAVE_AS = 2
+const MENU_PROJECT_NEW = 0
+const MENU_PROJECT_OPEN = 1
+const MENU_PROJECT_SAVE = 2
+const MENU_PROJECT_SAVE_AS = 3
 
 const MENU_HELP_ABOUT = 0
 
 var _project = ScriptData.Project.new()
-var _project_path = ""
 var _open_project_dialog = null
 var _save_project_dialog = null
 
@@ -28,6 +30,7 @@ var _save_project_dialog = null
 func _ready():
 	theme = ThemeGenerator.get_theme()
 	
+	_project_menu.get_popup().add_item("New", MENU_PROJECT_NEW)
 	_project_menu.get_popup().add_item("Open...", MENU_PROJECT_OPEN)
 	_project_menu.get_popup().add_item("Save", MENU_PROJECT_SAVE)
 	_project_menu.get_popup().add_item("Save As...", MENU_PROJECT_SAVE_AS)
@@ -36,12 +39,9 @@ func _ready():
 	_help_menu.get_popup().add_item("About...", MENU_HELP_ABOUT)
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
 		
-	_script_editor.set_project(_project)
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
 	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
-	
-	_character_editor.set_project(_project)
-	
+		
 	var dialogs_parent = self
 
 	var fd = FileDialog.new()
@@ -63,6 +63,10 @@ func _ready():
 	fd.connect("file_selected", self, "_on_SaveProjectDialog_file_selected")
 	dialogs_parent.add_child(fd)
 	_save_project_dialog = fd
+	
+	_actor_editor.setup_dialogs(dialogs_parent)
+
+	_set_project(_project)
 
 
 func _on_ScriptEditor_script_parsed(project, path, errors):
@@ -79,6 +83,8 @@ func _on_ScriptEditor_script_parsed(project, path, errors):
 
 func _on_ProjectMenu_id_pressed(id):
 	match id:
+		MENU_PROJECT_NEW:
+			_close_project()
 		
 		MENU_PROJECT_OPEN:
 			_trigger_open_project_dialog()
@@ -114,10 +120,10 @@ func _on_SaveProjectDialog_file_selected(fpath):
 
 
 func _save_project():
-	if _project_path == "":
+	if _project.file_path == "":
 		_save_project_dialog.popup_centered_ratio()
 	else:
-		_save_project_as(_project_path)
+		_save_project_as(_project.file_path)
 
 
 func _save_project_as(fpath):
@@ -132,19 +138,45 @@ func _save_project_as(fpath):
 			path = path.right(1 + len(dir))
 			episode_files.append(path)
 	
+	var characters = []
+	for cname in _project.characters:
+		var character = _project.characters[cname]
+		var char_data = {
+			"name": character.name,
+			"actor_id": character.actor_id
+		}
+		characters.append(char_data)
+	
+	var actors = []
+	for actor in _project.actors:
+		var actor_data = {
+			"id": actor.id,
+			"name": actor.name,
+			"gender": actor.gender,
+			"notes": actor.notes
+		}
+		actors.append(actor_data)
+	
 	var data = {
 		"title": _project.title,
-		"episode_files": episode_files
+		"episode_files": episode_files,
+		"actors": actors,
+		"characters": characters
 	}
 	
 	if _save_project_file(data, fpath):
-		_project_path = fpath
+		_project.file_path = fpath
 
 
 func _close_project():
-	_project.clear()
-	_script_editor.close_all_scripts()
-	_character_editor.clear()
+	_project = ScriptData.Project.new()
+	_set_project(_project)
+
+
+func _set_project(project):
+	_script_editor.set_project(_project)
+	_character_editor.set_project(_project)
+	_actor_editor.set_project(_project)
 
 
 func _open_project(fpath):
@@ -154,15 +186,37 @@ func _open_project(fpath):
 	if data == null:
 		return
 	
+	for char_data in data.characters:
+		var character = ScriptData.Character.new()
+		character.name = char_data.name
+		character.actor_id = char_data.actor_id
+		if _project.characters.has(character.name):
+			push_error("Project file contains two characters with the same name")
+			continue
+		_project.characters[character.name] = character
+	
 	_project.title = data.title
 	var dir = fpath.get_base_dir()
+	for ep_file_rpath in data.episode_files:
+		var path = dir.plus_file(ep_file_rpath)
+		ScriptParser.update_episode_data_from_file(_project, path)
+		# TODO Display errors
+		
+	for actor_data in data.actors:
+		if _project.next_actor_id <= actor_data.id:
+			_project.next_actor_id = actor_data.id + 1
+		var actor = ScriptData.Actor.new()
+		actor.id = actor_data.id
+		actor.name = actor_data.name
+		actor.gender = actor_data.gender
+		actor.notes = actor_data.notes
+		if _project.get_actor_by_id(actor.id) != null:
+			push_error("Project file contains two actors with the same ID")
+			continue
+		_project.actors.append(actor)
 	
-	for ep_path in data.episode_files:
-		# Relative to global
-		ep_path = dir.plus_file(ep_path)
-		_script_editor.open_script(ep_path)
-	
-	_project_path = fpath
+	_project.file_path = fpath
+	_set_project(_project)
 
 
 static func _load_project_file(fpath):
@@ -189,7 +243,9 @@ static func _load_project_file(fpath):
 	
 	var data = {
 		"title": "Untitled",
-		"episode_files": []
+		"episode_files": [],
+		"actors": [],
+		"characters": []
 	}
 	
 	if json_data.has("title"):
@@ -197,6 +253,12 @@ static func _load_project_file(fpath):
 	
 	if json_data.has("episode_files"):
 		data.episode_files = json_data.episode_files
+
+	if json_data.has("actors"):
+		data.actors = json_data.actors
+
+	if json_data.has("characters"):
+		data.characters = json_data.characters
 	
 	return data
 
@@ -218,4 +280,3 @@ static func _save_project_file(data, fpath):
 	f.close()
 	print("Saved ", fpath)
 	return true
-

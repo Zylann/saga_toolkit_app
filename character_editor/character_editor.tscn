@@ -64,6 +64,7 @@ margin_left = 67.0
 margin_right = 608.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+editable = false
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/GridContainer"]
 margin_top = 33.0
@@ -77,6 +78,7 @@ margin_top = 28.0
 margin_right = 608.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
+editable = false
 
 [node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer/GridContainer"]
 margin_top = 61.0
@@ -89,6 +91,7 @@ margin_left = 67.0
 margin_top = 56.0
 margin_right = 608.0
 margin_bottom = 80.0
+editable = false
 
 [node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]
 margin_left = 612.0
@@ -113,6 +116,7 @@ margin_top = 114.0
 margin_right = 812.0
 margin_bottom = 782.0
 size_flags_vertical = 3
+readonly = true
 caret_blink = true
 caret_blink_speed = 0.5
 

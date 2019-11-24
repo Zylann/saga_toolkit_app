@@ -264,6 +264,11 @@ static func get_theme() -> Theme:
 	theme.set_stylebox("bg", "VSplitContainer", split)
 	theme.set_stylebox("bg", "HSplitContainer", split)
 	
+	# GridContainer
+	
+	theme.set_constant("hseparation", "GridContainer", 8)
+	theme.set_constant("vseparation", "GridContainer", 8)
+	
 	# LineEdit
 	
 	var line_edit = list_panel.duplicate()

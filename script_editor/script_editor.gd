@@ -34,7 +34,7 @@ onready var _spell_check_panel = get_node("VBoxContainer/SpellCheckPanel")
 onready var _file_menu = get_node("VBoxContainer/HBoxContainer/FileMenu")
 onready var _view_menu = get_node("VBoxContainer/HBoxContainer/ViewMenu")
 
-var _project = ScriptData.Project.new()
+var _project = null
 var _modified_files = {}
 var _open_script_dialog: FileDialog
 var _statistics_window: AcceptDialog
@@ -84,7 +84,23 @@ func _ready():
 
 
 func set_project(project):
+	
+	close_all_scripts()
 	_project = project
+	
+	for ep in project.episodes:
+		var fname = ep.file_path.get_file()
+		var i = _file_list.get_item_count()
+		_file_list.add_item(fname)
+		_file_list.set_item_metadata(i, ep.file_path)
+	
+	_update_character_colors()
+	
+	if _file_list.get_item_count() > 0:
+		var default_selected = 0
+		_file_list.select(default_selected)
+		var path = _file_list.get_item_metadata(default_selected)
+		_set_current_script(path)
 
 
 func close_all_scripts():
@@ -94,7 +110,9 @@ func close_all_scripts():
 	_text_editor.clear_undo_history()
 
 
-func open_script(path):
+func _open_script(path):
+	# This actually adds an episode to the project,
+	# it's not for opening one already inside it
 	
 	if _project.get_episode_from_path(path) != null:
 		print("Script ", path, " is already open")
@@ -108,7 +126,7 @@ func open_script(path):
 	var text = f.get_as_text()
 	f.close()
 
-	var errors = _update_episode_data(_project, text, path)
+	var errors = ScriptParser.update_episode_data(_project, text, path)
 	
 	var filename = path.get_file()
 	var i = _file_list.get_item_count()
@@ -121,36 +139,6 @@ func open_script(path):
 	_set_current_script(path)
 	
 	emit_signal("script_parsed", _project, path, errors)
-
-
-# TODO I think this should be part of the parser
-static func _update_episode_data( \
-		project: ScriptData.Project, text: String, path: String) -> Array:
-	
-	var res = ScriptParser.parse_episode(text)
-	var ep = res.data
-	ep.file_path = path
-	
-	var epi = project.get_episode_index_from_path(path)
-	if epi == -1:
-		project.episodes.append(ep)
-	else:
-		project.episodes[epi] = ep
-	
-	var character_occurences : Dictionary = ep.character_occurrences
-	if len(character_occurences) != 0:
-		for cname in character_occurences:
-			
-			# Get or create character
-			var character : ScriptData.Character
-			if project.characters.has(cname):
-				character = project.characters[cname]
-			else:
-				character = ScriptData.Character.new()
-				character.name = cname
-				project.characters[cname] = character
-	
-	return res.errors
 
 
 func _set_current_script(path):
@@ -244,7 +232,7 @@ func save_current_script():
 	f.store_string(_text_editor.text)
 	f.close()
 	
-	var errors = _update_episode_data(_project, _text_editor.text, script_path)
+	var errors = ScriptParser.update_episode_data(_project, _text_editor.text, script_path)
 	var i = _get_file_list_index(script_path)
 	assert(i != -1)
 	_file_list.set_item_text(i, script_path.get_file())
@@ -336,7 +324,7 @@ func _trigger_open_script_dialog():
 
 func _on_OpenScriptDialog_file_selected(path):
 	UserPrefs.set_value("last_open_script_path", path.get_base_dir())
-	open_script(path)
+	_open_script(path)
 
 
 func _on_OpenButton_pressed():
