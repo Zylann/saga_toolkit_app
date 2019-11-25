@@ -12,6 +12,19 @@ It supersedes my previous work which was using Python: https://github.com/Zylann
 Features
 ----------
 
+- Interface grouping together various tasks of production of a series
+- Script editor using a custom kind of Markdown, with scenes index and characters highlighting
+- Characters list automatically deduced from the script
+- Visualization of all occurrences of a character within each episode
+- Focus on minimalism: all data is stored in readable text files, and the script written identical without the app.
+- Script is convertible to HTML for actors, with some extras (standard formatting, numbered lines, interactive characters highlighting)
+- Actor management: which character they play, which lines they have to do, which episode did they record so far
+- Estimated episode duration
+- Tools for french users with QWERTY keyboards to type or recover accents
+- Dark theme
+- Should work on all desktop platforms (Windows, Linux, Mac OSX)
+- And likely more features, as I add them when I need
+
 ### Script parser
 
 The first, mainly developped tool is a script parser.
