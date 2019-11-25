@@ -72,12 +72,13 @@ func _ready():
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_open_script_dialog = FileDialog.new()
+	_open_script_dialog.mode = FileDialog.MODE_OPEN_FILES
 	_open_script_dialog.window_title = "Open Script"
 	_open_script_dialog.add_filter("*.txt ; TXT files")
 	_open_script_dialog.add_filter("*.md ; MD files")
 	_open_script_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	_open_script_dialog.resizable = true
-	_open_script_dialog.connect("file_selected", self, "_on_OpenScriptDialog_file_selected")
+	_open_script_dialog.connect("files_selected", self, "_on_OpenScriptDialog_files_selected")
 	add_child(_open_script_dialog)
 	
 	_statistics_window = AcceptDialog.new()
@@ -340,9 +341,10 @@ func _trigger_open_script_dialog():
 	_open_script_dialog.popup_centered_ratio(0.75)
 
 
-func _on_OpenScriptDialog_file_selected(path):
-	UserPrefs.set_value("last_open_script_path", path.get_base_dir())
-	_open_script(path)
+func _on_OpenScriptDialog_files_selected(paths):
+	for path in paths:
+		UserPrefs.set_value("last_open_script_path", path.get_base_dir())
+		_open_script(path)
 
 
 func _on_OpenButton_pressed():
