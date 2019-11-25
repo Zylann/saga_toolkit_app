@@ -48,7 +48,11 @@ static func _parse_episode(text, existing_episode = null):
 		occurrence.texture = null
 		occurrence.word_count = 0
 	
-	var scene = null
+	var scene = ScriptData.Scene.new()
+	scene.title = "<DefaultScene>"
+	scene.line_index = 0
+	data.scenes.append(scene)
+	
 	var unrecognized_content = {}
 	
 	# Using a while because for loop forbids incrementing the index --"
@@ -126,6 +130,10 @@ static func _parse_episode(text, existing_episode = null):
 			}
 		
 		line_index += 1
+	
+	if len(data.scenes) > 1 and len(data.scenes[0].elements) == 0:
+		# Remove default scene
+		data.scenes.remove(0)
 	
 	var errors = []
 
