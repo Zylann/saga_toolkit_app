@@ -85,5 +85,6 @@ margin_bottom = 800.0
 size_flags_vertical = 3
 
 [node name="CharacterGrid" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+custom_constants/vseparation = 6
 columns = 3
 [connection signal="item_selected" from="EpisodeList" to="." method="_on_EpisodeList_item_selected"]
