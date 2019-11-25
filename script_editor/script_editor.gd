@@ -108,6 +108,7 @@ func set_project(project):
 func close_all_scripts():
 	_modified_files.clear()
 	_file_list.clear()
+	_scene_list.clear()
 	_text_editor.text = ""
 	_text_editor.clear_undo_history()
 
