@@ -77,6 +77,12 @@ func _find_next():
 				continue
 		break
 	
+	# TODO If only one word is available, select it
+	# TODO Remember choice of words
+	# TODO Allow double-clicking to correct
+	# TODO Increase font size
+	# TODO When Ctrl+F is used, close panel
+	
 	_suggestions_list.clear()
 	
 	if not res.finished:
