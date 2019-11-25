@@ -178,14 +178,13 @@ func _on_RemoveActorButton_pressed():
 		return
 	_remove_actor_confirmation_dialog.dialog_text = "Remove actor {0}?".format([actor.name])
 	_remove_actor_confirmation_dialog.popup_centered_minsize()
-	_properties_container.hide()
-	_update_buttons_availability()
 
 
 func _on_RemoveActorConfirmationDialog_confirmed():
 	var actor_id = _get_selected_actor_id()
 	
-	for character in _project.characters:
+	for character_name in _project.characters:
+		var character = _project.characters[character_name]
 		if character.actor_id == actor_id:
 			character.actor_id = -1
 	
@@ -195,6 +194,8 @@ func _on_RemoveActorConfirmationDialog_confirmed():
 			break
 
 	_update_actors_list()
+	_properties_container.hide()
+	_update_buttons_availability()
 
 
 func _on_ActorNameEdit_text_changed(new_text):
