@@ -2,6 +2,7 @@ extends Control
 
 const ScriptData = preload("./../script_data.gd")
 const CharacterSelectionDialogScene = preload("./character_selection_dialog.tscn")
+const TextDialogScene = preload("./text_dialog.tscn")
 
 onready var _actor_list = get_node("ActorList")
 onready var _gender_selector = get_node("VSplitContainer/Properties/GenderSelector")
@@ -15,6 +16,7 @@ onready var _get_statements_button = get_node("VSplitContainer/HBoxContainer/Sta
 var _project = null
 var _character_selection_dialog = null
 var _remove_actor_confirmation_dialog = null
+var _text_dialog = null
 
 
 func _ready():
@@ -46,6 +48,9 @@ func setup_dialogs(parent):
 	_remove_actor_confirmation_dialog.connect(\
 		"confirmed", self, "_on_RemoveActorConfirmationDialog_confirmed")
 	parent.add_child(_remove_actor_confirmation_dialog)
+	
+	_text_dialog = TextDialogScene.instance()
+	parent.add_child(_text_dialog)
 
 
 func _update_buttons_availability():
@@ -253,8 +258,7 @@ func _generate_statements_redux():
 				for s in statements:
 					text += str(_statement_to_text(s), "\n\n")
 	
-	# TODO Show this in a TextEdit
-	print(text)
+	return text
 
 
 static func _statement_to_text(s):
@@ -265,4 +269,6 @@ static func _statement_to_text(s):
 	
 
 func _on_StatementsReduxButton_pressed():
-	_generate_statements_redux()
+	var text = _generate_statements_redux()
+	_text_dialog.set_text(text)
+	_text_dialog.popup_centered_ratio()
