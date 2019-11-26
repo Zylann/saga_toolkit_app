@@ -183,13 +183,13 @@ func _on_SceneList_item_selected(index):
 func _get_current_script_path():
 	var selection = _file_list.get_selected_items()
 	if len(selection) == 0:
-		return null
+		return ""
 	return _file_list.get_item_metadata(selection[0])
 
 
 func export_as_html():
 	var script_path = _get_current_script_path()
-	if script_path == null:
+	if script_path == "":
 		printerr("No selected script")
 		return
 	var data = _project.get_episode_from_path(script_path)
@@ -244,7 +244,7 @@ func _setup_colors(character_names):
 
 func save_current_script():
 	var script_path = _get_current_script_path()
-	if script_path == null:
+	if script_path == "":
 		printerr("No selected script")
 		return
 	
