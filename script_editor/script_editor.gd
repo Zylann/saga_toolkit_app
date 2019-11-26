@@ -7,6 +7,7 @@ const ScriptData = preload("./../script_data.gd")
 const AccentorController = preload("./../spell_checker/accentor_controller.gd")
 const WordsDictionary = preload("../words_dictionary.gd")
 const UserPrefs = preload("./../util/userprefs.gd")
+const MixPreviewDialogScene = preload("./mix_preview_dialog.tscn")
 
 const CHARACTER_NAME_COLOR = Color(0.5, 0.5, 1.0)
 const HEADING_COLOR = Color(0.3, 0.6, 0.3)
@@ -23,6 +24,7 @@ const MENU_FILE_EXPORT_ALL_AS_HTML = 3
 const MENU_VIEW_ACCENT_BUTTONS = 0
 const MENU_VIEW_STATISTICS = 1
 const MENU_VIEW_MINIMAP = 2
+const MENU_VIEW_MIX_PREVIEW = 3
 
 signal script_parsed(project, path)
 
@@ -39,6 +41,7 @@ var _project = null
 var _modified_files = {}
 var _open_script_dialog: FileDialog
 var _statistics_window: AcceptDialog
+var _mix_preview_dialog: AcceptDialog
 
 
 func _ready():
@@ -69,6 +72,7 @@ func _ready():
 	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
 	_view_menu.get_popup().add_item("Statistics", MENU_VIEW_STATISTICS)
 	_view_menu.get_popup().add_item("Minimap", MENU_VIEW_MINIMAP)
+	_view_menu.get_popup().add_item("Mix Preview", MENU_VIEW_MIX_PREVIEW)
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_open_script_dialog = FileDialog.new()
@@ -84,6 +88,9 @@ func _ready():
 	_statistics_window = AcceptDialog.new()
 	_statistics_window.window_title = "Script Statistics"
 	add_child(_statistics_window)
+	
+	_mix_preview_dialog = MixPreviewDialogScene.instance()
+	add_child(_mix_preview_dialog)
 
 
 func set_project(project):
@@ -104,6 +111,8 @@ func set_project(project):
 		_file_list.select(default_selected)
 		var path = _file_list.get_item_metadata(default_selected)
 		_set_current_script(path)
+	
+	_mix_preview_dialog.set_project(project)
 
 
 func close_all_scripts():
@@ -363,3 +372,6 @@ func _on_ViewMenu_id_pressed(id):
 			_show_statistics()
 		MENU_VIEW_MINIMAP:
 			_text_editor.minimap_draw = not _text_editor.minimap_draw
+		MENU_VIEW_MIX_PREVIEW:
+			_mix_preview_dialog.set_episode_path(_get_current_script_path())
+			_mix_preview_dialog.popup_centered_ratio()
