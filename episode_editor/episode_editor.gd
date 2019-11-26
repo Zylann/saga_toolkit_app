@@ -72,21 +72,21 @@ func _update_controls():
 	character_names.sort_custom(comparer, "compare")
 	
 	var label = Label.new()
-	label.text = "Character"
+	label.text = tr("Character")
 	_character_grid.add_child(label)
 
 	label = Label.new()
-	label.text = "Actor"
+	label.text = tr("Actor")
 	_character_grid.add_child(label)
 
 	label = Label.new()
-	label.text = "Recorded"
+	label.text = tr("Recorded")
 	_character_grid.add_child(label)
 	
 	_character_grid.add_child(HSeparator.new())
 	_character_grid.add_child(HSeparator.new())
 	_character_grid.add_child(HSeparator.new())
-		
+	
 	for cname in character_names:
 		var occurrence = episode.character_occurrences[cname]
 		var character = _project.characters[cname]

@@ -62,22 +62,22 @@ func _ready():
 	_spell_check_panel.set_text_edit(_text_editor)
 	_spell_check_panel.set_controller(accentor_controller)
 	
-	_file_menu.get_popup().add_item("Open Script...", MENU_FILE_OPEN_SCRIPT)
-	_file_menu.get_popup().add_item("Save Current Script...", MENU_FILE_SAVE_CURRENT_SCRIPT)
+	_file_menu.get_popup().add_item(tr("Open Script..."), MENU_FILE_OPEN_SCRIPT)
+	_file_menu.get_popup().add_item(tr("Save Current Script..."), MENU_FILE_SAVE_CURRENT_SCRIPT)
 	_file_menu.get_popup().add_separator()
-	_file_menu.get_popup().add_item("Export As HTML...", MENU_FILE_EXPORT_AS_HTML)
-	_file_menu.get_popup().add_item("Export All As HTML", MENU_FILE_EXPORT_ALL_AS_HTML)
+	_file_menu.get_popup().add_item(tr("Export As HTML..."), MENU_FILE_EXPORT_AS_HTML)
+	_file_menu.get_popup().add_item(tr("Export All As HTML"), MENU_FILE_EXPORT_ALL_AS_HTML)
 	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
 	
-	_view_menu.get_popup().add_item("Accent Buttons", MENU_VIEW_ACCENT_BUTTONS)
-	_view_menu.get_popup().add_item("Statistics", MENU_VIEW_STATISTICS)
-	_view_menu.get_popup().add_item("Minimap", MENU_VIEW_MINIMAP)
-	_view_menu.get_popup().add_item("Mix Preview", MENU_VIEW_MIX_PREVIEW)
+	_view_menu.get_popup().add_item(tr("Accent Buttons"), MENU_VIEW_ACCENT_BUTTONS)
+	_view_menu.get_popup().add_item(tr("Statistics"), MENU_VIEW_STATISTICS)
+	_view_menu.get_popup().add_item(tr("Minimap"), MENU_VIEW_MINIMAP)
+	_view_menu.get_popup().add_item(tr("Mix Preview"), MENU_VIEW_MIX_PREVIEW)
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
 	_open_script_dialog = FileDialog.new()
 	_open_script_dialog.mode = FileDialog.MODE_OPEN_FILES
-	_open_script_dialog.window_title = "Open Script"
+	_open_script_dialog.window_title = tr("Open Script")
 	_open_script_dialog.add_filter("*.txt ; TXT files")
 	_open_script_dialog.add_filter("*.md ; MD files")
 	_open_script_dialog.access = FileDialog.ACCESS_FILESYSTEM
@@ -86,7 +86,7 @@ func _ready():
 	add_child(_open_script_dialog)
 	
 	_statistics_window = AcceptDialog.new()
-	_statistics_window.window_title = "Script Statistics"
+	_statistics_window.window_title = tr("Script Statistics")
 	add_child(_statistics_window)
 	
 	_mix_preview_dialog = MixPreviewDialogScene.instance()

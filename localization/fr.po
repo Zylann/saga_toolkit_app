@@ -1,0 +1,221 @@
+msgid ""
+msgstr "Project-Id-Version: Saga Toolkit\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ "Language: fr"
+
+msgid "---%"
+msgstr "---%"
+
+msgid "36 words"
+msgstr "36 mots"
+
+msgid "<UnnamedActor>"
+msgstr "<ActeurSansNom>"
+
+msgid "About..."
+msgstr "A propos..."
+
+msgid "Accent Buttons"
+msgstr "Boutons d\'Accents"
+
+msgid "Actor"
+msgstr "Acteur"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Add Actor"
+msgstr "Ajouter Acteur"
+
+msgid "Add to dictionary"
+msgstr "Ajouter au Dictionaire"
+
+msgid "Character"
+msgstr "Personnage"
+
+msgid "Characters"
+msgstr "Personnages"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Correct"
+msgstr "Corriger"
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete Actor\?"
+msgstr "Supprimer Acteur\?"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Export All As HTML"
+msgstr "Exporter Tout En HTML..."
+
+msgid "Export As HTML..."
+msgstr "Exporter En HTML..."
+
+msgid "Female"
+msgstr "Femelle"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Filter"
+msgstr "Filtrer"
+
+msgid "Full name"
+msgstr "Nom Complet"
+
+msgid "Gender"
+msgstr "Genre"
+
+msgid "Get Statements"
+msgstr "Lister Répliques"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Ignore All"
+msgstr "Tout Ignorer"
+
+msgid "Male"
+msgstr "Mâle"
+
+msgid "Minimap"
+msgstr "Minimap"
+
+msgid "Mix Preview"
+msgstr "Aperçu du Mixage"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New"
+msgstr "Nouveau"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "No results"
+msgstr "Pas de Résultats"
+
+msgid "No suggestions"
+msgstr "Pas de Suggestions"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Open Project"
+msgstr "Ouvrir Projet"
+
+msgid "Open Script"
+msgstr "Ouvrir Script"
+
+msgid "Open Script..."
+msgstr "Ouvrir Script..."
+
+msgid "Open..."
+msgstr "Ouvrir..."
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Prev"
+msgstr "Précedent"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Recorded"
+msgstr "Enregistré"
+
+msgid "Recording grid"
+msgstr "Grille d\'Enregistrements"
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Remove Actor"
+msgstr "Supprimer Acteur"
+
+msgid "Removing Actor"
+msgstr "Supprimer Acteur"
+
+msgid "SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.\n"
+ "Developped by Marc Gilleron, aka Zylann\n"
+ "[url=\\\\"https://github.com/Zylann/saga_toolkit_app\\\\"]https://github.com/Zylann/saga_toolkit_app[/url]"
+msgstr "SagaTK est un ensemble d\'outils pour la production de séries audio amateur, combinés dans une interface créée avec Godot Engine.\n"
+ "Développé par Marc Gilleron, alias Zylann\n"
+ "[url=\\\\"https://github.com/Zylann/saga_toolkit_app\\\\"]https://github.com/Zylann/saga_toolkit_app[/url]"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Save As..."
+msgstr "Sauvegarder Sous..."
+
+msgid "Save Current Script..."
+msgstr "Sauvegarder Script Courant..."
+
+msgid "Save DB"
+msgstr "Sauvegarder DB"
+
+msgid "Save Project As"
+msgstr "Sauvegarder Projet Sous..."
+
+msgid "Scenes"
+msgstr "Scènes"
+
+msgid "Script Statistics"
+msgstr "Statistiques du Script"
+
+msgid "Search complete"
+msgstr "Recherche Complète"
+
+msgid "Skip"
+msgstr "Ignorer"
+
+msgid "Sort by:"
+msgstr "Trier Par:"
+
+msgid "Statistics"
+msgstr "Statistiques"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Suggestions:"
+msgstr "Suggestions:"
+
+msgid "Synopsis"
+msgstr "Synopsis"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "View"
+msgstr "Vue"
+
+msgid "Word Count"
+msgstr "Nombre de Mots"
+
+msgid "Year"
+msgstr "Année"
+
+msgid "ep1"
+msgstr "ep1"
+
+msgid "x"
+msgstr "x"
+

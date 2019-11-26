@@ -92,18 +92,18 @@ func _find_next():
 		_text_edit.center_viewport_to_cursor()
 	
 		if len(res.suggestions) > 0:
-			_label.text = "Suggestions:"
+			_label.text = tr("Suggestions:")
 			for word in res.suggestions:
 				var i = _suggestions_list.get_item_count()
 				_suggestions_list.add_item(word)
 				_suggestions_list.set_item_metadata(i, word)
 		else:
-			_label.text = "No suggestions"
+			_label.text = tr("No suggestions")
 
 		_last_result = res
 	
 	else:
-		_label.text = "Search complete"
+		_label.text = tr("Search complete")
 	
 
 func _on_AddToDictionaryButton_pressed():

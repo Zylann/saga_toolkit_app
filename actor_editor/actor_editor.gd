@@ -20,9 +20,9 @@ var _text_dialog = null
 
 
 func _ready():
-	_gender_selector.add_item("Male", ScriptData.GENDER_MALE)
-	_gender_selector.add_item("Female", ScriptData.GENDER_FEMALE)
-	_gender_selector.add_item("Other", ScriptData.GENDER_OTHER)
+	_gender_selector.add_item(tr("Male"), ScriptData.GENDER_MALE)
+	_gender_selector.add_item(tr("Female"), ScriptData.GENDER_FEMALE)
+	_gender_selector.add_item(tr("Other"), ScriptData.GENDER_OTHER)
 	
 	_properties_container.hide()
 	_update_buttons_availability()
@@ -43,8 +43,8 @@ func setup_dialogs(parent):
 	parent.add_child(_character_selection_dialog)
 	
 	_remove_actor_confirmation_dialog = ConfirmationDialog.new()
-	_remove_actor_confirmation_dialog.window_title = "Removing Actor"
-	_remove_actor_confirmation_dialog.dialog_text = "Delete Actor?"
+	_remove_actor_confirmation_dialog.window_title = tr("Removing Actor")
+	_remove_actor_confirmation_dialog.dialog_text = tr("Delete Actor?")
 	_remove_actor_confirmation_dialog.connect(\
 		"confirmed", self, "_on_RemoveActorConfirmationDialog_confirmed")
 	parent.add_child(_remove_actor_confirmation_dialog)
@@ -132,7 +132,6 @@ func _on_ActorList_item_selected(index):
 	
 
 func _update_for_actor(actor_id):
-	print("Showing actor ", actor_id)
 	var actor = _project.get_actor_by_id(actor_id)
 	if actor == null:
 		push_error("Actor {0} not found".format(actor_id))
@@ -149,7 +148,6 @@ func _update_for_actor(actor_id):
 	
 	for i in _gender_selector.get_item_count():
 		if _gender_selector.get_item_id(i) == actor.gender:
-			print("Showing gender ", actor.gender, " (index ", i, ")")
 			_gender_selector.selected = i
 			break
 	
@@ -159,7 +157,7 @@ func _update_for_actor(actor_id):
 func _on_AddActorButton_pressed():
 	var actor = ScriptData.Actor.new()
 	actor.id = _project.generate_actor_id()
-	actor.name = "<UnnamedActor>"
+	actor.name = tr("<UnnamedActor>")
 	actor.gender = ScriptData.GENDER_OTHER
 	_project.actors.append(actor)
 	_update_actors_list()

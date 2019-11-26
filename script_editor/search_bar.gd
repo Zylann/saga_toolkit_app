@@ -80,7 +80,7 @@ func _search(flags):
 	var res = _text_edit.search(text, flags, search_line, search_col)
 	
 	if len(res) == 0:
-		_label.text = "No results"
+		_label.text = tr("No results")
 		
 	else:
 		# TODO Show how many occurrences there are

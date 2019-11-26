@@ -23,8 +23,8 @@ var _empty_texture = null
 
 
 func _ready():
-	_character_sort_option_button.get_popup().add_item("Name", SORT_BY_NAME)
-	_character_sort_option_button.get_popup().add_item("Word Count", SORT_BY_WORD_COUNT)
+	_character_sort_option_button.get_popup().add_item(tr("Name"), SORT_BY_NAME)
+	_character_sort_option_button.get_popup().add_item(tr("Word Count"), SORT_BY_WORD_COUNT)
 	_character_sort_option_button.select(0)
 	_character_sort_option_button.get_popup().connect("id_pressed", self, "_on_SortOption_id_pressed")
 
@@ -35,6 +35,8 @@ func set_project(project):
 	
 	for ep in project.episodes:
 		_generate_character_occurrence_maps_highp(project, ep.file_path)
+	
+	# TODO Show/hide controls depending on active selection
 
 
 func _update_characters_list(project, sort_mode = -1):
@@ -193,7 +195,7 @@ func _on_CharacterList_item_selected(index):
 		_occurrence_grid.add_child(ep_name_label)
 		
 		var word_count_label = Label.new()
-		word_count_label.text = str(word_count, " words    ")
+		word_count_label.text = str(word_count, " ", tr("words"), "    ")
 		_occurrence_grid.add_child(word_count_label)
 
 		var tex_control = TextureRect.new()

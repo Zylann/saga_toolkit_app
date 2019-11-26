@@ -31,13 +31,13 @@ var _save_project_dialog = null
 func _ready():
 	theme = ThemeGenerator.get_theme()
 	
-	_project_menu.get_popup().add_item("New", MENU_PROJECT_NEW)
-	_project_menu.get_popup().add_item("Open...", MENU_PROJECT_OPEN)
-	_project_menu.get_popup().add_item("Save", MENU_PROJECT_SAVE)
-	_project_menu.get_popup().add_item("Save As...", MENU_PROJECT_SAVE_AS)
+	_project_menu.get_popup().add_item(tr("New"), MENU_PROJECT_NEW)
+	_project_menu.get_popup().add_item(tr("Open..."), MENU_PROJECT_OPEN)
+	_project_menu.get_popup().add_item(tr("Save"), MENU_PROJECT_SAVE)
+	_project_menu.get_popup().add_item(tr("Save As..."), MENU_PROJECT_SAVE_AS)
 	_project_menu.get_popup().connect("id_pressed", self, "_on_ProjectMenu_id_pressed")
 	
-	_help_menu.get_popup().add_item("About...", MENU_HELP_ABOUT)
+	_help_menu.get_popup().add_item(tr("About..."), MENU_HELP_ABOUT)
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
 		
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
@@ -48,7 +48,7 @@ func _ready():
 	var fd = FileDialog.new()
 	fd.mode = FileDialog.MODE_OPEN_FILE
 	fd.access = FileDialog.ACCESS_FILESYSTEM
-	fd.window_title = "Open Project"
+	fd.window_title = tr("Open Project")
 	fd.resizable = true
 	fd.add_filter("*.stk ; STK Project Files")
 	fd.connect("file_selected", self, "_on_OpenProjectDialog_file_selected")
@@ -58,7 +58,7 @@ func _ready():
 	fd = FileDialog.new()
 	fd.mode = FileDialog.MODE_SAVE_FILE
 	fd.access = FileDialog.ACCESS_FILESYSTEM
-	fd.window_title = "Save Project As"
+	fd.window_title = tr("Save Project As")
 	fd.resizable = true
 	fd.add_filter("*.stk ; STK Project Files")
 	fd.connect("file_selected", self, "_on_SaveProjectDialog_file_selected")
