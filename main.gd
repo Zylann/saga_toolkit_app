@@ -12,6 +12,7 @@ onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
 onready var _actor_editor = get_node("VBoxContainer/TabContainer/ActorEditor")
 onready var _episode_editor = get_node("VBoxContainer/TabContainer/EpisodeEditor")
+onready var _project_editor = get_node("VBoxContainer/TabContainer/ProjectEditor")
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
@@ -64,6 +65,12 @@ func _ready():
 	fd.connect("file_selected", self, "_on_SaveProjectDialog_file_selected")
 	dialogs_parent.add_child(fd)
 	_save_project_dialog = fd
+	
+	_tab_container.set_tab_title(_script_editor.get_index(), tr("Script"))
+	_tab_container.set_tab_title(_character_editor.get_index(), tr("Characters"))
+	_tab_container.set_tab_title(_actor_editor.get_index(), tr("Actors"))
+	_tab_container.set_tab_title(_episode_editor.get_index(), tr("Episodes"))
+	_tab_container.set_tab_title(_project_editor.get_index(), tr("Project"))
 	
 	_actor_editor.setup_dialogs(dialogs_parent)
 

@@ -23,6 +23,9 @@ msgstr "Boutons d\'Accents"
 msgid "Actor"
 msgstr "Acteur"
 
+msgid "Actors"
+msgstr "Acteurs"
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -55,6 +58,9 @@ msgstr "Supprimer Acteur\?"
 
 msgid "Description"
 msgstr "Description"
+
+msgid "Episodes"
+msgstr "Episodes"
 
 msgid "Export All As HTML"
 msgstr "Exporter Tout En HTML..."
@@ -176,6 +182,9 @@ msgstr "Sauvegarder Projet Sous..."
 
 msgid "Scenes"
 msgstr "Scènes"
+
+msgid "Script"
+msgstr "Script"
 
 msgid "Script Statistics"
 msgstr "Statistiques du Script"
