@@ -16,10 +16,13 @@ const SELECTION_COLOR = Color(1, 1, 1, 0.1)
 const BACKGROUND_COLOR = Color(0.1, 0.1, 0.1)
 const CURRENT_LINE_COLOR = Color(0.0, 0.0, 0.0, 0.2)
 
-const MENU_FILE_OPEN_SCRIPT = 0
-const MENU_FILE_SAVE_CURRENT_SCRIPT = 1
-const MENU_FILE_EXPORT_AS_HTML = 2
-const MENU_FILE_EXPORT_ALL_AS_HTML = 3
+const MENU_FILE_NEW = 0
+const MENU_FILE_OPEN_SCRIPT = 1
+const MENU_FILE_SAVE = 2
+const MENU_FILE_SAVE_AS = 3
+const MENU_FILE_REMOVE_SCRIPT = 4
+const MENU_FILE_EXPORT_AS_HTML = 5
+const MENU_FILE_EXPORT_ALL_AS_HTML = 6
 
 const MENU_VIEW_ACCENT_BUTTONS = 0
 const MENU_VIEW_STATISTICS = 1
@@ -27,6 +30,7 @@ const MENU_VIEW_MINIMAP = 2
 const MENU_VIEW_MIX_PREVIEW = 3
 
 signal script_parsed(project, path)
+signal script_removed(path)
 
 onready var _file_list = get_node("VSplitContainer/ScriptList")
 onready var _text_editor = get_node("VBoxContainer/TextEditor")
@@ -42,6 +46,8 @@ var _modified_files = {}
 var _open_script_dialog: FileDialog
 var _statistics_window: AcceptDialog
 var _mix_preview_dialog: AcceptDialog
+var _save_script_dialog: FileDialog
+var _new_script_dialog: FileDialog
 
 
 func _ready():
@@ -62,9 +68,13 @@ func _ready():
 	_spell_check_panel.set_text_edit(_text_editor)
 	_spell_check_panel.set_controller(accentor_controller)
 	
+	_file_menu.get_popup().add_item(tr("New Script..."), MENU_FILE_NEW)
 	_file_menu.get_popup().add_item(tr("Open Script..."), MENU_FILE_OPEN_SCRIPT)
-	_file_menu.get_popup().add_item(tr("Save Current Script..."), MENU_FILE_SAVE_CURRENT_SCRIPT)
 	_file_menu.get_popup().add_separator()
+	_file_menu.get_popup().add_item(tr("Save"), MENU_FILE_SAVE)
+	_file_menu.get_popup().add_item(tr("Save As..."), MENU_FILE_SAVE_AS)
+	_file_menu.get_popup().add_separator()
+	_file_menu.get_popup().add_item(tr("Remove Script From Project"), MENU_FILE_REMOVE_SCRIPT)
 	_file_menu.get_popup().add_item(tr("Export As HTML..."), MENU_FILE_EXPORT_AS_HTML)
 	_file_menu.get_popup().add_item(tr("Export All As HTML"), MENU_FILE_EXPORT_ALL_AS_HTML)
 	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
@@ -75,15 +85,38 @@ func _ready():
 	_view_menu.get_popup().add_item(tr("Mix Preview"), MENU_VIEW_MIX_PREVIEW)
 	_view_menu.get_popup().connect("id_pressed", self, "_on_ViewMenu_id_pressed")
 	
-	_open_script_dialog = FileDialog.new()
-	_open_script_dialog.mode = FileDialog.MODE_OPEN_FILES
-	_open_script_dialog.window_title = tr("Open Script")
-	_open_script_dialog.add_filter("*.txt ; TXT files")
-	_open_script_dialog.add_filter("*.md ; MD files")
-	_open_script_dialog.access = FileDialog.ACCESS_FILESYSTEM
-	_open_script_dialog.resizable = true
-	_open_script_dialog.connect("files_selected", self, "_on_OpenScriptDialog_files_selected")
-	add_child(_open_script_dialog)
+	var fd = FileDialog.new()
+	fd.mode = FileDialog.MODE_OPEN_FILES
+	fd.window_title = tr("Open Script")
+	fd.add_filter("*.txt ; TXT files")
+	fd.add_filter("*.md ; MD files")
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.resizable = true
+	fd.connect("files_selected", self, "_on_OpenScriptDialog_files_selected")
+	add_child(fd)
+	_open_script_dialog = fd
+
+	fd = FileDialog.new()
+	fd.mode = FileDialog.MODE_SAVE_FILE
+	fd.window_title = tr("New Script")
+	fd.add_filter("*.txt ; TXT files")
+	fd.add_filter("*.md ; MD files")
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.resizable = true
+	fd.connect("file_selected", self, "_on_NewScriptDialog_file_selected")
+	add_child(fd)
+	_new_script_dialog = fd
+	
+	fd = FileDialog.new()
+	fd.mode = FileDialog.MODE_SAVE_FILE
+	fd.window_title = tr("Save Script As")
+	fd.add_filter("*.txt ; TXT files")
+	fd.add_filter("*.md ; MD files")
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.resizable = true
+	fd.connect("file_selected", self, "_on_SaveScriptDialog_file_selected")
+	add_child(fd)
+	_save_script_dialog = fd
 	
 	_statistics_window = AcceptDialog.new()
 	_statistics_window.window_title = tr("Script Statistics")
@@ -123,13 +156,15 @@ func close_all_scripts():
 	_text_editor.clear_undo_history()
 
 
-func _open_script(path):
+func _open_script(path: String):
 	# This actually adds an episode to the project,
 	# it's not for opening one already inside it
 	
 	if _project.get_episode_from_path(path) != null:
 		print("Script ", path, " is already open")
 		return
+	
+	UserPrefs.set_value("last_open_script_path", path.get_base_dir())
 	
 	var f = File.new()
 	var err = f.open(path, File.READ)
@@ -154,7 +189,25 @@ func _open_script(path):
 	emit_signal("script_parsed", _project, path, errors)
 
 
-func _set_current_script(path):
+func _new_script():
+	if _project.file_path != "":
+		_new_script_dialog.current_dir = _project.file_path.get_base_dir()
+	_new_script_dialog.popup_centered_ratio()
+
+
+func _on_NewScriptDialog_file_selected(file_path: String):
+	var f = File.new()
+	var err = f.open(file_path, File.WRITE)
+	if err != OK:
+		printerr("Could not create file ", file_path, ", ", Errors.get_message(err))
+		return
+	f.store_string("")
+	f.close()
+	print("Created ", file_path)
+	_open_script(file_path)
+
+
+func _set_current_script(path: String):
 	var data = _project.get_episode_from_path(path)
 	
 	_text_editor.text = data.text
@@ -177,7 +230,7 @@ func _update_scene_list():
 		_scene_list.set_item_metadata(i, scene)
 
 
-func _on_SceneList_item_selected(index):
+func _on_SceneList_item_selected(index: int):
 	var scene = _scene_list.get_item_metadata(index)
 	
 	# TODO Need a function to center that line
@@ -249,11 +302,24 @@ func _setup_colors(character_names):
 		_text_editor.add_keyword_color(cname, CHARACTER_NAME_COLOR)
 
 
+func _trigger_save_script_dialog():
+	_save_script_dialog.popup_centered_ratio()
+
+
 func _save_current_script():
-	var script_path = _get_current_script_path()
-	if script_path == "":
-		printerr("No selected script")
+	var selection = _file_list.get_selected_items()
+	if len(selection) == 0:
+		push_error("No selected script")
 		return
+	var script_path = _file_list.get_item_metadata(selection[0])
+	if script_path == "":
+		_trigger_save_script_dialog()
+		return
+	_save_current_script_as(script_path)
+	
+	
+func _save_current_script_as(script_path: String):
+	assert(script_path != "")
 	
 	var f = File.new()
 	var err = f.open(script_path, File.WRITE)
@@ -275,6 +341,10 @@ func _save_current_script():
 	_update_scene_list()
 
 	emit_signal("script_parsed", _project, script_path, errors)
+
+
+func _on_SaveScriptDialog_file_selected(file_path):
+	_save_current_script_as(file_path)
 
 
 func _toggle_accent_buttons():
@@ -344,10 +414,16 @@ func _get_file_list_index(path):
 
 func _on_FileMenu_id_pressed(id):
 	match id:
+		MENU_FILE_NEW:
+			_new_script()
 		MENU_FILE_OPEN_SCRIPT:
 			_trigger_open_script_dialog()
-		MENU_FILE_SAVE_CURRENT_SCRIPT:
+		MENU_FILE_SAVE:
 			_save_current_script()
+		MENU_FILE_SAVE_AS:
+			_trigger_save_script_dialog()
+		MENU_FILE_REMOVE_SCRIPT:
+			_remove_current_script_from_project()
 		MENU_FILE_EXPORT_AS_HTML:
 			export_as_html()
 		MENU_FILE_EXPORT_ALL_AS_HTML:
@@ -363,7 +439,6 @@ func _trigger_open_script_dialog():
 
 func _on_OpenScriptDialog_files_selected(paths):
 	for path in paths:
-		UserPrefs.set_value("last_open_script_path", path.get_base_dir())
 		_open_script(path)
 
 
@@ -402,4 +477,38 @@ func _unhandled_input(event):
 				KEY_S:
 					if event.control:
 						_save_current_script()
+
+
+func _remove_current_script_from_project():
+	
+	var ep_path = _get_current_script_path()
+	if ep_path == "":
+		return
+	var epi = _project.get_episode_index_from_path(ep_path)
+	if epi == -1:
+		push_error("Episode not found for removal: {0}".format([ep_path]))
+		return
+	_project.episodes.remove(epi)
+	
+	var selected = _file_list.get_selected_items()
+	var next_selected = -1
+	if len(selected) > 0 and _file_list.get_item_metadata(selected[0]) == ep_path:
+		next_selected = selected[0]
+	
+	for i in _file_list.get_item_count():
+		if _file_list.get_item_metadata(i) == ep_path:
+			_file_list.remove_item(i)
+			break
+	
+	if _file_list.get_item_count() == 0:
+		_scene_list.clear()
+	elif next_selected != -1:
+		if next_selected >= _file_list.get_item_count():
+			next_selected -= 1
+		var path = _file_list.get_item_metadata(next_selected)
+		_file_list.select(next_selected)
+		_set_current_script(path)
+	
+	emit_signal("script_removed", ep_path)
+
 
