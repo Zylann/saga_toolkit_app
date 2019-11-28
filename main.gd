@@ -43,7 +43,7 @@ func _ready():
 		
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
 	_script_editor.connect("script_parsed", self, "_on_ScriptEditor_script_parsed")
-		
+	
 	var dialogs_parent = self
 
 	var fd = FileDialog.new()
@@ -78,6 +78,7 @@ func _ready():
 
 
 func _on_ScriptEditor_script_parsed(project, path, errors):
+	
 	if len(errors) > 0:
 		if len(errors) == 1:
 			_status_label.text = "Found 1 error in script"
@@ -87,6 +88,9 @@ func _on_ScriptEditor_script_parsed(project, path, errors):
 	else:
 		_status_label.text = "Script successfully parsed"
 		_status_label.modulate = Color(1, 1, 1)
+	
+	_character_editor.refresh_episode(path)
+	_episode_editor.update_episode_list()
 
 
 func _on_ProjectMenu_id_pressed(id):

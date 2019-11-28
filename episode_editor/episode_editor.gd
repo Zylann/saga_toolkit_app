@@ -18,11 +18,11 @@ var _project = null
 
 func set_project(project):
 	_project = project
-	_update_episode_list()
+	update_episode_list()
 	_update_controls()
 
 
-func _update_episode_list():
+func update_episode_list():
 	_episode_list.clear()
 	for ep in _project.episodes:
 		var i = _episode_list.get_item_count()

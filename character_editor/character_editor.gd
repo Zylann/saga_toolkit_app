@@ -3,8 +3,6 @@ extends HSplitContainer
 const ScriptData = preload("./../script_data.gd")
 const WordCountComparer = preload("./../word_count_comparer.gd")
 
-#signal characters_list_changed(names)
-
 const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0, 0.8)
 const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
 
@@ -34,13 +32,24 @@ func set_project(project):
 	_update_characters_list(_project)
 	
 	for ep in project.episodes:
-		_generate_character_occurrence_maps_highp(project, ep.file_path)
+		refresh_episode(ep.file_path)
 	
 	# TODO Show/hide controls depending on active selection
 
 
+func refresh_episode(ep_path: String):
+	_update_characters_list(_project)
+	_generate_character_occurrence_maps_highp(_project, ep_path)
+
+
 func _update_characters_list(project, sort_mode = -1):
 	
+	# Remember selection if any
+	var selected = _character_list.get_selected_items()
+	var selected_name = ""
+	if len(selected) > 0:
+		selected_name = _character_list.get_item_metadata(selected[0])
+		
 	_character_list.clear()
 	
 	var sorted_names = []
@@ -63,8 +72,9 @@ func _update_characters_list(project, sort_mode = -1):
 		var i = _character_list.get_item_count()
 		_character_list.add_item(cname)
 		_character_list.set_item_metadata(i, cname)
-
-	#emit_signal("characters_list_changed", project)
+		
+		if cname == selected_name:
+			_character_list.select(i)
 
 
 func _on_ScriptEditor_script_parsed(project, script_path, errors):
