@@ -62,6 +62,9 @@ msgstr "Description"
 msgid "Episodes"
 msgstr "Episodes"
 
+msgid "Estimated duration"
+msgstr "Estimated duration"
+
 msgid "Export All As HTML"
 msgstr "Export All As HTML"
 
@@ -115,6 +118,9 @@ msgstr "Next"
 
 msgid "No results"
 msgstr "No Results"
+
+msgid "No statistics available."
+msgstr "No statistics available."
 
 msgid "No suggestions"
 msgstr "No Suggestions"
@@ -197,6 +203,9 @@ msgstr "Skip"
 
 msgid "Sort by:"
 msgstr "Sort by:"
+
+msgid "Statements"
+msgstr "Statements"
 
 msgid "Statistics"
 msgstr "Statistics"

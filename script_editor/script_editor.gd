@@ -306,11 +306,11 @@ func _show_statistics():
 	var stats = _get_current_script_statistics()
 	print("Stats: ", stats)
 	if stats == null:
-		_statistics_window.dialog_text = "No statistics available."
+		_statistics_window.dialog_text = tr("No statistics available.")
 	else:
 		_statistics_window.dialog_text = PoolStringArray([
-			str("Statements: ", stats.statement_count),
-			str("Estimated duration: ", _format_time(stats.estimated_duration))
+			str(tr("Statements"), ": ", stats.statement_count),
+			str(tr("Estimated duration"), ": ", _format_time(stats.estimated_duration))
 		]).join("\n")
 	_statistics_window.popup_centered_minsize()
 
@@ -318,7 +318,8 @@ func _show_statistics():
 static func _format_time(total_seconds):
 	var mins = total_seconds / 60
 	var seconds = total_seconds % 60
-	return str(mins, " min ", seconds, " seconds")
+	return str(mins, " ", TranslationServer.translate("minutes"), \
+		" ", seconds, " ", TranslationServer.translate("seconds"))
 
 
 func _on_TextEditor_text_changed():
