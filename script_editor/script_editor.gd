@@ -249,7 +249,7 @@ func _setup_colors(character_names):
 		_text_editor.add_keyword_color(cname, CHARACTER_NAME_COLOR)
 
 
-func save_current_script():
+func _save_current_script():
 	var script_path = _get_current_script_path()
 	if script_path == "":
 		printerr("No selected script")
@@ -262,6 +262,7 @@ func save_current_script():
 		return
 	f.store_string(_text_editor.text)
 	f.close()
+	print("Saved ", script_path)
 	
 	var errors = ScriptParser.update_episode_data_from_text(\
 		_project, _text_editor.text, script_path)
@@ -345,7 +346,7 @@ func _on_FileMenu_id_pressed(id):
 		MENU_FILE_OPEN_SCRIPT:
 			_trigger_open_script_dialog()
 		MENU_FILE_SAVE_CURRENT_SCRIPT:
-			save_current_script()
+			_save_current_script()
 		MENU_FILE_EXPORT_AS_HTML:
 			export_as_html()
 		MENU_FILE_EXPORT_ALL_AS_HTML:
@@ -370,17 +371,34 @@ func _on_OpenButton_pressed():
 
 
 func _on_SaveButton_pressed():
-	save_current_script()
+	_save_current_script()
 
 
 func _on_ViewMenu_id_pressed(id):
 	match id:
 		MENU_VIEW_ACCENT_BUTTONS:
 			_toggle_accent_buttons()
+		
 		MENU_VIEW_STATISTICS:
 			_show_statistics()
+		
 		MENU_VIEW_MINIMAP:
 			_text_editor.minimap_draw = not _text_editor.minimap_draw
+			
 		MENU_VIEW_MIX_PREVIEW:
 			_mix_preview_dialog.set_episode_path(_get_current_script_path())
 			_mix_preview_dialog.popup_centered_ratio()
+
+
+func _unhandled_input(event):
+	
+	if not visible:
+		return
+	
+	if event is InputEventKey:
+		if not event.is_echo():
+			match event.scancode:
+				KEY_S:
+					if event.control:
+						_save_current_script()
+
