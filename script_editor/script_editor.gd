@@ -160,14 +160,21 @@ func _set_current_script(path):
 	_text_editor.text = data.text
 	_text_editor.cursor_set_line(0, true, false)
 	
+	_update_scene_list()
+	
+	# TODO To workaround this limitation, we may instance multiple TextEdits
+	_text_editor.clear_undo_history()
+
+
+func _update_scene_list():
+	var data = _project.get_episode_from_path(_get_current_script_path())
 	_scene_list.clear()
+	if data == null:
+		return
 	for scene in data.scenes:
 		var i = _scene_list.get_item_count()
 		_scene_list.add_item(scene.title)
 		_scene_list.set_item_metadata(i, scene)
-	
-	# TODO To workaround this limitation, we may instance multiple TextEdits
-	_text_editor.clear_undo_history()
 
 
 func _on_SceneList_item_selected(index):
@@ -264,6 +271,8 @@ func save_current_script():
 	_file_list.set_item_text(i, script_path.get_file())
 	_modified_files.erase(script_path)
 	
+	_update_scene_list()
+
 	emit_signal("script_parsed", _project, script_path, errors)
 
 
