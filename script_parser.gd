@@ -48,6 +48,8 @@ static func _parse_episode(text, existing_episode = null):
 		occurrence.texture = null
 		occurrence.word_count = 0
 	
+	data.scenes.clear()
+	
 	var scene = ScriptData.Scene.new()
 	scene.title = "<DefaultScene>"
 	scene.line_index = 0
