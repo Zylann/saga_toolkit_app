@@ -59,6 +59,9 @@ msgstr "Supprimer Acteur\?"
 msgid "Description"
 msgstr "Description"
 
+msgid "Episode"
+msgstr "Episode"
+
 msgid "Episodes"
 msgstr "Episodes"
 
@@ -113,6 +116,12 @@ msgstr "Nom"
 msgid "New"
 msgstr "Nouveau"
 
+msgid "New Script"
+msgstr "Nouveau Script"
+
+msgid "New Script..."
+msgstr "Nouveau Script..."
+
 msgid "Next"
 msgstr "Suivant"
 
@@ -127,6 +136,9 @@ msgstr "Pas de Suggestions"
 
 msgid "Notes"
 msgstr "Notes"
+
+msgid "Occurrences"
+msgstr "Occurrences"
 
 msgid "Open Project"
 msgstr "Ouvrir Projet"
@@ -161,6 +173,9 @@ msgstr "Supprimer"
 msgid "Remove Actor"
 msgstr "Supprimer Acteur"
 
+msgid "Remove Script From Project"
+msgstr "Exclure Script du Projet"
+
 msgid "Removing Actor"
 msgstr "Supprimer Acteur"
 
@@ -185,6 +200,9 @@ msgstr "Sauvegarder DB"
 
 msgid "Save Project As"
 msgstr "Sauvegarder Projet Sous..."
+
+msgid "Save Script As"
+msgstr "Sauvegarder Script Sous"
 
 msgid "Scenes"
 msgstr "Scènes"
@@ -233,6 +251,12 @@ msgstr "Année"
 
 msgid "ep1"
 msgstr "ep1"
+
+msgid "minutes"
+msgstr "minutes"
+
+msgid "seconds"
+msgstr "secondes"
 
 msgid "x"
 msgstr "x"
