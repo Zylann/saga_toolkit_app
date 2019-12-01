@@ -6,9 +6,6 @@ This is very experimental and tailored for my own use so far, and might be usefu
 
 I started to write this tool because I often write stuff on my smartphone, in raw text, because I like bare simplicity (and I don't like apps saving in formats only them can read), but I wanted to provide a better look and feel to people I share my files with. I implement other stuff in it if I need them or just for fun.
 
-It supersedes my previous work which was using Python: https://github.com/Zylann/SagaToolkit
-
-
 Features
 ----------
 
@@ -61,3 +58,17 @@ CHARACTER 2 -- I'd like to eat it.
 
 Once the script has been parsed, it can also be exported into a read-only HTML file, which is targeted at actors. This way, we can convert from Markdown to a very readable format which only requires a browser to open, and can also have some fancy Javascript code to highlight the characters they have to play.
 
+
+Where do I get the app?
+-------------------------
+
+There is no official release yet. I am using it on a daily basis for an ongoing project, but it is still in development, as I consider it needs usability improvements. However, you can test it quite simply if you want to:
+
+- Download this repository using the green button on the top left
+- Download latest Godot Engine for your OS: https://downloads.tuxfamily.org/godotengine/3.2/beta2/
+- Place Godot next to the app folder (not inside!)
+- Run Godot: in the project manager, import the project by locating the `project.godot` file inside the project
+- Open the project: a progress bar may show up the first time, and the Godot Editor will show up
+- Finally, run the app by pressing the Play button on the top left.
+
+If you find any problem, please report it in the issue tracker.
