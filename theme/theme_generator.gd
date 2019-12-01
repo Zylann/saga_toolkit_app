@@ -32,6 +32,26 @@ static func _make_button_stylebox(color) -> StyleBox:
 	return sb
 
 
+static func _make_button_focus_stylebox():
+	var button_focus = StyleBoxFlat.new()
+	button_focus.draw_center = false
+	button_focus.set_corner_radius_all(2)
+	button_focus.set_border_width_all(1)
+	button_focus.border_color = ACCENT_COLOR
+	button_focus.set_expand_margin_all(2)
+	return button_focus
+
+
+static func make_button_styleboxes() -> Dictionary:
+	return {
+		"normal": _make_button_stylebox(_grey(0.2)),
+		"hover": _make_button_stylebox(_grey(0.25)),
+		"pressed": _make_button_stylebox(ACCENT_COLOR),
+		"disabled": _make_button_stylebox(_grey(0.1)),
+		"focus": _make_button_focus_stylebox()
+	}
+
+
 static func _make_panel_stylebox() -> StyleBox:
 	var panel = StyleBoxFlat.new()
 	panel.bg_color = _grey(0.14)
@@ -60,23 +80,9 @@ static func get_theme() -> Theme:
 
 	# Button
 	
-	var button_normal = _make_button_stylebox(_grey(0.2))
-	var button_hover = _make_button_stylebox(_grey(0.25))
-	var button_pressed = _make_button_stylebox(ACCENT_COLOR)
-	var button_disabled = _make_button_stylebox(_grey(0.1))
-	
-	var button_focus = StyleBoxFlat.new()
-	button_focus.draw_center = false
-	button_focus.set_corner_radius_all(button_normal.corner_radius_bottom_left)
-	button_focus.set_border_width_all(1)
-	button_focus.border_color = ACCENT_COLOR
-	button_focus.set_expand_margin_all(2)
-
-	theme.set_stylebox("normal", "Button", button_normal)
-	theme.set_stylebox("pressed", "Button", button_pressed)
-	theme.set_stylebox("hover", "Button", button_hover)
-	theme.set_stylebox("disabled", "Button", button_disabled)
-	theme.set_stylebox("focus", "Button", button_focus)
+	var button_styles = make_button_styleboxes()
+	for k in button_styles:
+		theme.set_stylebox(k, "Button", button_styles[k])
 	
 	# Panel
 	
@@ -102,14 +108,14 @@ static func get_theme() -> Theme:
 	# MenuButton
 	
 	var menu_button_normal = StyleBoxEmpty.new()
-	menu_button_normal.content_margin_left = button_normal.content_margin_left
-	menu_button_normal.content_margin_top = button_normal.content_margin_top
-	menu_button_normal.content_margin_right = button_normal.content_margin_right
-	menu_button_normal.content_margin_bottom = button_normal.content_margin_bottom
+	menu_button_normal.content_margin_left = button_styles.normal.content_margin_left
+	menu_button_normal.content_margin_top = button_styles.normal.content_margin_top
+	menu_button_normal.content_margin_right = button_styles.normal.content_margin_right
+	menu_button_normal.content_margin_bottom = button_styles.normal.content_margin_bottom
 	
 	theme.set_stylebox("normal", "MenuButton", menu_button_normal)
-	theme.set_stylebox("hover", "MenuButton", button_normal)
-	theme.set_stylebox("pressed", "MenuButton", button_normal)
+	theme.set_stylebox("hover", "MenuButton", button_styles.normal)
+	theme.set_stylebox("pressed", "MenuButton", button_styles.normal)
 	
 	# ItemList
 	

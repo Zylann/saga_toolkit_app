@@ -124,7 +124,7 @@ caret_blink_speed = 0.5
 margin_top = 786.0
 margin_right = 812.0
 margin_bottom = 800.0
-columns = 3
+columns = 4
 
 [node name="Label" type="Label" parent="VBoxContainer/OccurenceMap"]
 margin_right = 24.0
@@ -139,7 +139,7 @@ text = "36 words"
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/OccurenceMap"]
 margin_left = 90.0
-margin_right = 812.0
+margin_right = 451.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 texture = ExtResource( 2 )

@@ -2,6 +2,7 @@ extends HSplitContainer
 
 const ScriptData = preload("./../script_data.gd")
 const WordCountComparer = preload("./../word_count_comparer.gd")
+const ThemeGenerator = preload("./../theme/theme_generator.gd")
 
 const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0, 0.8)
 const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
@@ -176,14 +177,43 @@ func _on_CharacterList_item_selected(index):
 		var child = _occurrence_grid.get_child(i)
 		child.queue_free()
 	
+	var label = Label.new()
+	label.text = tr("Episode")
+	_occurrence_grid.add_child(label)
+	
+	_occurrence_grid.add_child(Control.new())
+	
+	label = Label.new()
+	label.text = tr("Occurrences")
+	_occurrence_grid.add_child(label)
+
+	label = Label.new()
+	label.text = tr("Recorded")
+	_occurrence_grid.add_child(label)
+	
+	_occurrence_grid.add_child(HSeparator.new())
+	_occurrence_grid.add_child(HSeparator.new())
+	_occurrence_grid.add_child(HSeparator.new())
+	_occurrence_grid.add_child(HSeparator.new())
+	
+	var checkbox_styles = ThemeGenerator.make_button_styleboxes()
+	for k in checkbox_styles:
+		var sb = checkbox_styles[k]
+		sb.set_expand_margin_all(0)
+		sb.content_margin_left = 0
+		sb.content_margin_right = 0
+		sb.content_margin_top = 0
+		sb.content_margin_bottom = 0
+	
 	for i in len(_project.episodes):
 		var episode = _project.episodes[i]
 		
 		var word_count = 0
 		var tex = null
 		
+		var occurrence = null
 		if episode.character_occurrences.has(character_name):
-			var occurrence = episode.character_occurrences[character_name]
+			occurrence = episode.character_occurrences[character_name]
 			tex = occurrence.texture
 			word_count = occurrence.word_count
 			if tex == null:
@@ -217,10 +247,29 @@ func _on_CharacterList_item_selected(index):
 		tex_control.modulate = mod
 		_occurrence_grid.add_child(tex_control)
 
+		var recorded_checkbox = CheckBox.new()
+		for k in checkbox_styles:
+			var sb = checkbox_styles[k]
+			recorded_checkbox.add_stylebox_override(k, sb)
+		
 		if word_count == 0:
 			ep_name_label.modulate = Color(1,1,1, 0.5)
 			word_count_label.modulate = Color(1,1,1, 0.5)
 			tex_control.modulate = Color(mod.r, mod.g, mod.b, mod.a * 0.5)
+			recorded_checkbox.disabled = true
+			recorded_checkbox.modulate = Color(0,0,0,0)
+		else:
+			recorded_checkbox.pressed = occurrence.recorded
+			recorded_checkbox.connect("toggled", self, "_on_RecordedCheckbox_toggled", \
+				[episode.file_path, character_name])
+		
+		_occurrence_grid.add_child(recorded_checkbox)
+
+
+func _on_RecordedCheckbox_toggled(checked, episode_path, character_name):
+	var ep = _project.get_episode_from_path(episode_path)
+	var occurrence = ep.character_occurrences[character_name]
+	occurrence.recorded = checked
 
 
 func _on_SortOption_id_pressed(id):
