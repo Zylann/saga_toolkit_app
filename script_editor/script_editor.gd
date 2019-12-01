@@ -75,6 +75,7 @@ func _ready():
 	_file_menu.get_popup().add_item(tr("Save As..."), MENU_FILE_SAVE_AS)
 	_file_menu.get_popup().add_separator()
 	_file_menu.get_popup().add_item(tr("Remove Script From Project"), MENU_FILE_REMOVE_SCRIPT)
+	_file_menu.get_popup().add_separator()
 	_file_menu.get_popup().add_item(tr("Export As HTML..."), MENU_FILE_EXPORT_AS_HTML)
 	_file_menu.get_popup().add_item(tr("Export All As HTML"), MENU_FILE_EXPORT_ALL_AS_HTML)
 	_file_menu.get_popup().connect("id_pressed", self, "_on_FileMenu_id_pressed")
