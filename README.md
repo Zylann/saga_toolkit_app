@@ -69,6 +69,6 @@ There is no official release yet. I am using it on a daily basis for an ongoing 
 - Place Godot next to the app folder (not inside!)
 - Run Godot: in the project manager, import the project by locating the `project.godot` file inside the project
 - Open the project: a progress bar may show up the first time, and the Godot Editor will show up
-- Finally, run the app by pressing the Play button on the top left.
+- Finally, run the app by pressing the Play button on the top right.
 
 If you find any problem, please report it in the issue tracker.
