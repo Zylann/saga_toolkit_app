@@ -9,6 +9,7 @@ const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
 
 const SORT_BY_NAME = 0
 const SORT_BY_WORD_COUNT = 1
+const SORT_BY_FIRST_OCCURRENCE = 2
 
 onready var _character_list := get_node("CharacterListContainer/CharacterList") as ItemList
 onready var _character_sort_option_button := \
@@ -30,6 +31,7 @@ var _empty_texture : ImageTexture = null
 func _ready():
 	_character_sort_option_button.get_popup().add_item(tr("Name"), SORT_BY_NAME)
 	_character_sort_option_button.get_popup().add_item(tr("Word Count"), SORT_BY_WORD_COUNT)
+	_character_sort_option_button.get_popup().add_item(tr("First Occurrence"), SORT_BY_FIRST_OCCURRENCE)
 	_character_sort_option_button.select(0)
 	_character_sort_option_button.get_popup().connect("id_pressed", self, "_on_SortOption_id_pressed")
 
@@ -59,6 +61,53 @@ func _set_editors_visible(visible):
 		child.visible = visible
 
 
+class FirstOccurrenceComparer:
+	var first_occurences : Dictionary
+	func compare(a, b):
+		var fa = null
+		var fb = null
+		if first_occurences.has(a):
+			fa = first_occurences[a]
+		if first_occurences.has(b):
+			fb = first_occurences[b]
+		if fa == null:
+			if fb == null:
+				return a < b
+			else:
+				return false
+		else:
+			if fb == null:
+				return true
+		if fa[0] < fb[0]:
+			return true
+		if fa[0] > fb[0]:
+			return false
+		if fa[1] < fb[1]:
+			return true
+		if fa[1] > fb[1]:
+			return false
+		if fa[2] < fb[2]:
+			return true
+		if fa[2] > fb[2]:
+			return false
+		return a < b
+
+
+static func _get_first_occurrences(project):
+	var characters = {}
+	for i in len(project.episodes):
+		var episode = project.episodes[i]
+		for j in len(episode.scenes):
+			var scene = episode.scenes[j]
+			for k in len(scene.elements):
+				var element = scene.elements[k]
+				if element is ScriptData.Statement:
+					if characters.has(element.character_name):
+						continue
+					characters[element.character_name] = [i, j, k]
+	return characters
+
+
 func _update_characters_list(project, sort_mode = -1):
 	
 	# Remember selection if any
@@ -83,6 +132,11 @@ func _update_characters_list(project, sort_mode = -1):
 		SORT_BY_WORD_COUNT:
 			var comparer = WordCountComparer.new()
 			comparer.word_count_totals = _project.get_word_count_totals()
+			sorted_names.sort_custom(comparer, "compare")
+		
+		SORT_BY_FIRST_OCCURRENCE:
+			var comparer = FirstOccurrenceComparer.new()
+			comparer.first_occurences = _get_first_occurrences(_project)
 			sorted_names.sort_custom(comparer, "compare")
 
 	for cname in sorted_names:

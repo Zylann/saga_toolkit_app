@@ -83,6 +83,9 @@ msgstr "Fichier"
 msgid "Filter"
 msgstr "Filtrer"
 
+msgid "First Occurrence"
+msgstr "Première Apparition"
+
 msgid "Full name"
 msgstr "Nom Complet"
 

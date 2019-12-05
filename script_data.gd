@@ -63,10 +63,12 @@ class Episode:
 
 
 class CharacterOccurrence:
+	# Transient
 	var image = null
 	var texture = null
 	var word_count = 0
-	var recorded = false	
+	# Persistent
+	var recorded = false
 
 
 class Scene:
