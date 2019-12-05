@@ -45,11 +45,11 @@ margin_bottom = 800.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 812.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer"]
 margin_right = 608.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 size_flags_horizontal = 3
 columns = 2
 
@@ -72,51 +72,61 @@ margin_right = 63.0
 margin_bottom = 47.0
 text = "Full name"
 
-[node name="LineEdit2" type="LineEdit" parent="VBoxContainer/HBoxContainer/GridContainer"]
+[node name="FullNameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/GridContainer"]
 margin_left = 67.0
 margin_top = 28.0
 margin_right = 608.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
-editable = false
+
+[node name="Label4" type="Label" parent="VBoxContainer/HBoxContainer/GridContainer"]
+margin_top = 59.0
+margin_right = 63.0
+margin_bottom = 73.0
+text = "Gender"
+
+[node name="GenderSelector" type="OptionButton" parent="VBoxContainer/HBoxContainer/GridContainer"]
+margin_left = 67.0
+margin_top = 56.0
+margin_right = 608.0
+margin_bottom = 76.0
 
 [node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer/GridContainer"]
-margin_top = 61.0
+margin_top = 85.0
 margin_right = 63.0
-margin_bottom = 75.0
+margin_bottom = 99.0
 text = "Actor"
 
 [node name="LineEdit3" type="LineEdit" parent="VBoxContainer/HBoxContainer/GridContainer"]
 margin_left = 67.0
-margin_top = 56.0
+margin_top = 80.0
 margin_right = 608.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 editable = false
 
 [node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]
 margin_left = 612.0
 margin_right = 812.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
-margin_top = 84.0
+margin_top = 108.0
 margin_right = 812.0
-margin_bottom = 92.0
+margin_bottom = 116.0
 rect_min_size = Vector2( 0, 8 )
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_top = 96.0
+margin_top = 120.0
 margin_right = 812.0
-margin_bottom = 110.0
+margin_bottom = 134.0
 text = "Description"
 
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
-margin_top = 114.0
+[node name="DescriptionEdit" type="TextEdit" parent="VBoxContainer"]
+margin_top = 138.0
 margin_right = 812.0
 margin_bottom = 782.0
 size_flags_vertical = 3
-readonly = true
 caret_blink = true
 caret_blink_speed = 0.5
 
@@ -146,3 +156,6 @@ texture = ExtResource( 2 )
 expand = true
 stretch_mode = 1
 [connection signal="item_selected" from="CharacterListContainer/CharacterList" to="." method="_on_CharacterList_item_selected"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/GridContainer/FullNameEdit" to="." method="_on_FullNameEdit_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/GridContainer/GenderSelector" to="." method="_on_GenderSelector_item_selected"]
+[connection signal="text_changed" from="VBoxContainer/DescriptionEdit" to="." method="_on_DescriptionEdit_text_changed"]

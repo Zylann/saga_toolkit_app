@@ -171,6 +171,9 @@ func _save_project_as(fpath):
 		var character = _project.characters[cname]
 		var char_data = {
 			"name": character.name,
+			"full_name": character.full_name,
+			"gender": character.gender,
+			"description": character.description,
 			"actor_id": character.actor_id
 		}
 		characters.append(char_data)
@@ -218,7 +221,15 @@ func _open_project(fpath):
 	for char_data in data.characters:
 		var character = ScriptData.Character.new()
 		character.name = char_data.name
-		character.actor_id = char_data.actor_id
+		character.actor_id = int(char_data.actor_id)
+		if char_data.has("description"):
+			character.description = char_data.description
+		if char_data.has("full_name"):
+			character.full_name = char_data.full_name
+		if char_data.has("gender"):
+			character.gender = int(char_data.gender)
+		else:
+			character.gender = ScriptData.GENDER_OTHER
 		if _project.characters.has(character.name):
 			push_error("Project file contains two characters with the same name")
 			continue
@@ -260,9 +271,9 @@ func _open_project(fpath):
 		if _project.next_actor_id <= actor_data.id:
 			_project.next_actor_id = actor_data.id + 1
 		var actor = ScriptData.Actor.new()
-		actor.id = actor_data.id
+		actor.id = int(actor_data.id)
 		actor.name = actor_data.name
-		actor.gender = actor_data.gender
+		actor.gender = int(actor_data.gender)
 		actor.notes = actor_data.notes
 		if _project.get_actor_by_id(actor.id) != null:
 			push_error("Project file contains two actors with the same ID")

@@ -10,15 +10,21 @@ const OCCURRENCES_IMAGE_FG_COLOR = Color(1, 1, 1)
 const SORT_BY_NAME = 0
 const SORT_BY_WORD_COUNT = 1
 
-onready var _character_list = get_node("CharacterListContainer/CharacterList")
-onready var _character_sort_option_button = \
-	get_node("CharacterListContainer/HBoxContainer/SortOption")
-onready var _occurrence_grid = get_node("VBoxContainer/OccurenceMap")
-onready var _name_edit = get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit")
-onready var _actor_edit = get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit3")
+onready var _character_list := get_node("CharacterListContainer/CharacterList") as ItemList
+onready var _character_sort_option_button := \
+	get_node("CharacterListContainer/HBoxContainer/SortOption") as OptionButton
+onready var _editors_container := get_node("VBoxContainer") as Control
+onready var _occurrence_grid := get_node("VBoxContainer/OccurenceMap") as GridContainer
+onready var _name_edit := get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit") as LineEdit
+onready var _actor_edit := get_node("VBoxContainer/HBoxContainer/GridContainer/LineEdit3") as LineEdit
+onready var _full_name_edit := \
+	get_node("VBoxContainer/HBoxContainer/GridContainer/FullNameEdit") as LineEdit
+onready var _description_edit := get_node("VBoxContainer/DescriptionEdit") as TextEdit
+onready var _gender_selector := \
+	get_node("VBoxContainer/HBoxContainer/GridContainer/GenderSelector") as OptionButton
 
-var _project = null
-var _empty_texture = null
+var _project : ScriptData.Project = null
+var _empty_texture : ImageTexture = null
 
 
 func _ready():
@@ -27,20 +33,30 @@ func _ready():
 	_character_sort_option_button.select(0)
 	_character_sort_option_button.get_popup().connect("id_pressed", self, "_on_SortOption_id_pressed")
 
+	_gender_selector.add_item(tr("Male"), ScriptData.GENDER_MALE)
+	_gender_selector.add_item(tr("Female"), ScriptData.GENDER_FEMALE)
+	_gender_selector.add_item(tr("Other"), ScriptData.GENDER_OTHER)
+
 
 func set_project(project):
 	_project = project
-	_update_characters_list(_project)
 	
-	for ep in project.episodes:
-		refresh_episode(ep.file_path)
+	if len(project.episodes) == 0:
+		_update_characters_list(_project)
+	else:
+		for ep in project.episodes:
+			refresh_episode(ep.file_path)
 	
-	# TODO Show/hide controls depending on active selection
-
 
 func refresh_episode(ep_path: String):
 	_update_characters_list(_project)
 	_generate_character_occurrence_maps_highp(_project, ep_path)
+
+
+func _set_editors_visible(visible):
+	for i in _editors_container.get_child_count():
+		var child = _editors_container.get_child(i)
+		child.visible = visible
 
 
 func _update_characters_list(project, sort_mode = -1):
@@ -76,6 +92,8 @@ func _update_characters_list(project, sort_mode = -1):
 		
 		if cname == selected_name:
 			_character_list.select(i)
+	
+	_set_editors_visible(len(_character_list.get_selected_items()) != 0)
 
 
 func _on_ScriptEditor_script_parsed(project, script_path, errors):
@@ -159,17 +177,28 @@ static func _generate_character_occurrence_maps_highp(project, episode_path):
 #		occurrence.texture = null
 
 
-func _on_CharacterList_item_selected(index):
-	var character_name = _character_list.get_item_metadata(index)
+func _on_CharacterList_item_selected(index: int):
 	
-	_name_edit.text = character_name
+	_set_editors_visible(true)
 	
-	var character = _project.characters[character_name]
-	var actor = _project.get_actor_by_id(character.actor_id)
+	var character_name := _character_list.get_item_metadata(index) as String
+	
+	var character : ScriptData.Character = _project.characters[character_name]
+	var actor : ScriptData.Actor = _project.get_actor_by_id(character.actor_id)
 	if actor == null:
 		_actor_edit.text = ""
 	else:
 		_actor_edit.text = actor.name
+
+	for i in _gender_selector.get_item_count():
+		if _gender_selector.get_item_id(i) == character.gender:
+			_gender_selector.selected = i
+			break
+	
+	_name_edit.text = character_name
+	_full_name_edit.text = character.full_name
+	_description_edit.text = character.description
+	_description_edit.clear_undo_history()
 	
 	# Display occurrence grid
 	
@@ -177,7 +206,7 @@ func _on_CharacterList_item_selected(index):
 		var child = _occurrence_grid.get_child(i)
 		child.queue_free()
 	
-	var label = Label.new()
+	var label := Label.new()
 	label.text = tr("Episode")
 	_occurrence_grid.add_child(label)
 	
@@ -196,9 +225,9 @@ func _on_CharacterList_item_selected(index):
 	_occurrence_grid.add_child(HSeparator.new())
 	_occurrence_grid.add_child(HSeparator.new())
 	
-	var checkbox_styles = ThemeGenerator.make_button_styleboxes()
+	var checkbox_styles := ThemeGenerator.make_button_styleboxes()
 	for k in checkbox_styles:
-		var sb = checkbox_styles[k]
+		var sb := checkbox_styles[k] as StyleBoxFlat
 		sb.set_expand_margin_all(0)
 		sb.content_margin_left = 0
 		sb.content_margin_right = 0
@@ -206,10 +235,10 @@ func _on_CharacterList_item_selected(index):
 		sb.content_margin_bottom = 0
 	
 	for i in len(_project.episodes):
-		var episode = _project.episodes[i]
+		var episode := _project.episodes[i] as ScriptData.Episode
 		
-		var word_count = 0
-		var tex = null
+		var word_count := 0
+		var tex : ImageTexture = null
 		
 		var occurrence = null
 		if episode.character_occurrences.has(character_name):
@@ -223,22 +252,22 @@ func _on_CharacterList_item_selected(index):
 		
 		if tex == null:
 			if _empty_texture == null:
-				var im = Image.new()
+				var im := Image.new()
 				im.create(1, 1, false, Image.FORMAT_RGBA8)
 				im.fill(OCCURRENCES_IMAGE_BG_COLOR)
 				_empty_texture = ImageTexture.new()
 				_empty_texture.create_from_image(im, Texture.FLAG_FILTER)
 			tex = _empty_texture
 		
-		var ep_name_label = Label.new()
+		var ep_name_label := Label.new()
 		ep_name_label.text = str(episode.title, "    ")
 		_occurrence_grid.add_child(ep_name_label)
 		
-		var word_count_label = Label.new()
+		var word_count_label := Label.new()
 		word_count_label.text = str(word_count, " ", tr("words"), "    ")
 		_occurrence_grid.add_child(word_count_label)
 
-		var tex_control = TextureRect.new()
+		var tex_control := TextureRect.new()
 		tex_control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tex_control.stretch_mode = TextureRect.STRETCH_SCALE
 		tex_control.expand = true
@@ -247,7 +276,7 @@ func _on_CharacterList_item_selected(index):
 		tex_control.modulate = mod
 		_occurrence_grid.add_child(tex_control)
 
-		var recorded_checkbox = CheckBox.new()
+		var recorded_checkbox := CheckBox.new()
 		for k in checkbox_styles:
 			var sb = checkbox_styles[k]
 			recorded_checkbox.add_stylebox_override(k, sb)
@@ -274,3 +303,36 @@ func _on_RecordedCheckbox_toggled(checked, episode_path, character_name):
 
 func _on_SortOption_id_pressed(id):
 	_update_characters_list(_project, id)
+
+
+func _get_current_character_name() -> String:
+	var selected = _character_list.get_selected_items()
+	if len(selected) == 0:
+		return ""
+	return _character_list.get_item_metadata(selected[0])
+
+
+func _get_current_character():
+	var cname = _get_current_character_name()
+	if _project.characters.has(cname):
+		return _project.characters[cname]
+	return null
+
+
+func _on_FullNameEdit_text_changed(new_text: String):
+	var character : ScriptData.Character = _get_current_character()
+	assert(character != null)
+	character.full_name = new_text.strip_edges()
+
+
+func _on_DescriptionEdit_text_changed():
+	var character : ScriptData.Character = _get_current_character()
+	assert(character != null)
+	character.description = _description_edit.text
+
+
+func _on_GenderSelector_item_selected(id):
+	var character : ScriptData.Character = _get_current_character()
+	assert(character != null)
+	character.gender = id
+	
