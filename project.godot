@@ -31,7 +31,6 @@ enabled=PoolStringArray( "zylann.translation_editor" )
 
 [locale]
 
-test="fr"
 translations=PoolStringArray( "res://localization/fr.po", "res://localization/en.po" )
 locale_filter=[ 0, [ "en", "fr" ] ]
 

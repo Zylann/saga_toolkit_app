@@ -7,6 +7,7 @@ const ThemeGenerator = preload("./theme/theme_generator.gd")
 const ScriptParser = preload("./script_parser.gd")
 
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
+onready var _edit_menu = get_node("VBoxContainer/MenuBar/EditMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
 onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
 onready var _character_editor = get_node("VBoxContainer/TabContainer/CharacterEditor")
@@ -15,6 +16,7 @@ onready var _episode_editor = get_node("VBoxContainer/TabContainer/EpisodeEditor
 onready var _project_editor = get_node("VBoxContainer/TabContainer/ProjectEditor")
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
+onready var _preferences_window = get_node("PreferencesDialog")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
 
 const MENU_PROJECT_NEW = 0
@@ -22,11 +24,19 @@ const MENU_PROJECT_OPEN = 1
 const MENU_PROJECT_SAVE = 2
 const MENU_PROJECT_SAVE_AS = 3
 
+const MENU_EDIT_PREFERENCES = 0
+
 const MENU_HELP_ABOUT = 0
 
 var _project = ScriptData.Project.new()
 var _open_project_dialog = null
 var _save_project_dialog = null
+
+
+func _init():
+	var locale = UserPrefs.get_value("locale")
+	if locale != null:
+		TranslationServer.set_locale(locale)
 
 
 func _ready():
@@ -37,6 +47,9 @@ func _ready():
 	_project_menu.get_popup().add_item(tr("Save"), MENU_PROJECT_SAVE)
 	_project_menu.get_popup().add_item(tr("Save As..."), MENU_PROJECT_SAVE_AS)
 	_project_menu.get_popup().connect("id_pressed", self, "_on_ProjectMenu_id_pressed")
+	
+	_edit_menu.get_popup().add_item(tr("Preferences"), MENU_EDIT_PREFERENCES)
+	_edit_menu.get_popup().connect("id_pressed", self, "_on_EditMenu_id_pressed")
 	
 	_help_menu.get_popup().add_item(tr("About..."), MENU_HELP_ABOUT)
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
@@ -111,6 +124,12 @@ func _on_ProjectMenu_id_pressed(id):
 		
 		MENU_PROJECT_SAVE_AS:
 			_save_project_dialog.popup_centered_ratio()
+
+
+func _on_EditMenu_id_pressed(id):
+	match id:
+		MENU_EDIT_PREFERENCES:
+			_preferences_window.popup_centered_minsize()
 
 
 func _on_HelpMenu_id_pressed(id):

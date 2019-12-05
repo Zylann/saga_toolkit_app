@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://actor_editor/actor_editor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://preferences/preferences_dialog.tscn" type="PackedScene" id=3]
 [ext_resource path="res://project_editor/project_editor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://character_editor/character_editor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://script_editor/script_editor.tscn" type="PackedScene" id=6]
@@ -39,9 +40,16 @@ text = "Project"
 flat = false
 switch_on_hover = true
 
-[node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
+[node name="EditMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_left = 61.0
-margin_right = 103.0
+margin_right = 97.0
+margin_bottom = 20.0
+text = "Edit"
+flat = false
+
+[node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
+margin_left = 101.0
+margin_right = 143.0
 margin_bottom = 20.0
 text = "Help"
 flat = false
@@ -149,3 +157,6 @@ Developped by Marc Gilleron, aka Zylann
 
 https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
+
+[node name="PreferencesDialog" parent="." instance=ExtResource( 3 )]
+visible = false

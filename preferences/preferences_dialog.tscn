@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://preferences/preferences_dialog.gd" type="Script" id=1]
+
+[node name="PreferencesDialog" type="AcceptDialog"]
+margin_left = 91.0
+margin_top = 103.0
+margin_right = 291.0
+margin_bottom = 223.0
+rect_min_size = Vector2( 250, 120 )
+window_title = "Preferences"
+resizable = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 242.0
+margin_bottom = 84.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="GridContainer"]
+margin_top = 3.0
+margin_right = 59.0
+margin_bottom = 17.0
+text = "Language"
+
+[node name="LanguageSelector" type="OptionButton" parent="GridContainer"]
+margin_left = 63.0
+margin_right = 234.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+[connection signal="item_selected" from="GridContainer/LanguageSelector" to="." method="_on_LanguageSelector_item_selected"]

@@ -101,6 +101,9 @@ msgstr "Identifier"
 msgid "Ignore All"
 msgstr "Ignore All"
 
+msgid "Language"
+msgstr "Language"
+
 msgid "Male"
 msgstr "Male"
 
