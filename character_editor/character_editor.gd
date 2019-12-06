@@ -360,6 +360,7 @@ func _on_RecordedCheckbox_toggled(checked, episode_path, character_name):
 	var ep = _project.get_episode_from_path(episode_path)
 	var occurrence = ep.character_occurrences[character_name]
 	occurrence.recorded = checked
+	_project.make_modified()
 
 
 func _on_SortOption_id_pressed(id):
@@ -384,16 +385,19 @@ func _on_FullNameEdit_text_changed(new_text: String):
 	var character : ScriptData.Character = _get_current_character()
 	assert(character != null)
 	character.full_name = new_text.strip_edges()
+	_project.make_modified()
 
 
 func _on_DescriptionEdit_text_changed():
 	var character : ScriptData.Character = _get_current_character()
 	assert(character != null)
 	character.description = _description_edit.text
+	_project.make_modified()
 
 
 func _on_GenderSelector_item_selected(id):
 	var character : ScriptData.Character = _get_current_character()
 	assert(character != null)
 	character.gender = id
+	_project.make_modified()
 	

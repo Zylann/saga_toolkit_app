@@ -188,6 +188,7 @@ func _open_script(path: String):
 	_set_current_script(path)
 	
 	emit_signal("script_parsed", _project, path, errors)
+	_project.make_modified()
 
 
 func _new_script():
@@ -342,6 +343,8 @@ func _save_current_script_as(script_path: String):
 	_update_scene_list()
 
 	emit_signal("script_parsed", _project, script_path, errors)
+	# TODO That one might not be required if we save the project too
+	_project.make_modified()
 
 
 func _on_SaveScriptDialog_file_selected(file_path):
@@ -511,5 +514,6 @@ func _remove_current_script_from_project():
 		_set_current_script(path)
 	
 	emit_signal("script_removed", ep_path)
+	_project.make_modified()
 
 

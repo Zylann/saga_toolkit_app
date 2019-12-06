@@ -28,7 +28,7 @@ const MENU_EDIT_PREFERENCES = 0
 
 const MENU_HELP_ABOUT = 0
 
-var _project = ScriptData.Project.new()
+var _project : ScriptData.Project = null
 var _open_project_dialog = null
 var _save_project_dialog = null
 
@@ -88,7 +88,7 @@ func _ready():
 	
 	_actor_editor.setup_dialogs(dialogs_parent)
 
-	_set_project(_project)
+	_set_project(ScriptData.Project.new())
 
 
 func _on_ScriptEditor_script_parsed(project, path, errors):
@@ -215,6 +215,8 @@ func _save_project_as(fpath):
 	
 	if _save_project_file(data, fpath):
 		_project.file_path = fpath
+		_project.modified = false
+		_update_window_title()
 
 
 func _close_project():
@@ -222,14 +224,38 @@ func _close_project():
 
 
 func _set_project(project):
+	if _project != null:
+		_project.disconnect("modified", self, "_on_project_modified")
+	
 	_project = project
+	
+	if _project != null:
+		_project.connect("modified", self, "_on_project_modified")
+	
+	_update_window_title()
+	
 	_script_editor.set_project(_project)
 	_character_editor.set_project(_project)
 	_actor_editor.set_project(_project)
 	_episode_editor.set_project(_project)
 
 
-func _open_project(fpath):
+func _on_project_modified():
+	_update_window_title()
+
+
+func _update_window_title():
+	var suffix = ""
+	if _project.file_path == "":
+		suffix = str("(", tr("Unsaved Project"), ")")
+	elif _project.modified:
+		suffix = str(_project.file_path.get_file(), " (", tr("Modified"), ")")
+	else:
+		suffix = _project.file_path.get_file()
+	OS.set_window_title(str(ProjectSettings.get("application/config/name"), " - ", suffix))
+
+
+func _open_project(fpath: String):
 	_close_project()
 
 	var data = _load_project_file(fpath)
@@ -257,9 +283,9 @@ func _open_project(fpath):
 	
 	if len(data.episode_files) > 0:
 		# Legacy
-		var dir = fpath.get_base_dir()
+		var dir := fpath.get_base_dir()
 		for ep_file_rpath in data.episode_files:
-			var path = dir.plus_file(ep_file_rpath)
+			var path := dir.plus_file(ep_file_rpath)
 			ScriptParser.update_episode_data_from_file(_project, path)
 			# TODO Display errors
 	
@@ -286,10 +312,10 @@ func _open_project(fpath):
 			occurrence.recorded = occurrence_data.recorded
 	
 	for actor_data in data.actors:
-		if _project.next_actor_id <= actor_data.id:
-			_project.next_actor_id = actor_data.id + 1
 		var actor = ScriptData.Actor.new()
 		actor.id = int(actor_data.id)
+		if _project.next_actor_id <= actor.id:
+			_project.next_actor_id = actor.id + 1
 		actor.name = actor_data.name
 		actor.gender = int(actor_data.gender)
 		actor.notes = actor_data.notes

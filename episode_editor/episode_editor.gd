@@ -137,6 +137,7 @@ func _on_RecordedCheckbox_toggled(checked, character_name, episode_path):
 	var occurrence = ep.character_occurrences[character_name]
 	occurrence.recorded = checked
 	_update_progress(episode_path)
+	_project.make_modified()
 
 
 func _update_progress(episode_path):

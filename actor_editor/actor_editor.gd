@@ -100,6 +100,7 @@ func _on_RemoveCharacterButton_pressed():
 		if character.actor_id == actor_id:
 			character.actor_id = -1
 	_update_characters_list()
+	_project.make_modified()
 
 
 func _update_characters_list():
@@ -124,6 +125,7 @@ func _on_CharacterSelectionDialog_characters_selected(character_names):
 		var character = _project.characters[cname]
 		character.actor_id = actor_id
 	_update_characters_list()
+	_project.make_modified()
 
 
 func _on_ActorList_item_selected(index):
@@ -162,6 +164,7 @@ func _on_AddActorButton_pressed():
 	_project.actors.append(actor)
 	_update_actors_list()
 	_select_actor_by_id(actor.id)
+	_project.make_modified()
 
 
 func _select_actor_by_id(p_id):
@@ -199,6 +202,7 @@ func _on_RemoveActorConfirmationDialog_confirmed():
 	_update_actors_list()
 	_properties_container.hide()
 	_update_buttons_availability()
+	_project.make_modified()
 
 
 func _on_ActorNameEdit_text_changed(new_text):
@@ -210,6 +214,8 @@ func _on_ActorNameEdit_text_changed(new_text):
 		if _actor_list.get_item_metadata(i) == actor_id:
 			_actor_list.set_item_text(i, new_name)
 			break
+	
+	_project.make_modified()
 
 
 func _on_GenderSelector_item_selected(id):
@@ -224,6 +230,7 @@ func _set_actor_data_prop(key, value):
 		return
 	actor.set(key, value)
 	#print("Set actor ", actor_id, " ", key, " to ", value)
+	_project.make_modified()
 
 
 func _on_Notes_text_changed():

@@ -3,26 +3,35 @@
 
 # TOOD Make this class the main script
 class Project:
-	var title = "Untitled"
-	var episodes = []
-	var characters = {}
-	var actors = []
-	var next_actor_id = 1
-	var file_path = ""
+	signal modified
+	
+	var title := "Untitled"
+	var episodes := []
+	var characters := {}
+	var actors := []
+	var next_actor_id := 1
+	
+	# Transient
+	var file_path := ""
+	var modified := false
+	
+	func make_modified():
+		emit_signal("modified")
+		modified = true
 
-	func get_episode_index_from_path(fpath) -> int:
+	func get_episode_index_from_path(fpath: String) -> int:
 		for i in len(episodes):
 			if episodes[i].file_path == fpath:
 				return i
 		return -1
 
-	func get_episode_from_path(fpath) -> Episode:
+	func get_episode_from_path(fpath: String) -> Episode:
 		for e in episodes:
 			if e.file_path == fpath:
 				return e
 		return null
 	
-	func get_actor_by_id(id) -> Actor:
+	func get_actor_by_id(id: int) -> Actor:
 		for a in actors:
 			if a.id == id:
 				return a
