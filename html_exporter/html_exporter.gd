@@ -15,15 +15,15 @@ func _init():
 	_note_template = _read_all_file(str(TEMPLATES_PATH, "standalone_note.html"))
 
 
-func export_script(script_data, output_path):
+func export_script(episode: ScriptData.Episode, output_path: String):
 	print("Exporting script as HTML to ", output_path, "...")
 	var time_before = OS.get_ticks_msec()
 	
 	var content = ""
 	var statement_index = 1
 	
-	for scene_index in len(script_data.scenes):
-		var scene = script_data.scenes[scene_index]
+	for scene_index in len(episode.scenes):
+		var scene = episode.scenes[scene_index]
 		
 		content += "<h2 id=\"{0}\">{1}</h2>\n" \
 			.format([scene_index, scene.title.xml_escape()])
@@ -58,7 +58,7 @@ func export_script(script_data, output_path):
 				})
 				
 	var full_text = _root_template.format({
-		"title": script_data.title.xml_escape(),
+		"title": episode.title.xml_escape(),
 		"content": content
 	})
 	
