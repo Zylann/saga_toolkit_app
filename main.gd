@@ -104,11 +104,10 @@ func _on_ScriptEditor_script_parsed(project, path, errors):
 		_status_label.modulate = Color(1, 1, 1)
 	
 	_character_editor.refresh_episode(path)
-	_episode_editor.update_episode_list()
 
 
 func _on_ScriptEditor_script_removed(path):
-	_episode_editor.update_episode_list()
+	pass
 
 
 func _on_ProjectMenu_id_pressed(id):

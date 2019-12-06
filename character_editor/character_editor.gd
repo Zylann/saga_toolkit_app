@@ -55,6 +55,12 @@ func refresh_episode(ep_path: String):
 	_generate_character_occurrence_maps_highp(_project, ep_path)
 
 
+#func _notification(what):
+#	if what == NOTIFICATION_VISIBILITY_CHANGED:
+#		if visible:
+#			_update_characters_list(_project)
+
+
 func _set_editors_visible(visible):
 	for i in _editors_container.get_child_count():
 		var child = _editors_container.get_child(i)
@@ -62,6 +68,7 @@ func _set_editors_visible(visible):
 
 
 class FirstOccurrenceComparer:
+	# character name => [first episode, first scene, first statement]
 	var first_occurences : Dictionary
 	func compare(a, b):
 		var fa = null

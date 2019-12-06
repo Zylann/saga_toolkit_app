@@ -159,4 +159,3 @@ https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
 
 [node name="PreferencesDialog" parent="." instance=ExtResource( 3 )]
-visible = false

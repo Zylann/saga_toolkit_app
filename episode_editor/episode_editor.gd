@@ -18,17 +18,37 @@ var _project = null
 
 func set_project(project):
 	_project = project
-	update_episode_list()
+	_update_episode_list()
 	_update_controls()
 
 
-func update_episode_list():
+func _update_episode_list():
+	
+	# Remember selection
+	var selected = _episode_list.get_selected_items()
+	var selected_ep = ""
+	if len(selected) != 0:
+		selected_ep = _episode_list.get_item_metadata(selected[0])
+	
 	_episode_list.clear()
 	for ep in _project.episodes:
 		var i = _episode_list.get_item_count()
 		_episode_list.add_item(ep.title)
 		_episode_list.set_item_metadata(i, ep.file_path)
 	_episode_list.sort_items_by_text()
+	
+	if selected_ep != "":
+		for i in _episode_list.get_item_count():
+			if _episode_list.get_item_metadata(i) == selected_ep:
+				_episode_list.select(i)
+				break
+
+
+func _notification(what):
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		if visible:
+			_update_episode_list()
+			_update_controls()
 
 
 func _update_controls():
