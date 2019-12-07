@@ -93,6 +93,7 @@ func _ready():
 	_tab_container.set_tab_title(_project_editor.get_index(), tr("Project"))
 	
 	_actor_editor.setup_dialogs(dialogs_parent)
+	_episode_editor.setup_dialogs(dialogs_parent)
 	
 	_set_project(ScriptData.Project.new())
 

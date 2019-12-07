@@ -27,7 +27,6 @@ margin_bottom = 20.0
 [node name="GeneratePost" type="Button" parent="VBoxContainer/Buttons"]
 margin_right = 103.0
 margin_bottom = 20.0
-disabled = true
 text = "Generate Post"
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
@@ -104,4 +103,5 @@ size_flags_vertical = 3
 custom_constants/vseparation = 6
 columns = 3
 [connection signal="item_selected" from="EpisodeList" to="." method="_on_EpisodeList_item_selected"]
+[connection signal="pressed" from="VBoxContainer/Buttons/GeneratePost" to="." method="_on_GeneratePost_pressed"]
 [connection signal="text_changed" from="VBoxContainer/Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]

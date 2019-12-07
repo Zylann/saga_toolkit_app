@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://episode_editor/episode_post_dialog.gd" type="Script" id=1]
+[ext_resource path="res://fonts/hack_regular.tres" type="DynamicFont" id=2]
+
+[node name="EpisodePostDialog" type="AcceptDialog"]
+margin_right = 576.0
+margin_bottom = 454.0
+window_title = "Episode Post"
+resizable = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 568.0
+margin_bottom = 418.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 560.0
+margin_bottom = 20.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 45.0
+margin_bottom = 17.0
+text = "Format"
+
+[node name="Format" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 49.0
+margin_right = 560.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
+margin_top = 24.0
+margin_right = 560.0
+margin_bottom = 410.0
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )

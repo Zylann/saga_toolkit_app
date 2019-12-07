@@ -2,6 +2,7 @@ extends HSplitContainer
 
 const WordCountComparer = preload("./../word_count_comparer.gd")
 const ScriptData = preload("./../script_data.gd")
+const PostDialogScene = preload("./episode_post_dialog.tscn")
 
 const NOT_STARTED_COLOR = Color(1, 0.5, 0.5)
 const IN_PROGRESS_COLOR = Color(1, 1, 0.5)
@@ -15,6 +16,13 @@ onready var _progress_label = get_node("VBoxContainer/HBoxContainer/ProgressLabe
 onready var _character_grid = get_node("VBoxContainer/ScrollContainer/CharacterGrid")
 
 var _project : ScriptData.Project = null
+var _post_dialog = null
+
+
+func setup_dialogs(parent):
+	assert(_post_dialog == null)
+	_post_dialog = PostDialogScene.instance()
+	parent.add_child(_post_dialog)
 
 
 func set_project(project):
@@ -181,3 +189,8 @@ func _on_Synopsis_text_changed():
 	var ep = _project.get_episode_from_path(_get_selected_episode_path())
 	ep.synopsis = _synopsis_edit.text
 	_project.make_modified()
+
+
+func _on_GeneratePost_pressed():
+	_post_dialog.configure(_project, _get_selected_episode_path())
+	_post_dialog.popup_centered_ratio()
