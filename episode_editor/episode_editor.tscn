@@ -20,9 +20,26 @@ margin_left = 212.0
 margin_right = 1024.0
 margin_bottom = 800.0
 
-[node name="Properties" type="GridContainer" parent="VBoxContainer"]
+[node name="Buttons" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 812.0
-margin_bottom = 128.0
+margin_bottom = 20.0
+
+[node name="GeneratePost" type="Button" parent="VBoxContainer/Buttons"]
+margin_right = 103.0
+margin_bottom = 20.0
+disabled = true
+text = "Generate Post"
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+margin_top = 24.0
+margin_right = 812.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="Properties" type="GridContainer" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 812.0
+margin_bottom = 164.0
 columns = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/Properties"]
@@ -50,17 +67,16 @@ margin_top = 28.0
 margin_right = 812.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 100 )
-readonly = true
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-margin_top = 132.0
+margin_top = 168.0
 margin_right = 812.0
-margin_bottom = 136.0
+margin_bottom = 172.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 140.0
+margin_top = 176.0
 margin_right = 812.0
-margin_bottom = 154.0
+margin_bottom = 190.0
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_right = 91.0
@@ -79,7 +95,7 @@ margin_bottom = 14.0
 text = "---%"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-margin_top = 158.0
+margin_top = 194.0
 margin_right = 812.0
 margin_bottom = 800.0
 size_flags_vertical = 3
@@ -88,3 +104,4 @@ size_flags_vertical = 3
 custom_constants/vseparation = 6
 columns = 3
 [connection signal="item_selected" from="EpisodeList" to="." method="_on_EpisodeList_item_selected"]
+[connection signal="text_changed" from="VBoxContainer/Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]

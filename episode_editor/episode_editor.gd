@@ -1,6 +1,7 @@
 extends HSplitContainer
 
 const WordCountComparer = preload("./../word_count_comparer.gd")
+const ScriptData = preload("./../script_data.gd")
 
 const NOT_STARTED_COLOR = Color(1, 0.5, 0.5)
 const IN_PROGRESS_COLOR = Color(1, 1, 0.5)
@@ -13,7 +14,7 @@ onready var _controls_container = get_node("VBoxContainer")
 onready var _progress_label = get_node("VBoxContainer/HBoxContainer/ProgressLabel")
 onready var _character_grid = get_node("VBoxContainer/ScrollContainer/CharacterGrid")
 
-var _project = null
+var _project : ScriptData.Project = null
 
 
 func set_project(project):
@@ -75,6 +76,7 @@ func _update_controls():
 	# Properties
 	
 	_title_edit.text = episode.title
+	_synopsis_edit.text = episode.synopsis
 	
 	# Character grid
 	
@@ -166,4 +168,16 @@ func _update_progress(episode_path):
 
 func _on_EpisodeList_item_selected(index):
 	_update_controls()
-	
+
+
+func _get_selected_episode_path():
+	var selected = _episode_list.get_selected_items()
+	if len(selected) == 0:
+		return ""
+	return _episode_list.get_item_metadata(selected[0])
+
+
+func _on_Synopsis_text_changed():
+	var ep = _project.get_episode_from_path(_get_selected_episode_path())
+	ep.synopsis = _synopsis_edit.text
+	_project.make_modified()

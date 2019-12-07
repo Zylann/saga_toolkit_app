@@ -216,9 +216,9 @@ func _save_project_as(fpath):
 			path = path.right(1 + len(dir))
 			var ep_data = {
 				"file_path": path,
+				"synopsis": episode.synopsis,
 				"character_occurrences": []
 			}
-			episodes.append(ep_data)
 			for cname in episode.character_occurrences:
 				var occurrence = episode.character_occurrences[cname]
 				var occurrence_data = {
@@ -226,6 +226,7 @@ func _save_project_as(fpath):
 					"recorded": occurrence.recorded
 				}
 				ep_data.character_occurrences.append(occurrence_data)
+			episodes.append(ep_data)
 	
 	var characters = []
 	for cname in _project.characters:
@@ -251,6 +252,7 @@ func _save_project_as(fpath):
 	
 	var data = {
 		"title": _project.title,
+		"synopsis": _project.synopsis,
 		"episodes": episodes,
 		"actors": actors,
 		"characters": characters
@@ -309,6 +311,10 @@ func _open_project(fpath: String):
 	var data = _load_project_file(fpath)
 	if data == null:
 		return
+
+	_project.title = data.title
+	if data.has("synopsis"):
+		_project.synopsis = data.synopsis as String
 	
 	for char_data in data.characters:
 		var character = ScriptData.Character.new()
@@ -327,8 +333,6 @@ func _open_project(fpath: String):
 			continue
 		_project.characters[character.name] = character
 	
-	_project.title = data.title
-	
 	if len(data.episode_files) > 0:
 		# Legacy
 		var dir := fpath.get_base_dir()
@@ -341,7 +345,7 @@ func _open_project(fpath: String):
 		
 		var dir = fpath.get_base_dir()
 		# Path in project file is relative to project dir
-		var ep_fullpath = dir.plus_file(ep_data.file_path)
+		var ep_fullpath = dir.plus_file(ep_data.file_path) as String
 		ScriptParser.update_episode_data_from_file(_project, ep_fullpath)
 		# TODO Display errors
 		
@@ -349,6 +353,9 @@ func _open_project(fpath: String):
 		if episode == null:
 			# Some error happened
 			continue
+		
+		if ep_data.has("synopsis"):
+			episode.synopsis = ep_data.synopsis as String
 		
 		for occurrence_data in ep_data.character_occurrences:
 			var cname = occurrence_data.character_name

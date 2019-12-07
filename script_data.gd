@@ -79,6 +79,7 @@ class ScriptError:
 
 class Episode:
 	var title := ""
+	var synopsis := ""
 	var file_path := ""
 	var scenes := []
 	var character_occurrences := {} # name => occurence
