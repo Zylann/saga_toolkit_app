@@ -1,6 +1,46 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://project_editor/project_editor.gd" type="Script" id=1]
 
 [node name="ProjectEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
+[node name="Properties" type="GridContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Properties"]
+margin_top = 5.0
+margin_right = 56.0
+margin_bottom = 19.0
+text = "Title"
+
+[node name="Title" type="LineEdit" parent="Properties"]
+margin_left = 60.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Properties"]
+margin_top = 121.0
+margin_right = 56.0
+margin_bottom = 135.0
+text = "Synopsis"
+
+[node name="Synopsis" type="TextEdit" parent="Properties"]
+margin_left = 60.0
+margin_top = 28.0
+margin_right = 1024.0
+margin_bottom = 228.0
+rect_min_size = Vector2( 0, 200 )
+[connection signal="text_changed" from="Properties/Title" to="." method="_on_Title_text_changed"]
+[connection signal="text_changed" from="Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]

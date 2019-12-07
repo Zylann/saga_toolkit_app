@@ -1,11 +1,18 @@
 
 # TOOD Rename ProjectData
 
+const GENDER_UNKNOWN = -1
+const GENDER_MALE = 0
+const GENDER_FEMALE = 1
+const GENDER_OTHER = 2
+
+
 # TOOD Make this class the main script
 class Project:
 	signal modified
 	
 	var title := "Untitled"
+	var synopsis := ""
 	var episodes := []
 	var characters := {}
 	var actors := []
@@ -81,12 +88,12 @@ class Episode:
 
 
 class CharacterOccurrence:
+	# Persistent
+	var recorded = false
 	# Transient
 	var image = null
 	var texture = null
 	var word_count = 0
-	# Persistent
-	var recorded = false
 
 
 class Scene:
@@ -117,12 +124,6 @@ class Character:
 	var description := ""
 	# TODO Allow multiple actors so we can have crowd participation?
 	var actor_id := -1
-
-
-const GENDER_UNKNOWN = -1
-const GENDER_MALE = 0
-const GENDER_FEMALE = 1
-const GENDER_OTHER = 2
 
 
 class Actor:

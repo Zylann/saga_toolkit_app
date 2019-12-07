@@ -281,6 +281,7 @@ func _set_project(project):
 	_character_editor.set_project(_project)
 	_actor_editor.set_project(_project)
 	_episode_editor.set_project(_project)
+	_project_editor.set_project(_project)
 
 
 func _on_project_modified():
