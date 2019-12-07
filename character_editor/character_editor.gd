@@ -157,7 +157,7 @@ func _update_characters_list(project, sort_mode = -1):
 	_set_editors_visible(len(_character_list.get_selected_items()) != 0)
 
 
-func _on_ScriptEditor_script_parsed(project, script_path, errors):
+func _on_ScriptEditor_script_parsed(project, script_path):
 	_update_characters_list(project)
 	_generate_character_occurrence_maps_highp(project, script_path)
 

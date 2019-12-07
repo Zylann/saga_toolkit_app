@@ -148,6 +148,26 @@ margin_left = 0.0
 margin_top = 680.0
 margin_right = 817.0
 margin_bottom = 800.0
+
+[node name="Errors" type="HBoxContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 776.0
+margin_right = 817.0
+margin_bottom = 800.0
+
+[node name="Label" type="LineEdit" parent="VBoxContainer/Errors"]
+margin_right = 783.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+custom_colors/font_color_uneditable = Color( 1, 0.439216, 0.439216, 1 )
+text = "---"
+editable = false
+
+[node name="GoToError" type="Button" parent="VBoxContainer/Errors"]
+margin_left = 787.0
+margin_right = 817.0
+margin_bottom = 24.0
+text = "Go"
 [connection signal="item_selected" from="VSplitContainer/ScriptList" to="." method="_on_ScriptList_item_selected"]
 [connection signal="item_selected" from="VSplitContainer/VBoxContainer/SceneList" to="." method="_on_SceneList_item_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OpenButton" to="." method="_on_OpenButton_pressed"]
@@ -157,3 +177,4 @@ margin_bottom = 800.0
 [connection signal="pressed" from="VBoxContainer/SearchBox/NextButton" to="VBoxContainer/SearchBox" method="_on_NextButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SearchBox/PrevButton" to="VBoxContainer/SearchBox" method="_on_PrevButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SearchBox/CloseButton" to="VBoxContainer/SearchBox" method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Errors/GoToError" to="." method="_on_GoToError_pressed"]

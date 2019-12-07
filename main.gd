@@ -102,18 +102,7 @@ func _notification(what):
 		_request_quit()
 
 
-func _on_ScriptEditor_script_parsed(project, path, errors):
-	
-	if len(errors) > 0:
-		if len(errors) == 1:
-			_status_label.text = "Found 1 error in script"
-		else:
-			_status_label.text = "Found {0} errors in script".format([len(errors)])
-		_status_label.modulate = Color(1, 0.2, 0.1)
-	else:
-		_status_label.text = "Script successfully parsed"
-		_status_label.modulate = Color(1, 1, 1)
-	
+func _on_ScriptEditor_script_parsed(project, path):
 	_character_editor.refresh_episode(path)
 
 

@@ -63,12 +63,21 @@ class Project:
 		return word_count_totals
 
 
+class ScriptError:
+	var line := -1
+	var column := -1
+	var message := ""
+	var text := ""
+
+
 class Episode:
 	var title := ""
 	var file_path := ""
 	var scenes := []
 	var character_occurrences := {} # name => occurence
 	var text := ""
+	# Transient
+	var errors = []
 
 
 class CharacterOccurrence:

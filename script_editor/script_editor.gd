@@ -40,8 +40,10 @@ onready var _accent_buttons = get_node("VBoxContainer/HBoxContainer/AccentsHelpe
 onready var _spell_check_panel = get_node("VBoxContainer/SpellCheckPanel")
 onready var _file_menu = get_node("VBoxContainer/HBoxContainer/FileMenu")
 onready var _view_menu = get_node("VBoxContainer/HBoxContainer/ViewMenu")
+onready var _errors_panel = get_node("VBoxContainer/Errors")
+onready var _error_label = get_node("VBoxContainer/Errors/Label")
 
-var _project = null
+var _project : ScriptData.Project = null
 var _modified_files = {}
 var _open_script_dialog: FileDialog
 var _statistics_window: AcceptDialog
@@ -175,7 +177,7 @@ func _open_script(path: String):
 	var text = f.get_as_text()
 	f.close()
 
-	var errors = ScriptParser.update_episode_data_from_text(_project, text, path)
+	var episode = ScriptParser.update_episode_data_from_text(_project, text, path)
 	
 	var filename = path.get_file()
 	var i = _file_list.get_item_count()
@@ -187,7 +189,7 @@ func _open_script(path: String):
 	_file_list.select(i)
 	_set_current_script(path)
 	
-	emit_signal("script_parsed", _project, path, errors)
+	emit_signal("script_parsed", _project, path)
 	_project.make_modified()
 
 
@@ -216,6 +218,7 @@ func _set_current_script(path: String):
 	_text_editor.cursor_set_line(0, true, false)
 	
 	_update_scene_list()
+	_update_error_panel()
 	
 	# TODO To workaround this limitation, we may instance multiple TextEdits
 	_text_editor.clear_undo_history()
@@ -332,7 +335,7 @@ func _save_current_script_as(script_path: String):
 	f.close()
 	print("Saved ", script_path)
 	
-	var errors = ScriptParser.update_episode_data_from_text(\
+	var episode = ScriptParser.update_episode_data_from_text(\
 		_project, _text_editor.text, script_path)
 	
 	var i = _get_file_list_index(script_path)
@@ -341,8 +344,9 @@ func _save_current_script_as(script_path: String):
 	_modified_files.erase(script_path)
 	
 	_update_scene_list()
+	_update_error_panel()
 
-	emit_signal("script_parsed", _project, script_path, errors)
+	emit_signal("script_parsed", _project, script_path)
 	# TODO That one might not be required if we save the project too
 	_project.make_modified()
 
@@ -520,3 +524,25 @@ func _remove_current_script_from_project():
 	_project.make_modified()
 
 
+func _update_error_panel():
+	var episode = _project.get_episode_from_path(_get_current_script_path())
+	if episode == null:
+		_errors_panel.hide()
+	if len(episode.errors) > 0:
+		var e = episode.errors[0]
+		_error_label.text = tr("Error line {0}: {1}").format([e.line + 1, e.message])
+		_errors_panel.show()
+	else:
+		_errors_panel.hide()
+
+
+func _on_GoToError_pressed():
+	var episode = _project.get_episode_from_path(_get_current_script_path())
+	if episode == null:
+		push_error("Go to error was pressed but no episode is loaded.")
+		return
+	if len(episode.errors) > 0:
+		var e = episode.errors[0]
+		_text_editor.cursor_set_line(e.line)
+		_text_editor.cursor_set_column(e.column)
+		_text_editor.center_viewport_to_cursor()

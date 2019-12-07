@@ -12,18 +12,18 @@ const _ignored_character_names = {
 }
 
 
-static func parse_episode(text, existing_episode = null):
+static func _parse_episode(text: String, existing_episode = null) -> ScriptData.Episode:
 	
 	var time_before = OS.get_ticks_msec()
 	
-	var res = _parse_episode(text, existing_episode)
+	var res = _parse_episode_internal(text, existing_episode)
 	
-	res.data.text = text
+	res.text = text
 
 	if len(res.errors) > 0:
 		printerr("--- Unrecognized content ---")
 		for e in res.errors:
-			printerr("Line ", e.line_index, ":")
+			printerr("Line ", e.line, ":")
 			print("\"", e.text, "\"\n")
 		printerr("----------------------------")
 	
@@ -33,7 +33,7 @@ static func parse_episode(text, existing_episode = null):
 	return res
 
 
-static func _parse_episode(text, existing_episode = null):
+static func _parse_episode_internal(text, existing_episode = null):
 
 	var lines = text.split("\n")
 	
@@ -49,6 +49,7 @@ static func _parse_episode(text, existing_episode = null):
 		occurrence.word_count = 0
 	
 	data.scenes.clear()
+	data.errors.clear()
 	
 	var scene = ScriptData.Scene.new()
 	scene.title = "<DefaultScene>"
@@ -137,17 +138,17 @@ static func _parse_episode(text, existing_episode = null):
 		# Remove default scene
 		data.scenes.remove(0)
 	
-	var errors = []
-
 	if unrecognized_content.empty():
 		print("No problem found in script.")
 	else:
 		for line_index in unrecognized_content:
 			var c = unrecognized_content[line_index]
-			errors.append({
-				"line_index": line_index,
-				"text": c.text
-			})
+			var e = ScriptData.ScriptError.new()
+			e.line = line_index
+			e.column = 0
+			e.message = "Unrecognized content"
+			e.text = c.text
+			data.errors.append(e)
 	
 	var character_names = data.character_occurrences.keys()
 	for cname in character_names:
@@ -156,10 +157,7 @@ static func _parse_episode(text, existing_episode = null):
 			# The character is no longer present in that episode
 			data.character_occurrences.erase(cname)
 	
-	return {
-		"data": data,
-		"errors": errors
-	}
+	return data
 
 
 static func _add_statement(scene, data, statement):
@@ -267,31 +265,32 @@ static func parse_statement(lines, line_index):
 #	return count
 
 
-static func update_episode_data_from_file(project: ScriptData.Project, path: String) -> Array:
+static func update_episode_data_from_file(
+	project: ScriptData.Project, path: String) -> ScriptData.Episode:
+	
 	var f = File.new()
 	var err = f.open(path, File.READ)
 	if err != OK:
 		var err_msg = "Could not load file {0}, {1}".format([path, Errors.get_message(err)])
 		push_error(err_msg)
-		return [err_msg]
+		return null
 	var text = f.get_as_text()
 	f.close()
 
-	var errors = update_episode_data_from_text(project, text, path)
+	var episode = update_episode_data_from_text(project, text, path)
 	
-	return errors
+	return episode
 
 
 static func update_episode_data_from_text( \
-		project: ScriptData.Project, text: String, path: String) -> Array:
+		project: ScriptData.Project, text: String, path: String) -> ScriptData.Episode:
 	
-	var ep = null
-	var epi = project.get_episode_index_from_path(path)
+	var ep : ScriptData.Episode = null
+	var epi := project.get_episode_index_from_path(path)
 	if epi != -1:
-		ep = project.episodes[epi]
+		ep = project.episodes[epi] as ScriptData.Episode
 	
-	var res = parse_episode(text, ep)
-	ep = res.data
+	ep = _parse_episode(text, ep)
 	ep.file_path = path
 	
 	if epi == -1:
@@ -310,5 +309,5 @@ static func update_episode_data_from_text( \
 				character.name = cname
 				project.characters[cname] = character
 	
-	return res.errors
+	return ep
 
