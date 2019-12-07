@@ -406,6 +406,9 @@ func _on_TextEditor_text_changed():
 			var i = _get_file_list_index(path)
 			assert(i != -1)
 			_file_list.set_item_text(i, str(path.get_file(), " (*)"))
+	# Technically the project file hasn't changed,
+	# but we want the app to be able to warn about unsaved scripts
+	_project.make_modified()
 
 
 func _get_file_list_index(path):
