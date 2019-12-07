@@ -11,7 +11,6 @@ I started to write this tool because I often write stuff on my smartphone, in ra
 Features
 ----------
 
-- Interface grouping together various tasks of production of a series
 - Script editor using a custom kind of Markdown, with scenes index and characters highlighting
 - Characters list automatically deduced from the script
 - Visualization of all occurrences of a character within each episode
