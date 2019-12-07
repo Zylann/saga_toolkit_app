@@ -91,7 +91,7 @@ func _generate_bbcode(episode):
 		+ "\n" \
 		+ "[u][size=150]{listen}[/size][/u]\n" \
 		+ "\n" \
-		+ "<audio controls><source src=\"{mp3_url}\"/>" + unsupported_audio_tag + "</audio>\n" \
+	+ "<audio controls><source src=\"{mp3_url}\"/>" + unsupported_audio_tag + "</audio>\n" \
 		+ "[url={website_url}]{website}[/url] | [bravo]{saga_id}[/bravo]\n" \
 		+ "\n" \
 		+ "[u][size=150]{actors}[/size][/u]\n" \
@@ -135,18 +135,13 @@ func _generate_bbcode(episode):
 	
 	var text = root_template.format({
 		"title": episode.title,
-		# TODO Proper link
-		"banner_url": "https://forum.netophonix.com/images/netoban.jpg",
+		"banner_url": _project.post_banner_url,
 		"synopsis": episode.synopsis,
 		"listen": tr("Listen"),
-		# TODO Proper link
-		"mp3_url": "https://zylannprods.fr/audiosagas/1287/" \
-			+ "1287-Episode-XI-Francie-in-Periculum-Partie-I.mp3",
-		# TODO Proper link
-		"website_url": "https://forum.netophonix.com/forums.html",
+		"mp3_url": episode.mp3_url,
+		"website_url": _project.website,
 		"website": tr("Website"),
-		# TODO Proper ID
-		"saga_id": 999999,
+		"saga_id": _project.netophonix_saga_id,
 		"actors": tr("Actors"),
 		"actors_list": actors_text
 	})

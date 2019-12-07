@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://project_editor/project_editor.gd" type="Script" id=1]
+[ext_resource path="res://controls/url_edit/url_edit.tscn" type="PackedScene" id=2]
 
 [node name="ProjectEditor" type="Control"]
 anchor_right = 1.0
@@ -20,27 +21,67 @@ __meta__ = {
 
 [node name="Label" type="Label" parent="Properties"]
 margin_top = 5.0
-margin_right = 56.0
+margin_right = 125.0
 margin_bottom = 19.0
 text = "Title"
 
 [node name="Title" type="LineEdit" parent="Properties"]
-margin_left = 60.0
+margin_left = 129.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="Properties"]
 margin_top = 121.0
-margin_right = 56.0
+margin_right = 125.0
 margin_bottom = 135.0
 text = "Synopsis"
 
 [node name="Synopsis" type="TextEdit" parent="Properties"]
-margin_left = 60.0
+margin_left = 129.0
 margin_top = 28.0
 margin_right = 1024.0
 margin_bottom = 228.0
 rect_min_size = Vector2( 0, 200 )
+
+[node name="Label4" type="Label" parent="Properties"]
+margin_top = 237.0
+margin_right = 125.0
+margin_bottom = 251.0
+text = "Website URL"
+
+[node name="WebsiteURL" parent="Properties" instance=ExtResource( 2 )]
+margin_left = 129.0
+margin_top = 232.0
+margin_right = 1024.0
+margin_bottom = 256.0
+
+[node name="Label5" type="Label" parent="Properties"]
+margin_top = 265.0
+margin_right = 125.0
+margin_bottom = 279.0
+text = "Post Banner URL"
+
+[node name="PostBannerURL" parent="Properties" instance=ExtResource( 2 )]
+margin_left = 129.0
+margin_top = 260.0
+margin_right = 1024.0
+margin_bottom = 284.0
+
+[node name="Label3" type="Label" parent="Properties"]
+margin_top = 293.0
+margin_right = 125.0
+margin_bottom = 307.0
+text = "Netophonix Saga ID"
+
+[node name="NetoSagaID" type="SpinBox" parent="Properties"]
+margin_left = 129.0
+margin_top = 288.0
+margin_right = 1024.0
+margin_bottom = 312.0
+max_value = 10000.0
 [connection signal="text_changed" from="Properties/Title" to="." method="_on_Title_text_changed"]
 [connection signal="text_changed" from="Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]
+[connection signal="changed" from="Properties/WebsiteURL" to="." method="_on_WebsiteURL_changed"]
+[connection signal="changed" from="Properties/PostBannerURL" to="." method="_on_PostBannerURL_changed"]
+[connection signal="value_changed" from="Properties/NetoSagaID" to="." method="_on_NetoSagaID_value_changed"]

@@ -218,6 +218,7 @@ func _save_project_as(fpath):
 			var ep_data = {
 				"file_path": path,
 				"synopsis": episode.synopsis,
+				"mp3_url": episode.mp3_url,
 				"character_occurrences": []
 			}
 			for cname in episode.character_occurrences:
@@ -254,6 +255,9 @@ func _save_project_as(fpath):
 	var data = {
 		"title": _project.title,
 		"synopsis": _project.synopsis,
+		"website_url": _project.website,
+		"post_banner_url": _project.post_banner_url,
+		"netophonix_saga_id": _project.netophonix_saga_id,
 		"episodes": episodes,
 		"actors": actors,
 		"characters": characters
@@ -312,10 +316,14 @@ func _open_project(fpath: String):
 	var data = _load_project_file(fpath)
 	if data == null:
 		return
+	
+	var project = ScriptData.Project.new()
 
-	_project.title = data.title
-	if data.has("synopsis"):
-		_project.synopsis = data.synopsis as String
+	project.title = data.title
+	project.synopsis = data.synopsis as String
+	project.post_banner_url = data.post_banner_url
+	project.website = data.website_url
+	project.netophonix_saga_id = int(data.netophonix_saga_id)
 	
 	for char_data in data.characters:
 		var character = ScriptData.Character.new()
@@ -329,17 +337,17 @@ func _open_project(fpath: String):
 			character.gender = int(char_data.gender)
 		else:
 			character.gender = ScriptData.GENDER_OTHER
-		if _project.characters.has(character.name):
+		if project.characters.has(character.name):
 			push_error("Project file contains two characters with the same name")
 			continue
-		_project.characters[character.name] = character
+		project.characters[character.name] = character
 	
 	if len(data.episode_files) > 0:
 		# Legacy
 		var dir := fpath.get_base_dir()
 		for ep_file_rpath in data.episode_files:
 			var path := dir.plus_file(ep_file_rpath) as String
-			ScriptParser.update_episode_data_from_file(_project, path)
+			ScriptParser.update_episode_data_from_file(project, path)
 			# TODO Display errors
 	
 	for ep_data in data.episodes:
@@ -347,16 +355,18 @@ func _open_project(fpath: String):
 		var dir = fpath.get_base_dir()
 		# Path in project file is relative to project dir
 		var ep_fullpath = dir.plus_file(ep_data.file_path) as String
-		ScriptParser.update_episode_data_from_file(_project, ep_fullpath)
+		ScriptParser.update_episode_data_from_file(project, ep_fullpath)
 		# TODO Display errors
 		
-		var episode = _project.get_episode_from_path(ep_fullpath)
+		var episode = project.get_episode_from_path(ep_fullpath)
 		if episode == null:
 			# Some error happened
 			continue
 		
 		if ep_data.has("synopsis"):
 			episode.synopsis = ep_data.synopsis as String
+		if ep_data.has("mp3_url"):
+			episode.mp3_url = ep_data.mp3_url
 		
 		for occurrence_data in ep_data.character_occurrences:
 			var cname = occurrence_data.character_name
@@ -370,18 +380,24 @@ func _open_project(fpath: String):
 	for actor_data in data.actors:
 		var actor = ScriptData.Actor.new()
 		actor.id = int(actor_data.id)
-		if _project.next_actor_id <= actor.id:
-			_project.next_actor_id = actor.id + 1
+		if project.next_actor_id <= actor.id:
+			project.next_actor_id = actor.id + 1
 		actor.name = actor_data.name
 		actor.gender = int(actor_data.gender)
 		actor.notes = actor_data.notes
-		if _project.get_actor_by_id(actor.id) != null:
+		if project.get_actor_by_id(actor.id) != null:
 			push_error("Project file contains two actors with the same ID")
 			continue
-		_project.actors.append(actor)
+		project.actors.append(actor)
 	
-	_project.file_path = fpath
-	_set_project(_project)
+	project.file_path = fpath
+	_set_project(project)
+
+
+static func tryget(d, k, def):
+	if d.has(k):
+		return d[k]
+	return def
 
 
 static func _load_project_file(fpath):
@@ -407,28 +423,16 @@ static func _load_project_file(fpath):
 	var json_data = json_res.result["stk_project"]
 	
 	var data = {
-		"title": "Untitled",
-		"episodes": [],
-		"episode_files": [],
-		"actors": [],
-		"characters": []
+		"title": tryget(json_data, "title", TranslationServer.translate("Untitled")),
+		"episodes": tryget(json_data, "episodes", []),
+		"episode_files": tryget(json_data, "episode_files", []),
+		"actors": tryget(json_data, "actors", []),
+		"characters": tryget(json_data, "characters", []),
+		"website_url": tryget(json_data, "website_url", ""),
+		"netophonix_saga_id": tryget(json_data, "netophonix_saga_id", -1),
+		"post_banner_url": tryget(json_data, "post_banner_url", ""),
+		"synopsis": tryget(json_data, "synopsis", "")
 	}
-	
-	if json_data.has("title"):
-		data.title = json_data.title
-	
-	if json_data.has("episodes"):
-		data.episodes = json_data.episodes
-
-	elif json_data.has("episode_files"):
-		# Legacy
-		data.episode_files = json_data.episode_files
-
-	if json_data.has("actors"):
-		data.actors = json_data.actors
-
-	if json_data.has("characters"):
-		data.characters = json_data.characters
 	
 	return data
 

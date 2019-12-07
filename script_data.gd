@@ -16,7 +16,10 @@ class Project:
 	var episodes := []
 	var characters := {}
 	var actors := []
+	var website := ""
 	var next_actor_id := 1
+	var post_banner_url := ""
+	var netophonix_saga_id := -1
 	
 	# Transient
 	var file_path := ""
@@ -84,6 +87,7 @@ class Episode:
 	var scenes := []
 	var character_occurrences := {} # name => occurence
 	var text := ""
+	var mp3_url := ""
 	# Transient
 	var errors = []
 

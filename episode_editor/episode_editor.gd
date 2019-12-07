@@ -11,6 +11,7 @@ const COMPLETED_COLOR = Color(0.5, 1, 0.5)
 onready var _episode_list = get_node("EpisodeList")
 onready var _title_edit = get_node("VBoxContainer/Properties/TitleEdit")
 onready var _synopsis_edit = get_node("VBoxContainer/Properties/Synopsis")
+onready var _mp3_url = get_node("VBoxContainer/Properties/MP3URL")
 onready var _controls_container = get_node("VBoxContainer")
 onready var _progress_label = get_node("VBoxContainer/HBoxContainer/ProgressLabel")
 onready var _character_grid = get_node("VBoxContainer/ScrollContainer/CharacterGrid")
@@ -85,6 +86,7 @@ func _update_controls():
 	
 	_title_edit.text = episode.title
 	_synopsis_edit.text = episode.synopsis
+	_mp3_url.set_url(episode.mp3_url)
 	
 	# Character grid
 	
@@ -194,3 +196,9 @@ func _on_Synopsis_text_changed():
 func _on_GeneratePost_pressed():
 	_post_dialog.configure(_project, _get_selected_episode_path())
 	_post_dialog.popup_centered_ratio()
+
+
+func _on_MP3URL_changed(new_url):
+	var ep = _project.get_episode_from_path(_get_selected_episode_path())
+	ep.mp3_url = new_url
+	_project.make_modified()

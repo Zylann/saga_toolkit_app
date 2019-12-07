@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://episode_editor/episode_editor.gd" type="Script" id=1]
+[ext_resource path="res://controls/url_edit/url_edit.tscn" type="PackedScene" id=2]
 
 [node name="EpisodeEditor" type="HSplitContainer"]
 anchor_right = 1.0
@@ -38,17 +39,17 @@ rect_min_size = Vector2( 0, 8 )
 [node name="Properties" type="GridContainer" parent="VBoxContainer"]
 margin_top = 36.0
 margin_right = 812.0
-margin_bottom = 164.0
+margin_bottom = 192.0
 columns = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/Properties"]
 margin_top = 5.0
-margin_right = 56.0
+margin_right = 57.0
 margin_bottom = 19.0
 text = "Title"
 
 [node name="TitleEdit" type="LineEdit" parent="VBoxContainer/Properties"]
-margin_left = 60.0
+margin_left = 61.0
 margin_right = 812.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -56,26 +57,38 @@ editable = false
 
 [node name="Label3" type="Label" parent="VBoxContainer/Properties"]
 margin_top = 71.0
-margin_right = 56.0
+margin_right = 57.0
 margin_bottom = 85.0
 text = "Synopsis"
 
 [node name="Synopsis" type="TextEdit" parent="VBoxContainer/Properties"]
-margin_left = 60.0
+margin_left = 61.0
 margin_top = 28.0
 margin_right = 812.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 100 )
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-margin_top = 168.0
+[node name="Label2" type="Label" parent="VBoxContainer/Properties"]
+margin_top = 137.0
+margin_right = 57.0
+margin_bottom = 151.0
+text = "MP3 URL"
+
+[node name="MP3URL" parent="VBoxContainer/Properties" instance=ExtResource( 2 )]
+margin_left = 61.0
+margin_top = 132.0
 margin_right = 812.0
-margin_bottom = 172.0
+margin_bottom = 156.0
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 196.0
+margin_right = 812.0
+margin_bottom = 200.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 176.0
+margin_top = 204.0
 margin_right = 812.0
-margin_bottom = 190.0
+margin_bottom = 218.0
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_right = 91.0
@@ -94,7 +107,7 @@ margin_bottom = 14.0
 text = "---%"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-margin_top = 194.0
+margin_top = 222.0
 margin_right = 812.0
 margin_bottom = 800.0
 size_flags_vertical = 3
@@ -105,3 +118,4 @@ columns = 3
 [connection signal="item_selected" from="EpisodeList" to="." method="_on_EpisodeList_item_selected"]
 [connection signal="pressed" from="VBoxContainer/Buttons/GeneratePost" to="." method="_on_GeneratePost_pressed"]
 [connection signal="text_changed" from="VBoxContainer/Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]
+[connection signal="changed" from="VBoxContainer/Properties/MP3URL" to="." method="_on_MP3URL_changed"]
