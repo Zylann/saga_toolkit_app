@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://actor_editor/actor_editor.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://episode_editor/episode_editor.tscn" type="PackedScene" id=7]
 [ext_resource path="res://icon_white.png" type="Texture" id=8]
 [ext_resource path="res://util/rich_text_label_hyperlinks.gd" type="Script" id=9]
+[ext_resource path="res://unsaved_changes_dialog.tscn" type="PackedScene" id=10]
 
 [node name="Main" type="Panel"]
 anchor_right = 1.0
@@ -159,3 +160,10 @@ https://github.com/Zylann/saga_toolkit_app"
 script = ExtResource( 9 )
 
 [node name="PreferencesDialog" parent="." instance=ExtResource( 3 )]
+
+[node name="UnsavedChangesDialog" parent="." instance=ExtResource( 10 )]
+margin_left = 493.0
+margin_top = 412.0
+margin_right = 759.0
+margin_bottom = 512.0
+[connection signal="discard_selected" from="UnsavedChangesDialog" to="." method="_on_UnsavedChangesDialog_discard_selected"]

@@ -17,12 +17,14 @@ onready var _project_editor = get_node("VBoxContainer/TabContainer/ProjectEditor
 onready var _tab_container = get_node("VBoxContainer/TabContainer")
 onready var _about_window = get_node("AboutWindow")
 onready var _preferences_window = get_node("PreferencesDialog")
+onready var _unsaved_changes_dialog = get_node("UnsavedChangesDialog")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
 
 const MENU_PROJECT_NEW = 0
 const MENU_PROJECT_OPEN = 1
 const MENU_PROJECT_SAVE = 2
 const MENU_PROJECT_SAVE_AS = 3
+const MENU_PROJECT_QUIT = 4
 
 const MENU_EDIT_PREFERENCES = 0
 
@@ -31,6 +33,7 @@ const MENU_HELP_ABOUT = 0
 var _project : ScriptData.Project = null
 var _open_project_dialog = null
 var _save_project_dialog = null
+var _action_on_discard_unsaved_changes : FuncRef = null
 
 
 func _init():
@@ -44,8 +47,11 @@ func _ready():
 	
 	_project_menu.get_popup().add_item(tr("New"), MENU_PROJECT_NEW)
 	_project_menu.get_popup().add_item(tr("Open..."), MENU_PROJECT_OPEN)
+	_project_menu.get_popup().add_separator()
 	_project_menu.get_popup().add_item(tr("Save"), MENU_PROJECT_SAVE)
 	_project_menu.get_popup().add_item(tr("Save As..."), MENU_PROJECT_SAVE_AS)
+	_project_menu.get_popup().add_separator()
+	_project_menu.get_popup().add_item(tr("Quit"), MENU_PROJECT_QUIT)
 	_project_menu.get_popup().connect("id_pressed", self, "_on_ProjectMenu_id_pressed")
 	
 	_edit_menu.get_popup().add_item(tr("Preferences"), MENU_EDIT_PREFERENCES)
@@ -87,8 +93,13 @@ func _ready():
 	_tab_container.set_tab_title(_project_editor.get_index(), tr("Project"))
 	
 	_actor_editor.setup_dialogs(dialogs_parent)
-
+	
 	_set_project(ScriptData.Project.new())
+
+
+func _notification(what):
+	if what == NOTIFICATION_WM_QUIT_REQUEST:
+		_request_quit()
 
 
 func _on_ScriptEditor_script_parsed(project, path, errors):
@@ -113,16 +124,19 @@ func _on_ScriptEditor_script_removed(path):
 func _on_ProjectMenu_id_pressed(id):
 	match id:
 		MENU_PROJECT_NEW:
-			_close_project()
+			_request_new_project()
 		
 		MENU_PROJECT_OPEN:
-			_trigger_open_project_dialog()
+			_request_open_project()
 		
 		MENU_PROJECT_SAVE:
 			_save_project()
 		
 		MENU_PROJECT_SAVE_AS:
 			_save_project_dialog.popup_centered_ratio()
+		
+		MENU_PROJECT_QUIT:
+			_request_quit()
 
 
 func _on_EditMenu_id_pressed(id):
@@ -137,7 +151,47 @@ func _on_HelpMenu_id_pressed(id):
 			_about_window.popup_centered_minsize()
 
 
-func _trigger_open_project_dialog():
+func _request_new_project():
+	if _project.modified:
+		_unsaved_changes_dialog.configure(
+			tr("The project has unsaved changes.\nAre you sure you want to close it?"),
+			tr("Discard"))
+		_action_on_discard_unsaved_changes = funcref(self, "_close_project")
+		_unsaved_changes_dialog.popup_centered_minsize()
+	else:
+		_close_project()
+
+
+func _request_open_project():
+	if _project.modified:
+		_unsaved_changes_dialog.configure(
+			tr("The project has unsaved changes.\nAre you sure you want to close it?"),
+			tr("Discard"))
+		_action_on_discard_unsaved_changes = funcref(self, "_show_open_project_dialog")
+		_unsaved_changes_dialog.popup_centered_minsize()
+	else:
+		_show_open_project_dialog()
+
+
+func _request_quit():
+	if _project.modified:
+		_unsaved_changes_dialog.configure(
+			tr("The project has unsaved changes.\nAre you sure you want to quit?"),
+			tr("Quit"))
+		_action_on_discard_unsaved_changes = funcref(get_tree(), "quit")
+		_unsaved_changes_dialog.popup_centered_minsize()
+		OS.request_attention()
+	else:
+		get_tree().quit()
+
+
+func _on_UnsavedChangesDialog_discard_selected():
+	var a = _action_on_discard_unsaved_changes
+	_action_on_discard_unsaved_changes = null
+	a.call_func()
+
+
+func _show_open_project_dialog():
 	var dir = UserPrefs.get_value("last_open_project_path")
 	if dir != null:
 		_open_project_dialog.current_dir = dir
@@ -245,13 +299,17 @@ func _on_project_modified():
 
 
 func _update_window_title():
-	var suffix = ""
+	
+	var suffix := ""
+	
 	if _project.file_path == "":
-		suffix = str("(", tr("Unsaved Project"), ")")
-	elif _project.modified:
-		suffix = str(_project.file_path.get_file(), " (", tr("Modified"), ")")
+		suffix = str(tr("Unsaved Project"))
 	else:
 		suffix = _project.file_path.get_file()
+	
+	if _project.modified:
+		suffix = str(suffix, " (", tr("Modified"), ")")
+
 	OS.set_window_title(str(ProjectSettings.get("application/config/name"), " - ", suffix))
 
 
@@ -285,7 +343,7 @@ func _open_project(fpath: String):
 		# Legacy
 		var dir := fpath.get_base_dir()
 		for ep_file_rpath in data.episode_files:
-			var path := dir.plus_file(ep_file_rpath)
+			var path := dir.plus_file(ep_file_rpath) as String
 			ScriptParser.update_episode_data_from_file(_project, path)
 			# TODO Display errors
 	
@@ -394,3 +452,4 @@ static func _save_project_file(data, fpath):
 	f.close()
 	print("Saved ", fpath)
 	return true
+

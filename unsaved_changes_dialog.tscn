@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://unsaved_changes_dialog.gd" type="Script" id=1]
+
+[node name="UnsavedChangesDialog" type="WindowDialog"]
+margin_left = 402.0
+margin_top = 309.0
+margin_right = 668.0
+margin_bottom = 405.0
+rect_min_size = Vector2( 260, 100 )
+window_title = "Unsaved Changes"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -8.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 250.0
+margin_bottom = 14.0
+
+[node name="Buttons" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 34.0
+margin_right = 250.0
+margin_bottom = 54.0
+custom_constants/separation = 40
+alignment = 1
+
+[node name="Discard" type="Button" parent="VBoxContainer/Buttons"]
+margin_left = 58.0
+margin_right = 98.0
+margin_bottom = 20.0
+text = "Quit"
+
+[node name="Cancel" type="Button" parent="VBoxContainer/Buttons"]
+margin_left = 138.0
+margin_right = 192.0
+margin_bottom = 20.0
+text = "Cancel"
+[connection signal="pressed" from="VBoxContainer/Buttons/Discard" to="." method="_on_Discard_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/Cancel" to="." method="_on_Cancel_pressed"]
