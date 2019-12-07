@@ -1,6 +1,8 @@
 Saga Toolkit
 ------------
 
+![image](https://user-images.githubusercontent.com/1311555/70381691-d3cc2d00-1946-11ea-8a59-f015c564d956.png)
+
 SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.
 This is very experimental and tailored for my own use so far, and might be useful to other hobbyists having the same workflow as me.
 
