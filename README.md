@@ -1,6 +1,8 @@
 Saga Toolkit
 ------------
 
+![image](https://user-images.githubusercontent.com/1311555/70381691-d3cc2d00-1946-11ea-8a59-f015c564d956.png)
+
 SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.
 This is very experimental and tailored for my own use so far, and might be useful to other hobbyists having the same workflow as me.
 
@@ -9,7 +11,6 @@ I started to write this tool because I often write stuff on my smartphone, in ra
 Features
 ----------
 
-- Interface grouping together various tasks of production of a series
 - Script editor using a custom kind of Markdown, with scenes index and characters highlighting
 - Characters list automatically deduced from the script
 - Visualization of all occurrences of a character within each episode
