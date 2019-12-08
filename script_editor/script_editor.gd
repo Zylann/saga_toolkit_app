@@ -42,6 +42,7 @@ onready var _file_menu = get_node("VBoxContainer/HBoxContainer/FileMenu")
 onready var _view_menu = get_node("VBoxContainer/HBoxContainer/ViewMenu")
 onready var _errors_panel = get_node("VBoxContainer/Errors")
 onready var _error_label = get_node("VBoxContainer/Errors/Label")
+onready var _save_button = get_node("VBoxContainer/HBoxContainer/SaveButton")
 
 var _project : ScriptData.Project = null
 var _modified_files = {}
@@ -217,6 +218,8 @@ func _set_current_script(path: String):
 	_text_editor.text = data.text
 	_text_editor.cursor_set_line(0, true, false)
 	
+	_save_button.disabled = not _modified_files.has(path)
+	
 	_update_scene_list()
 	_update_error_panel()
 	
@@ -342,6 +345,7 @@ func _save_current_script_as(script_path: String):
 	assert(i != -1)
 	_file_list.set_item_text(i, script_path.get_file())
 	_modified_files.erase(script_path)
+	_save_button.disabled = true
 	
 	_update_scene_list()
 	_update_error_panel()
@@ -410,6 +414,7 @@ func _on_TextEditor_text_changed():
 			var i = _get_file_list_index(path)
 			assert(i != -1)
 			_file_list.set_item_text(i, str(path.get_file(), " (*)"))
+			_save_button.disabled = false
 	# Technically the project file hasn't changed,
 	# but we want the app to be able to warn about unsaved scripts
 	_project.make_modified()
