@@ -37,6 +37,9 @@
 			border-bottom: 1px solid #aaa;
 			text-align: center;
 		}
+		.characterListItem:hover{
+			background: #eee;
+		}
 		.charBlock {
 			padding: 4px 0px 4px 0px;
 			margin: 1px 0px 0px 0px;
@@ -150,6 +153,12 @@
 				statements.push(new Statement(block));
 			}
 
+			var charListItems = document.querySelectorAll(".characterListItem");
+			for(var i = 0; i < charListItems.length; ++i) {
+				var item = charListItems[i];
+				item.addEventListener("click", onCharListItemClicked);
+			}
+
 			var outlineCanvas = document.getElementById('outlineCanvas');
 			outlineCanvas.height = statements.length;
 			var ctx = outlineCanvas.getContext('2d');
@@ -188,6 +197,13 @@
 				currentHighlight = characterName
 			}
 			highlightCharacter(currentHighlight);
+		}
+
+		function onCharListItemClicked() {
+			var block = this;
+			var head = block.querySelector("a");
+			var charName = head.firstChild.data;
+			highlightCharacter(charName);
 		}
 
 	</script>

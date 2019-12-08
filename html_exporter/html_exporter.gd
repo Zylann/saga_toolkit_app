@@ -7,12 +7,30 @@ const TEMPLATES_PATH = "res://html_exporter/templates/"
 var _statement_template = ""
 var _root_template = ""
 var _note_template = ""
+var _character_list_template = ""
+var _character_list_item_template = ""
 
 
 func _init():
 	_statement_template = _read_all_file(str(TEMPLATES_PATH, "statement.html"))
 	_root_template = _read_all_file(str(TEMPLATES_PATH, "root.html"))
 	_note_template = _read_all_file(str(TEMPLATES_PATH, "standalone_note.html"))
+	_character_list_template = _read_all_file(str(TEMPLATES_PATH, "character_list.html"))
+	_character_list_item_template = _read_all_file(str(TEMPLATES_PATH, "character_list_item.html"))
+
+
+static func _get_first_occurrences(episode):
+	var characters = {}
+	var statement_index = 1
+	for j in len(episode.scenes):
+		var scene = episode.scenes[j]
+		for k in len(scene.elements):
+			var element = scene.elements[k]
+			if element is ScriptData.Statement:
+				if not characters.has(element.character_name):
+					characters[element.character_name] = statement_index
+				statement_index += 1
+	return characters
 
 
 func export_script(episode: ScriptData.Episode, output_path: String):
@@ -20,6 +38,18 @@ func export_script(episode: ScriptData.Episode, output_path: String):
 	var time_before = OS.get_ticks_msec()
 	
 	var content = ""
+	
+	var first_occurrences = _get_first_occurrences(episode)
+	var character_names = first_occurrences.keys()
+	character_names.sort()
+	var charlist_text = ""
+	for cname in character_names:
+		charlist_text += _character_list_item_template.format({
+			"name": cname,
+			"first": first_occurrences[cname]
+		})
+	content += _character_list_template.format({"items": charlist_text})
+	
 	var statement_index = 1
 	
 	for scene_index in len(episode.scenes):
