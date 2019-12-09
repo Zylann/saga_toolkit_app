@@ -15,6 +15,9 @@ const MENU_PROJECT_QUIT = 4
 const MENU_EDIT_PREFERENCES = 0
 
 const MENU_HELP_ABOUT = 0
+const MENU_HELP_REPORT_ISSUE = 1
+
+const ISSUE_TRACKER_URL = "https://github.com/Zylann/saga_toolkit_app/issues"
 
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
 onready var _edit_menu = get_node("VBoxContainer/MenuBar/EditMenu")
@@ -59,6 +62,7 @@ func _ready():
 	_edit_menu.get_popup().connect("id_pressed", self, "_on_EditMenu_id_pressed")
 	
 	_help_menu.get_popup().add_item(tr("About..."), MENU_HELP_ABOUT)
+	_help_menu.get_popup().add_item(tr("Report an Issue"), MENU_HELP_REPORT_ISSUE)
 	_help_menu.get_popup().connect("id_pressed", self, "_on_HelpMenu_id_pressed")
 		
 	_script_editor.connect("script_parsed", _character_editor, "_on_ScriptEditor_script_parsed")
@@ -140,6 +144,9 @@ func _on_HelpMenu_id_pressed(id):
 	match id:
 		MENU_HELP_ABOUT:
 			_about_window.popup_centered_minsize()
+		
+		MENU_HELP_REPORT_ISSUE:
+			OS.shell_open(ISSUE_TRACKER_URL)
 
 
 func _request_new_project():
