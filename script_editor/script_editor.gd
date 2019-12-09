@@ -314,6 +314,13 @@ func _trigger_save_script_dialog():
 	_save_script_dialog.popup_centered_ratio()
 
 
+func save_all_scripts():
+	for fpath in _modified_files:
+		var episode = _project.get_episode_from_path(fpath)
+		if episode.file_path != "":
+			_save_script_as(episode.file_path, episode.file_path, episode.text)
+
+
 func _save_current_script():
 	var selection = _file_list.get_selected_items()
 	if len(selection) == 0:
@@ -324,33 +331,45 @@ func _save_current_script():
 		_trigger_save_script_dialog()
 		return
 	_save_current_script_as(script_path)
-	
+
 	
 func _save_current_script_as(script_path: String):
-	assert(script_path != "")
+	_save_script_as(script_path, script_path, _text_editor.text)
+
+
+func _save_script_as(old_path: String, new_path: String, text: String):
+	assert(old_path != "")
+	assert(new_path != "")
 	
 	var f = File.new()
-	var err = f.open(script_path, File.WRITE)
+	var err = f.open(new_path, File.WRITE)
 	if err != OK:
-		printerr("Could not save file ", script_path, ", ", Errors.get_message(err))
+		printerr("Could not save file ", new_path, ", ", Errors.get_message(err))
 		return
 	f.store_string(_text_editor.text)
 	f.close()
-	print("Saved ", script_path)
+	print("Saved ", new_path)
+
+	if old_path == _get_current_script_path():
+		_save_button.disabled = true
 	
-	var episode = ScriptParser.update_episode_data_from_text(\
-		_project, _text_editor.text, script_path)
+	if old_path != new_path:
+		# Replace path
+		var ep = _project.get_episode_from_path(old_path)
+		ep.file_path = new_path
 	
-	var i = _get_file_list_index(script_path)
+	ScriptParser.update_episode_data_from_text(_project, text, new_path)
+	
+	var i = _get_file_list_index(old_path)
 	assert(i != -1)
-	_file_list.set_item_text(i, script_path.get_file())
-	_modified_files.erase(script_path)
-	_save_button.disabled = true
+	_file_list.set_item_text(i, new_path.get_file())
+	_file_list.set_item_metadata(i, new_path)
+	_modified_files.erase(old_path)
 	
 	_update_scene_list()
 	_update_error_panel()
 
-	emit_signal("script_parsed", _project, script_path)
+	emit_signal("script_parsed", _project, new_path)
 	# TODO That one might not be required if we save the project too
 	_project.make_modified()
 

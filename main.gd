@@ -6,6 +6,16 @@ const Errors = preload("./util/errors.gd")
 const ThemeGenerator = preload("./theme/theme_generator.gd")
 const ScriptParser = preload("./script_parser.gd")
 
+const MENU_PROJECT_NEW = 0
+const MENU_PROJECT_OPEN = 1
+const MENU_PROJECT_SAVE = 2
+const MENU_PROJECT_SAVE_AS = 3
+const MENU_PROJECT_QUIT = 4
+
+const MENU_EDIT_PREFERENCES = 0
+
+const MENU_HELP_ABOUT = 0
+
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
 onready var _edit_menu = get_node("VBoxContainer/MenuBar/EditMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
@@ -19,16 +29,7 @@ onready var _about_window = get_node("AboutWindow")
 onready var _preferences_window = get_node("PreferencesDialog")
 onready var _unsaved_changes_dialog = get_node("UnsavedChangesDialog")
 onready var _status_label = get_node("VBoxContainer/StatusBar/Label")
-
-const MENU_PROJECT_NEW = 0
-const MENU_PROJECT_OPEN = 1
-const MENU_PROJECT_SAVE = 2
-const MENU_PROJECT_SAVE_AS = 3
-const MENU_PROJECT_QUIT = 4
-
-const MENU_EDIT_PREFERENCES = 0
-
-const MENU_HELP_ABOUT = 0
+onready var _save_project_button = get_node("VBoxContainer/MenuBar/SaveProjectButton")
 
 var _project : ScriptData.Project = null
 var _open_project_dialog = null
@@ -207,6 +208,8 @@ func _save_project():
 
 func _save_project_as(fpath):
 	
+	_script_editor.save_all_scripts()
+	
 	var dir = fpath.get_base_dir()
 	
 	var episodes = []
@@ -266,7 +269,7 @@ func _save_project_as(fpath):
 	if _save_project_file(data, fpath):
 		_project.file_path = fpath
 		_project.modified = false
-		_update_window_title()
+		_update_project_modified_state()
 
 
 func _close_project():
@@ -282,7 +285,7 @@ func _set_project(project):
 	if _project != null:
 		_project.connect("modified", self, "_on_project_modified")
 	
-	_update_window_title()
+	_update_project_modified_state()
 	
 	_script_editor.set_project(_project)
 	_character_editor.set_project(_project)
@@ -292,7 +295,12 @@ func _set_project(project):
 
 
 func _on_project_modified():
+	_update_project_modified_state()
+
+
+func _update_project_modified_state():
 	_update_window_title()
+	_save_project_button.disabled = not (_project.modified or _project.file_path == "")
 
 
 func _update_window_title():
@@ -455,3 +463,6 @@ static func _save_project_file(data, fpath):
 	print("Saved ", fpath)
 	return true
 
+
+func _on_SaveProjectButton_pressed():
+	_save_project()

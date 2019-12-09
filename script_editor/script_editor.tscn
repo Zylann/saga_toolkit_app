@@ -75,12 +75,14 @@ margin_bottom = 24.0
 margin_left = 93.0
 margin_right = 121.0
 margin_bottom = 24.0
+hint_tooltip = "Add Existing Script..."
 icon = ExtResource( 7 )
 
 [node name="SaveButton" type="ToolButton" parent="VBoxContainer/HBoxContainer"]
 margin_left = 125.0
 margin_right = 153.0
 margin_bottom = 24.0
+hint_tooltip = "Save Script"
 icon = ExtResource( 6 )
 
 [node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer"]

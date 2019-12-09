@@ -26,8 +26,9 @@ class Project:
 	var modified := false
 	
 	func make_modified():
-		modified = true
-		emit_signal("modified")
+		if not modified:
+			modified = true
+			emit_signal("modified")
 
 	func get_episode_index_from_path(fpath: String) -> int:
 		for i in len(episodes):

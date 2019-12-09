@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://actor_editor/actor_editor.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://icon_white.png" type="Texture" id=8]
 [ext_resource path="res://util/rich_text_label_hyperlinks.gd" type="Script" id=9]
 [ext_resource path="res://unsaved_changes_dialog.tscn" type="PackedScene" id=10]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=11]
 
 [node name="Main" type="Panel"]
 anchor_right = 1.0
@@ -32,11 +33,11 @@ __meta__ = {
 
 [node name="MenuBar" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1008.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 
 [node name="ProjectMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_right = 57.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 text = "Project"
 flat = false
 switch_on_hover = true
@@ -44,20 +45,32 @@ switch_on_hover = true
 [node name="EditMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_left = 61.0
 margin_right = 97.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 text = "Edit"
 flat = false
 
 [node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_left = 101.0
 margin_right = 143.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 text = "Help"
 flat = false
 switch_on_hover = true
 
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/MenuBar"]
+margin_left = 147.0
+margin_right = 151.0
+margin_bottom = 24.0
+
+[node name="SaveProjectButton" type="ToolButton" parent="VBoxContainer/MenuBar"]
+margin_left = 155.0
+margin_right = 183.0
+margin_bottom = 24.0
+hint_tooltip = "Save Project and Scripts"
+icon = ExtResource( 11 )
+
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
-margin_top = 24.0
+margin_top = 28.0
 margin_right = 1008.0
 margin_bottom = 766.0
 size_flags_vertical = 3
@@ -166,4 +179,5 @@ margin_left = 493.0
 margin_top = 412.0
 margin_right = 759.0
 margin_bottom = 512.0
+[connection signal="pressed" from="VBoxContainer/MenuBar/SaveProjectButton" to="." method="_on_SaveProjectButton_pressed"]
 [connection signal="discard_selected" from="UnsavedChangesDialog" to="." method="_on_UnsavedChangesDialog_discard_selected"]
