@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://project_editor/project_editor.gd" type="Script" id=1]
 [ext_resource path="res://controls/url_edit/url_edit.tscn" type="PackedScene" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
 
-[node name="ProjectEditor" type="Control"]
+[node name="ProjectEditor" type="VBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -12,8 +13,8 @@ __meta__ = {
 }
 
 [node name="Properties" type="GridContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 312.0
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -30,6 +31,7 @@ margin_left = 129.0
 margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+caret_blink = true
 
 [node name="Label2" type="Label" parent="Properties"]
 margin_top = 121.0
@@ -80,6 +82,15 @@ margin_top = 288.0
 margin_right = 1024.0
 margin_bottom = 312.0
 max_value = 10000.0
+
+[node name="Banner" type="TextureRect" parent="."]
+margin_top = 316.0
+margin_right = 1024.0
+margin_bottom = 800.0
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 5
 [connection signal="text_changed" from="Properties/Title" to="." method="_on_Title_text_changed"]
 [connection signal="text_changed" from="Properties/Synopsis" to="." method="_on_Synopsis_text_changed"]
 [connection signal="changed" from="Properties/WebsiteURL" to="." method="_on_WebsiteURL_changed"]
