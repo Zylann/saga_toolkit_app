@@ -5,6 +5,9 @@ msgstr "Project-Id-Version: Saga Toolkit\n"
  "Content-Transfer-Encoding: 8bit\n"
  "Language: fr"
 
+msgid "---"
+msgstr "---"
+
 msgid "---%"
 msgstr "---%"
 
@@ -35,6 +38,9 @@ msgstr "Ajouter Acteur"
 msgid "Add to dictionary"
 msgstr "Ajouter au Dictionaire"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Character"
 msgstr "Personnage"
 
@@ -59,11 +65,20 @@ msgstr "Supprimer Acteur\?"
 msgid "Description"
 msgstr "Description"
 
+msgid "Discard"
+msgstr "Ignorer"
+
+msgid "Edit"
+msgstr "Edition"
+
 msgid "Episode"
 msgstr "Episode"
 
 msgid "Episodes"
 msgstr "Episodes"
+
+msgid "Error line {0}: {1}"
+msgstr "Erreur ligne {0}: {1}"
 
 msgid "Estimated duration"
 msgstr "Durée estimée"
@@ -86,14 +101,23 @@ msgstr "Filtrer"
 msgid "First Occurrence"
 msgstr "Première Apparition"
 
+msgid "Format"
+msgstr "Format"
+
 msgid "Full name"
 msgstr "Nom Complet"
 
 msgid "Gender"
 msgstr "Genre"
 
+msgid "Generate Post"
+msgstr "Générer Post"
+
 msgid "Get Statements"
 msgstr "Lister Répliques"
+
+msgid "Go"
+msgstr "Go"
 
 msgid "Help"
 msgstr "Aide"
@@ -107,6 +131,12 @@ msgstr "Tout Ignorer"
 msgid "Language"
 msgstr "Langue"
 
+msgid "Listen"
+msgstr "Ecouter"
+
+msgid "MP3 URL"
+msgstr "URL MP3"
+
 msgid "Male"
 msgstr "Mâle"
 
@@ -118,6 +148,9 @@ msgstr "Aperçu du Mixage"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "Netophonix Saga ID"
+msgstr "Saga ID sur Netophonix"
 
 msgid "New"
 msgstr "Nouveau"
@@ -146,6 +179,9 @@ msgstr "Notes"
 msgid "Occurrences"
 msgstr "Occurrences"
 
+msgid "Open"
+msgstr "Ouvrir"
+
 msgid "Open Project"
 msgstr "Ouvrir Projet"
 
@@ -161,11 +197,20 @@ msgstr "Ouvrir..."
 msgid "Other"
 msgstr "Autre"
 
+msgid "Post Banner URL"
+msgstr "URL de la bannière"
+
+msgid "Preferences"
+msgstr "Préférences"
+
 msgid "Prev"
 msgstr "Précedent"
 
 msgid "Project"
 msgstr "Projet"
+
+msgid "Quit"
+msgstr "Quitter"
 
 msgid "Recorded"
 msgstr "Enregistré"
@@ -184,6 +229,9 @@ msgstr "Exclure Script du Projet"
 
 msgid "Removing Actor"
 msgstr "Supprimer Acteur"
+
+msgid "Report an Issue"
+msgstr "Signaler un Problème"
 
 msgid "SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.\n"
  "Developped by Marc Gilleron, aka Zylann\n"
@@ -243,17 +291,37 @@ msgstr "Suggestions:"
 msgid "Synopsis"
 msgstr "Synopsis"
 
+msgid "The project has unsaved changes.\\nAre you sure you want to close it\?"
+msgstr "Le projet a des modifications non enregistrées.\n"
+ "Etes vous sûr de vouloir le fermer\?"
+
+msgid "The project has unsaved changes.\\nAre you sure you want to quit\?"
+msgstr "Le projet a des modifications non enregistrées.\n"
+ "Etes vous sûr de vouloir quitter\?"
+
 msgid "Title"
 msgstr "Titre"
 
+msgid "Untitled"
+msgstr "Sans Titre"
+
 msgid "View"
 msgstr "Vue"
+
+msgid "Website"
+msgstr "Site web"
+
+msgid "Website URL"
+msgstr "URL du site"
 
 msgid "Word Count"
 msgstr "Nombre de Mots"
 
 msgid "Year"
 msgstr "Année"
+
+msgid "Your browser does not support the audio tag."
+msgstr "Votre navigateur ne supporte pas la balise audio."
 
 msgid "ep1"
 msgstr "ep1"

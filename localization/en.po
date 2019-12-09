@@ -5,6 +5,9 @@ msgstr "Project-Id-Version: Saga Toolkit\n"
  "Content-Transfer-Encoding: 8bit\n"
  "Language: en"
 
+msgid "---"
+msgstr "---"
+
 msgid "---%"
 msgstr "---%"
 
@@ -35,6 +38,9 @@ msgstr "Add Actor"
 msgid "Add to dictionary"
 msgstr "Add to Dictionary"
 
+msgid "Cancel"
+msgstr "Cancel"
+
 msgid "Character"
 msgstr "Character"
 
@@ -59,11 +65,20 @@ msgstr "Delete Actor\?"
 msgid "Description"
 msgstr "Description"
 
+msgid "Discard"
+msgstr "Discard"
+
+msgid "Edit"
+msgstr "Edit"
+
 msgid "Episode"
 msgstr "Episode"
 
 msgid "Episodes"
 msgstr "Episodes"
+
+msgid "Error line {0}: {1}"
+msgstr "Error line {0}: {1}"
 
 msgid "Estimated duration"
 msgstr "Estimated duration"
@@ -86,14 +101,23 @@ msgstr "Filter"
 msgid "First Occurrence"
 msgstr "First Occurrence"
 
+msgid "Format"
+msgstr "Format"
+
 msgid "Full name"
 msgstr "Full Name"
 
 msgid "Gender"
 msgstr "Gender"
 
+msgid "Generate Post"
+msgstr "Generate Post"
+
 msgid "Get Statements"
 msgstr "Get Statements"
+
+msgid "Go"
+msgstr "Go"
 
 msgid "Help"
 msgstr "Help"
@@ -107,6 +131,12 @@ msgstr "Ignore All"
 msgid "Language"
 msgstr "Language"
 
+msgid "Listen"
+msgstr "Listen"
+
+msgid "MP3 URL"
+msgstr "MP3 URL"
+
 msgid "Male"
 msgstr "Male"
 
@@ -118,6 +148,9 @@ msgstr "Mix Preview"
 
 msgid "Name"
 msgstr "Name"
+
+msgid "Netophonix Saga ID"
+msgstr "Netophonix Saga ID"
 
 msgid "New"
 msgstr "New"
@@ -146,6 +179,9 @@ msgstr "Notes"
 msgid "Occurrences"
 msgstr "Occurrences"
 
+msgid "Open"
+msgstr "Open"
+
 msgid "Open Project"
 msgstr "Open Project"
 
@@ -161,11 +197,17 @@ msgstr "Open..."
 msgid "Other"
 msgstr "Other"
 
+msgid "Preferences"
+msgstr "Preferences"
+
 msgid "Prev"
 msgstr "Prev"
 
 msgid "Project"
 msgstr "Project"
+
+msgid "Quit"
+msgstr "Quit"
 
 msgid "Recorded"
 msgstr "Recorded"
@@ -184,6 +226,9 @@ msgstr "Remove Script From Project"
 
 msgid "Removing Actor"
 msgstr "Removing Actor"
+
+msgid "Report an Issue"
+msgstr "Report an Issue"
 
 msgid "SagaTK is a set of tools for hobbyist audio plays production, combined into a user interface made with Godot Engine.\n"
  "Developped by Marc Gilleron, aka Zylann\n"
@@ -243,17 +288,37 @@ msgstr "Suggestions:"
 msgid "Synopsis"
 msgstr "Synopsis"
 
+msgid "The project has unsaved changes.\\nAre you sure you want to close it\?"
+msgstr "The project has unsaved changes.\n"
+ "Are you sure you want to close it\?"
+
+msgid "The project has unsaved changes.\\nAre you sure you want to quit\?"
+msgstr "The project has unsaved changes.\n"
+ "Are you sure you want to quit\?"
+
 msgid "Title"
 msgstr "Title"
 
+msgid "Untitled"
+msgstr "Untitled"
+
 msgid "View"
 msgstr "View"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Website URL"
+msgstr "Website URL"
 
 msgid "Word Count"
 msgstr "Word Count"
 
 msgid "Year"
 msgstr "Year"
+
+msgid "Your browser does not support the audio tag."
+msgstr "Your browser does not support the audio tag."
 
 msgid "ep1"
 msgstr "ep1"
