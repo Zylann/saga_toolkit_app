@@ -92,10 +92,10 @@ func _search(flags):
 		_text_edit.cursor_set_column(_result_col)
 		_text_edit.select(_result_line, _result_col, _result_line, _result_col + len(text))
 
-	# TODO Had to wait one frame for centering to work
-	# See https://github.com/godotengine/godot/issues/33375
-	yield(get_tree(), "idle_frame")
-	_text_edit.center_viewport_to_cursor()
+		# TODO Had to wait one frame for centering to work
+		# See https://github.com/godotengine/godot/issues/33375
+		yield(get_tree(), "idle_frame")
+		_text_edit.center_viewport_to_cursor()
 
 
 func _on_CloseButton_pressed():
