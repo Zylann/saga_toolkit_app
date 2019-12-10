@@ -48,6 +48,7 @@ margin_right = 97.0
 margin_bottom = 24.0
 text = "Edit"
 flat = false
+switch_on_hover = true
 
 [node name="HelpMenu" type="MenuButton" parent="VBoxContainer/MenuBar"]
 margin_left = 101.0
