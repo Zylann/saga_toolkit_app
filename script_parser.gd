@@ -20,12 +20,12 @@ static func _parse_episode(text: String, existing_episode = null) -> ScriptData.
 	
 	res.text = text
 
-	if len(res.errors) > 0:
-		printerr("--- Unrecognized content ---")
-		for e in res.errors:
-			printerr("Line ", e.line, ":")
-			print("\"", e.text, "\"\n")
-		printerr("----------------------------")
+#	if len(res.errors) > 0:
+#		printerr("--- Unrecognized content ---")
+#		for e in res.errors:
+#			printerr("Line ", e.line, ":")
+#			print("\"", e.text, "\"\n")
+#		printerr("----------------------------")
 	
 	var time_spent = OS.get_ticks_msec() - time_before
 	print("Took ", time_spent, "ms to parse text")
