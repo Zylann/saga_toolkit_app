@@ -181,4 +181,3 @@ margin_top = 412.0
 margin_right = 759.0
 margin_bottom = 512.0
 [connection signal="pressed" from="VBoxContainer/MenuBar/SaveProjectButton" to="." method="_on_SaveProjectButton_pressed"]
-[connection signal="discard_selected" from="UnsavedChangesDialog" to="." method="_on_UnsavedChangesDialog_discard_selected"]

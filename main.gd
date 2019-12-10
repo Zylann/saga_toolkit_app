@@ -18,6 +18,7 @@ const MENU_HELP_ABOUT = 0
 const MENU_HELP_REPORT_ISSUE = 1
 
 const ISSUE_TRACKER_URL = "https://github.com/Zylann/saga_toolkit_app/issues"
+const MAX_RECENT_PROJECTS = 10
 
 onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
 onready var _edit_menu = get_node("VBoxContainer/MenuBar/EditMenu")
@@ -37,7 +38,8 @@ onready var _save_project_button = get_node("VBoxContainer/MenuBar/SaveProjectBu
 var _project : ScriptData.Project = null
 var _open_project_dialog = null
 var _save_project_dialog = null
-var _action_on_discard_unsaved_changes : FuncRef = null
+var _recent_projects_menu : PopupMenu = null
+var _recent_projects_menu_index := -1
 
 
 func _init():
@@ -51,13 +53,20 @@ func _ready():
 	
 	_project_menu.get_popup().add_item(tr("New"), MENU_PROJECT_NEW)
 	_project_menu.get_popup().add_item(tr("Open..."), MENU_PROJECT_OPEN)
+	_recent_projects_menu_index = _project_menu.get_popup().get_item_count()
+	_project_menu.get_popup().add_submenu_item(tr("Open Recent"), "RecentProjectsMenu")
 	_project_menu.get_popup().add_separator()
 	_project_menu.get_popup().add_item(tr("Save"), MENU_PROJECT_SAVE)
 	_project_menu.get_popup().add_item(tr("Save As..."), MENU_PROJECT_SAVE_AS)
 	_project_menu.get_popup().add_separator()
 	_project_menu.get_popup().add_item(tr("Quit"), MENU_PROJECT_QUIT)
 	_project_menu.get_popup().connect("id_pressed", self, "_on_ProjectMenu_id_pressed")
-	
+
+	_recent_projects_menu = PopupMenu.new()
+	_recent_projects_menu.name = "RecentProjectsMenu"
+	_recent_projects_menu.connect("id_pressed", self, "_on_RecentProjectsMenu_id_pressed")
+	_project_menu.get_popup().add_child(_recent_projects_menu)
+
 	_edit_menu.get_popup().add_item(tr("Preferences"), MENU_EDIT_PREFERENCES)
 	_edit_menu.get_popup().connect("id_pressed", self, "_on_EditMenu_id_pressed")
 	
@@ -100,7 +109,44 @@ func _ready():
 	_actor_editor.setup_dialogs(dialogs_parent)
 	_episode_editor.setup_dialogs(dialogs_parent)
 	
+	_update_recent_projects_menu()
+	
 	_set_project(ScriptData.Project.new())
+
+
+func _update_recent_projects_menu(recent_projects = null):
+	_recent_projects_menu.clear()
+	
+	if recent_projects == null:
+		recent_projects = UserPrefs.get_value("recent_projects")
+	if recent_projects == null:
+		recent_projects = []
+
+	_project_menu.get_popup().set_item_disabled(
+		_recent_projects_menu_index, len(recent_projects) == 0)
+
+	for path in recent_projects:
+		var i = _recent_projects_menu.get_item_count()
+		_recent_projects_menu.add_item(path.get_file())
+		_recent_projects_menu.set_item_metadata(i, path)
+
+
+func _remember_recent_project(fpath):
+	UserPrefs.set_value("last_open_project_path", fpath.get_base_dir())
+	var recent = UserPrefs.get_value("recent_projects")
+	if recent == null:
+		recent = [fpath]
+	else:
+		var i = recent.find(fpath)
+		if i != -1:
+			print("Already in ", recent)
+			recent.remove(i)
+		recent.push_front(fpath)
+		print("Added: ", recent)
+		if len(recent) > MAX_RECENT_PROJECTS:
+			recent.resize(MAX_RECENT_PROJECTS)
+	UserPrefs.set_value("recent_projects", recent)
+	_update_recent_projects_menu(recent)	
 
 
 func _notification(what):
@@ -154,21 +200,27 @@ func _request_new_project():
 		_unsaved_changes_dialog.configure(
 			tr("The project has unsaved changes.\nAre you sure you want to close it?"),
 			tr("Discard"))
-		_action_on_discard_unsaved_changes = funcref(self, "_close_project")
+		_unsaved_changes_dialog.set_discard_action(self, "_close_project")
 		_unsaved_changes_dialog.popup_centered_minsize()
 	else:
 		_close_project()
 
 
-func _request_open_project():
+func _request_open_project(fpath := ""):
 	if _project.modified:
 		_unsaved_changes_dialog.configure(
 			tr("The project has unsaved changes.\nAre you sure you want to close it?"),
 			tr("Discard"))
-		_action_on_discard_unsaved_changes = funcref(self, "_show_open_project_dialog")
+		if fpath == "":
+			_unsaved_changes_dialog.set_discard_action(self, "_show_open_project_dialog")
+		else:
+			_unsaved_changes_dialog.set_discard_action(self, "_open_project", [fpath])
 		_unsaved_changes_dialog.popup_centered_minsize()
 	else:
-		_show_open_project_dialog()
+		if fpath == "":
+			_show_open_project_dialog()
+		else:
+			_open_project(fpath)
 
 
 func _request_quit():
@@ -176,17 +228,11 @@ func _request_quit():
 		_unsaved_changes_dialog.configure(
 			tr("The project has unsaved changes.\nAre you sure you want to quit?"),
 			tr("Quit"))
-		_action_on_discard_unsaved_changes = funcref(get_tree(), "quit")
+		_unsaved_changes_dialog.set_discard_action(get_tree(), "quit")
 		_unsaved_changes_dialog.popup_centered_minsize()
 		OS.request_attention()
 	else:
 		get_tree().quit()
-
-
-func _on_UnsavedChangesDialog_discard_selected():
-	var a = _action_on_discard_unsaved_changes
-	_action_on_discard_unsaved_changes = null
-	a.call_func()
 
 
 func _show_open_project_dialog():
@@ -198,12 +244,12 @@ func _show_open_project_dialog():
 
 func _on_OpenProjectDialog_file_selected(fpath):
 	_open_project(fpath)
-	UserPrefs.set_value("last_open_project_path", fpath.get_base_dir())
+	_remember_recent_project(fpath)
 
 
 func _on_SaveProjectDialog_file_selected(fpath):
 	_save_project_as(fpath)
-	UserPrefs.set_value("last_open_project_path", fpath.get_base_dir())
+	_remember_recent_project(fpath)
 
 
 func _save_project():
@@ -473,3 +519,10 @@ static func _save_project_file(data, fpath):
 
 func _on_SaveProjectButton_pressed():
 	_save_project()
+
+
+func _on_RecentProjectsMenu_id_pressed(id):
+	var fpath = _recent_projects_menu.get_item_metadata(id)
+	_request_open_project(fpath)
+	_remember_recent_project(fpath)
+

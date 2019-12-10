@@ -20,3 +20,9 @@ func configure(p_text: String, p_discard_text: String):
 	_discard_button.text = p_discard_text
 
 
+func set_discard_action(target: Object, method: String, binds := []):
+	var connections = get_signal_connection_list("discard_selected")
+	for con in connections:
+		disconnect("discard_selected", con.target, con.method)
+	connect("discard_selected", target, method, binds, CONNECT_ONESHOT)
+
