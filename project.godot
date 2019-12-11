@@ -20,7 +20,6 @@ run/main_scene="res://main.tscn"
 run/low_processor_mode=true
 boot_splash/image="res://splash.png"
 config/icon="res://icon.png"
-config/auto_accept_quit=false
 
 [display]
 
