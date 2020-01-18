@@ -183,7 +183,7 @@ static func get_theme() -> Theme:
 	tab_fg.set_expand_margin_individual(0, 2, 0, -1)
 	_set_content_margin_individual(tab_fg, 16, 6, 16, 8)
 	tab_fg.shadow_size = 0
-	_set_border_width_individual(tab_fg, 1, 1, 1, 0)
+	_set_border_width_individual(tab_fg, 2, 2, 2, 0)
 	tab_fg.border_color = ACCENT_COLOR
 
 	var tab_bg = tab_fg.duplicate()
@@ -199,7 +199,7 @@ static func get_theme() -> Theme:
 	tab_panel.bg_color = tab_fg.bg_color
 	tab_panel.set_expand_margin_all(3)
 	tab_panel.border_color = ACCENT_COLOR
-	tab_panel.border_width_top = 1
+	tab_panel.border_width_top = 2
 	tab_panel.corner_radius_top_left = 4
 	tab_panel.corner_radius_top_right = 4
 	_set_content_margin_individual(tab_panel, 5, 6, 5, 5)
