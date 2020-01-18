@@ -51,7 +51,7 @@ func _init():
 func _ready():
 	theme = ThemeGenerator.get_theme()
 	
-	ProjectSettings.set("application/config/auto_accept_quit", false)
+	get_tree().set_auto_accept_quit(false)
 	
 	_project_menu.get_popup().add_item(tr("New"), MENU_PROJECT_NEW)
 	_project_menu.get_popup().add_item(tr("Open..."), MENU_PROJECT_OPEN)
