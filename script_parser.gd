@@ -141,10 +141,10 @@ static func _parse_episode_internal(text, existing_episode = null):
 	if unrecognized_content.empty():
 		print("No problem found in script.")
 	else:
-		for line_index in unrecognized_content:
-			var c = unrecognized_content[line_index]
+		for line_index2 in unrecognized_content:
+			var c = unrecognized_content[line_index2]
 			var e = ScriptData.ScriptError.new()
-			e.line = line_index
+			e.line = line_index2
 			e.column = 0
 			e.message = "Unrecognized content"
 			e.text = c.text
