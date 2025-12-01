@@ -1,10 +1,15 @@
 extends Control
 
 const ScriptData = preload("./../script_data.gd")
+const FirstOccurrenceComparer = preload("./../first_occurrence_comparer.gd")
 const CharacterSelectionDialogScene = preload("./character_selection_dialog.tscn")
 const TextDialogScene = preload("./text_dialog.tscn")
 
-onready var _actor_list = get_node("ActorList")
+const SORT_BY_NAME = 0
+const SORT_BY_WORD_COUNT = 1
+const SORT_BY_FIRST_OCCURRENCE = 2
+
+onready var _actor_list : ItemList = $ActorListContainer/ActorList
 onready var _gender_selector = get_node("VSplitContainer/Properties/GenderSelector")
 onready var _name_edit = get_node("VSplitContainer/Properties/ActorNameEdit")
 onready var _characters_list = get_node("VSplitContainer/Properties/HBoxContainer2/CharacterList")
@@ -12,6 +17,8 @@ onready var _notes_edit = get_node("VSplitContainer/Properties/Notes")
 onready var _properties_container = get_node("VSplitContainer/Properties")
 onready var _remove_actor_button = get_node("VSplitContainer/HBoxContainer/RemoveActorButton")
 onready var _get_statements_button = get_node("VSplitContainer/HBoxContainer/StatementsReduxButton")
+onready var _actor_sort_option_button := \
+	$ActorListContainer/HBoxContainer/SortOption as OptionButton
 
 var _project = null
 var _character_selection_dialog = null
@@ -20,6 +27,12 @@ var _text_dialog = null
 
 
 func _ready():
+	_actor_sort_option_button.get_popup().add_item(tr("Name"), SORT_BY_NAME)
+	_actor_sort_option_button.get_popup().add_item(tr("Word Count"), SORT_BY_WORD_COUNT)
+	_actor_sort_option_button.get_popup().add_item(tr("First Occurrence"), SORT_BY_FIRST_OCCURRENCE)
+	_actor_sort_option_button.select(0)
+	_actor_sort_option_button.get_popup().connect("id_pressed", self, "_on_SortOption_id_pressed")
+
 	_gender_selector.add_item(tr("Male"), ScriptData.GENDER_MALE)
 	_gender_selector.add_item(tr("Female"), ScriptData.GENDER_FEMALE)
 	_gender_selector.add_item(tr("Other"), ScriptData.GENDER_OTHER)
@@ -63,13 +76,62 @@ func _update_buttons_availability():
 	_get_statements_button.disabled = not available
 
 
-func _update_actors_list():
+func _compare_actors_by_name(a: ScriptData.Actor, b: ScriptData.Actor) -> bool:
+	return a.name.nocasecmp_to(b.name) < 0
+
+
+class ActorWordCountComparer:
+	# Dictionary[int, int]
+	var word_count_totals = {}
+
+	# a: ScriptData.Actor, b: ScriptData.Actor
+	func compare(a, b):
+		# It's possible the actor has no occurrence
+		var wca : int = word_count_totals.get(a.id, 0)
+		var wcb : int = word_count_totals.get(b.id, 0)
+		# Tie break by name if word counts are equal
+		if wca == wcb:
+			return a.name < b.name
+		# Highest word counts come first
+		return wca > wcb
+
+
+func _update_actors_list(sort_mode: int = -1) -> void:
+	# Remember selection if any
+	var selected := _actor_list.get_selected_items()
+	var selected_actor_id := -1
+	if len(selected) > 0:
+		selected_actor_id = _actor_list.get_item_metadata(selected[0])
+
+	if sort_mode == -1:
+		sort_mode = _actor_sort_option_button.selected
+
+	var actors : Array = _project.actors.duplicate()
+	
+	match sort_mode:
+		SORT_BY_NAME:
+			actors.sort_custom(self, "_compare_actors_by_name")
+		
+		SORT_BY_WORD_COUNT:
+			var comparer := ActorWordCountComparer.new()
+			comparer.word_count_totals = _project.get_word_count_totals_per_actor_id()
+			actors.sort_custom(comparer, "compare")
+		
+		SORT_BY_FIRST_OCCURRENCE:
+			var comparer := FirstOccurrenceComparer.new()
+			comparer.first_occurences = \
+				FirstOccurrenceComparer.get_actors_first_occurrences(_project)
+			actors.sort_custom(comparer, "compare_actors")
+
 	_actor_list.clear()
-	for actor in _project.actors:
-		var i = _actor_list.get_item_count()
+	
+	for actor in actors:
+		var i : int = _actor_list.get_item_count()
 		_actor_list.add_item(actor.name)
 		_actor_list.set_item_metadata(i, actor.id)
-	_actor_list.sort_items_by_text()	
+
+		if actor.id == selected_actor_id:
+			_actor_list.select(i)
 
 
 func _get_selected_actor_id():
@@ -277,3 +339,8 @@ func _on_StatementsReduxButton_pressed():
 	var text = _generate_statements_redux()
 	_text_dialog.set_text(text)
 	_text_dialog.popup_centered_ratio()
+
+
+func _on_SortOption_id_pressed(sort_mode: int) -> void:
+	_update_actors_list(sort_mode)
+

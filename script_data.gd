@@ -72,6 +72,19 @@ class Project:
 				else:
 					word_count_totals[cname] = wc
 		return word_count_totals
+	
+	# actor_id:int => world_count:int
+	func get_word_count_totals_per_actor_id() -> Dictionary:
+		var word_count_per_character := get_word_count_totals()
+		var word_count_per_actor := {}
+		for cname in word_count_per_character:
+			var cwc : int = word_count_per_character[cname]
+			var character : Character = characters[cname]
+			var actor_id : int = character.actor_id
+			var c : int = word_count_per_actor.get(actor_id, 0)
+			c += cwc
+			word_count_per_actor[actor_id] = cwc
+		return word_count_per_actor
 
 
 class ScriptError:

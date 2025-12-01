@@ -2,6 +2,7 @@ extends HSplitContainer
 
 const ScriptData = preload("./../script_data.gd")
 const WordCountComparer = preload("./../word_count_comparer.gd")
+const FirstOccurrenceComparer = preload("./../first_occurrence_comparer.gd")
 const ThemeGenerator = preload("./../theme/theme_generator.gd")
 
 const OCCURRENCES_IMAGE_BG_COLOR = Color(0, 0, 0, 0.8)
@@ -67,54 +68,6 @@ func _set_editors_visible(visible):
 		child.visible = visible
 
 
-class FirstOccurrenceComparer:
-	# character name => [first episode, first scene, first statement]
-	var first_occurences : Dictionary
-	func compare(a, b):
-		var fa = null
-		var fb = null
-		if first_occurences.has(a):
-			fa = first_occurences[a]
-		if first_occurences.has(b):
-			fb = first_occurences[b]
-		if fa == null:
-			if fb == null:
-				return a < b
-			else:
-				return false
-		else:
-			if fb == null:
-				return true
-		if fa[0] < fb[0]:
-			return true
-		if fa[0] > fb[0]:
-			return false
-		if fa[1] < fb[1]:
-			return true
-		if fa[1] > fb[1]:
-			return false
-		if fa[2] < fb[2]:
-			return true
-		if fa[2] > fb[2]:
-			return false
-		return a < b
-
-
-static func _get_first_occurrences(project):
-	var characters = {}
-	for i in len(project.episodes):
-		var episode = project.episodes[i]
-		for j in len(episode.scenes):
-			var scene = episode.scenes[j]
-			for k in len(scene.elements):
-				var element = scene.elements[k]
-				if element is ScriptData.Statement:
-					if characters.has(element.character_name):
-						continue
-					characters[element.character_name] = [i, j, k]
-	return characters
-
-
 func _update_characters_list(project, sort_mode = -1):
 	
 	# Remember selection if any
@@ -143,8 +96,9 @@ func _update_characters_list(project, sort_mode = -1):
 		
 		SORT_BY_FIRST_OCCURRENCE:
 			var comparer = FirstOccurrenceComparer.new()
-			comparer.first_occurences = _get_first_occurrences(_project)
-			sorted_names.sort_custom(comparer, "compare")
+			comparer.first_occurences = \
+				FirstOccurrenceComparer.get_characters_first_occurrences(_project)
+			sorted_names.sort_custom(comparer, "compare_character_names")
 
 	for cname in sorted_names:
 		var i = _character_list.get_item_count()
