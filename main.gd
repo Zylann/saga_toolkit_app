@@ -20,7 +20,7 @@ const MENU_HELP_REPORT_ISSUE = 1
 const ISSUE_TRACKER_URL = "https://github.com/Zylann/saga_toolkit_app/issues"
 const MAX_RECENT_PROJECTS = 10
 
-onready var _project_menu = get_node("VBoxContainer/MenuBar/ProjectMenu")
+onready var _project_menu = $VBoxContainer/MenuBar/ProjectMenu
 onready var _edit_menu = get_node("VBoxContainer/MenuBar/EditMenu")
 onready var _help_menu = get_node("VBoxContainer/MenuBar/HelpMenu")
 onready var _script_editor = get_node("VBoxContainer/TabContainer/ScriptEditor")
@@ -46,7 +46,7 @@ func _init():
 	var locale = UserPrefs.get_value("locale")
 	if locale != null:
 		TranslationServer.set_locale(locale)
-
+	
 
 func _ready():
 	theme = ThemeGenerator.get_theme()

@@ -89,7 +89,7 @@ func _update_controls():
 	_mp3_url.set_url(episode.mp3_url)
 	
 	# Character grid
-	
+
 	_update_progress(episode.file_path)
 	
 	var character_names = episode.character_occurrences.keys()
